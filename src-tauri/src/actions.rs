@@ -230,12 +230,12 @@ fn load_clipboard(app: &AppHandle) -> ActionResult {
         output::notify(app, "Kein Bild", "Die Zwischenablage enthält kein Bild.");
         return Ok(());
     };
-    let image = imaging::decode(&bytes)?;
+    let (image, scale) = imaging::decode(&bytes)?;
     let (x, y) = capture::cursor_location();
     deliver(
         app,
         &image,
-        1.0,
+        scale,
         Kind::Imported,
         Rect {
             x,
@@ -248,12 +248,12 @@ fn load_clipboard(app: &AppHandle) -> ActionResult {
 
 /// Öffnet eine Bilddatei im Editor.
 pub fn open_file(app: &AppHandle, path: &std::path::Path) -> ActionResult {
-    let image = imaging::decode(&std::fs::read(path)?)?;
+    let (image, scale) = imaging::decode(&std::fs::read(path)?)?;
     let (x, y) = capture::cursor_location();
     deliver(
         app,
         &image,
-        1.0,
+        scale,
         Kind::Imported,
         Rect {
             x,
@@ -303,7 +303,7 @@ fn start_overlay(app: &AppHandle, mode: OverlayMode) -> ActionResult {
 
     let mut displays = Vec::with_capacity(shots.len());
     for shot in shots {
-        let png = imaging::encode(&shot.image, Format::Png)?;
+        let png = imaging::encode(&shot.image, Format::Png, shot.scale)?;
         let info = app
             .state::<Shots>()
             .insert(shot.image, shot.scale, png, Format::Png.mime());
@@ -483,7 +483,7 @@ pub fn recognize_into_clipboard(app: &AppHandle, image: &Image) -> ActionResult 
 fn deliver(app: &AppHandle, image: &Image, scale: f64, kind: Kind, screen: Rect) -> ActionResult {
     let settings = app.state::<Store>().get();
     let after = settings.after_capture;
-    let png = imaging::encode(image, Format::Png)?;
+    let png = imaging::encode(image, Format::Png, scale)?;
     if after.copy && kind != Kind::Imported {
         clipboard::write_image(&png);
     }

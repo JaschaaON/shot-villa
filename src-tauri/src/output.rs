@@ -16,9 +16,10 @@ pub enum OutputError {
     Io(#[from] std::io::Error),
 }
 
-/// Kopiert ein Bild in voller Auflösung in die Zwischenablage.
-pub fn copy(image: &Image) -> Result<(), OutputError> {
-    clipboard::write_image(&imaging::encode(image, Format::Png)?);
+/// Kopiert ein Bild in voller Auflösung in die Zwischenablage; die Pixeldichte
+/// sagt anderen Apps, dass es ein Retina-Bild ist.
+pub fn copy(image: &Image, scale: f64) -> Result<(), OutputError> {
+    clipboard::write_image(&imaging::encode(image, Format::Png, scale)?);
     Ok(())
 }
 
@@ -44,8 +45,8 @@ pub fn save_as(
         Some(e) if e.eq_ignore_ascii_case("jpg") || e.eq_ignore_ascii_case("jpeg") => Format::Jpeg,
         _ => Format::Png,
     };
-    let image = downscaled(image, scale, settings)?;
-    files::write_screenshot(path, &imaging::encode(&image, format)?)?;
+    let (image, scale) = downscaled(image, scale, settings)?;
+    files::write_screenshot(path, &imaging::encode(&image, format, scale)?)?;
     Ok(())
 }
 
@@ -54,7 +55,7 @@ fn prepare(
     scale: f64,
     settings: &Settings,
 ) -> Result<(Vec<u8>, Format), OutputError> {
-    let image = downscaled(image, scale, settings)?;
+    let (image, scale) = downscaled(image, scale, settings)?;
     let format = match settings.save_format {
         SaveFormat::Png => Format::Png,
         SaveFormat::Auto => {
@@ -65,15 +66,16 @@ fn prepare(
             }
         }
     };
-    Ok((imaging::encode(&image, format)?, format))
+    Ok((imaging::encode(&image, format, scale)?, format))
 }
 
-fn downscaled(image: &Image, scale: f64, settings: &Settings) -> Result<Image, OutputError> {
+/// Verkleinert Retina-Bilder auf 1x, wenn eingestellt; liefert die neue Skalierung.
+fn downscaled(image: &Image, scale: f64, settings: &Settings) -> Result<(Image, f64), OutputError> {
     if settings.downscale_on_save && scale > 1.0 {
         let (width, height) = scaled_size(imaging::width(image), imaging::height(image), scale);
-        Ok(imaging::resize(image, width, height)?)
+        Ok((imaging::resize(image, width, height)?, 1.0))
     } else {
-        Ok(image.clone())
+        Ok((image.clone(), scale))
     }
 }
 

@@ -52,7 +52,8 @@ pub fn resize(image: &Image, width: usize, height: usize) -> Result<Image, Image
     )))
 }
 
-pub fn encode(image: &Image, format: Format) -> Result<Vec<u8>, ImageError> {
+/// Kodiert ein Bild; die Pixeldichte schreibt Windows nicht mit.
+pub fn encode(image: &Image, format: Format, _scale: f64) -> Result<Vec<u8>, ImageError> {
     let mut bytes = Cursor::new(Vec::new());
     match format {
         Format::Png => image
@@ -71,9 +72,10 @@ pub fn encode(image: &Image, format: Format) -> Result<Vec<u8>, ImageError> {
     Ok(bytes.into_inner())
 }
 
-pub fn decode(bytes: &[u8]) -> Result<Image, ImageError> {
+/// Dekodiert ein Bild; unter Windows immer mit Skalierung 1.
+pub fn decode(bytes: &[u8]) -> Result<(Image, f64), ImageError> {
     image::load_from_memory(bytes)
-        .map(|decoded| Arc::new(decoded.into_rgba8()))
+        .map(|decoded| (Arc::new(decoded.into_rgba8()), 1.0))
         .map_err(|_| ImageError::Decoding)
 }
 
@@ -93,7 +95,7 @@ mod tests {
     #[test]
     fn round_trips_pixels_through_png() -> Result<(), ImageError> {
         let image = from_pixels(&solid(4, 3, [10, 200, 30, 255]))?;
-        let decoded = decode(&encode(&image, Format::Png)?)?;
+        let decoded = decode(&encode(&image, Format::Png, 1.0)?)?.0;
         assert_eq!((width(&decoded), height(&decoded)), (4, 3));
         assert_eq!(&decoded.as_raw()[..4], &[10, 200, 30, 255]);
         Ok(())
@@ -118,7 +120,7 @@ mod tests {
     #[test]
     fn jpeg_encoding_works() -> Result<(), ImageError> {
         let image = from_pixels(&noise(16, 16))?;
-        let bytes = encode(&image, Format::Jpeg)?;
+        let bytes = encode(&image, Format::Jpeg, 1.0)?;
         assert_eq!(&bytes[..2], &[0xFF, 0xD8]);
         Ok(())
     }

@@ -236,17 +236,18 @@ pub fn export_image(
     let (png, ExportParams { scale, target }) = raw_request(&request)?;
     match target {
         ExportTarget::Copy => {
-            crate::clipboard::write_image(&png);
+            let (image, _) = imaging::decode(&png).map_err(text)?;
+            output::copy(&image, scale).map_err(text)?;
             Ok(None)
         }
         ExportTarget::Save => {
-            let image = imaging::decode(&png).map_err(text)?;
+            let (image, _) = imaging::decode(&png).map_err(text)?;
             let path = output::save(&image, scale, &store.get()).map_err(text)?;
             output::notify(&app, "Gespeichert", &path.display().to_string());
             Ok(Some(path))
         }
         ExportTarget::SaveAs { path } => {
-            let image = imaging::decode(&png).map_err(text)?;
+            let (image, _) = imaging::decode(&png).map_err(text)?;
             output::save_as(&image, scale, &store.get(), &path).map_err(text)?;
             Ok(Some(path))
         }
@@ -268,7 +269,7 @@ pub fn export_shot(
 ) -> CommandResult<Option<PathBuf>> {
     let (image, scale) = shots.image(id).ok_or("Bild ist nicht mehr vorhanden")?;
     match target {
-        ExportTarget::Copy => output::copy(&image).map(|()| None).map_err(text),
+        ExportTarget::Copy => output::copy(&image, scale).map(|()| None).map_err(text),
         ExportTarget::Save => {
             let path = output::save(&image, scale, &store.get()).map_err(text)?;
             output::notify(&app, "Gespeichert", &path.display().to_string());
@@ -287,7 +288,7 @@ pub async fn recognize_text(
     app: AppHandle,
 ) -> CommandResult<actions::Recognized> {
     let (png, ScaleParams { .. }) = raw_request(&request)?;
-    let image = imaging::decode(&png).map_err(text)?;
+    let (image, _) = imaging::decode(&png).map_err(text)?;
     actions::recognize_to_clipboard(&app, &image).map_err(text)
 }
 
@@ -299,7 +300,7 @@ pub async fn recognize_text(
 )]
 pub fn pin_image(request: Request<'_>, app: AppHandle, shots: State<'_, Shots>) -> CommandResult {
     let (png, ScaleParams { scale }) = raw_request(&request)?;
-    let image = imaging::decode(&png).map_err(text)?;
+    let (image, _) = imaging::decode(&png).map_err(text)?;
     let info = shots.insert(image, scale, png, Format::Png.mime());
     #[allow(clippy::cast_precision_loss)]
     let (width, height) = (info.width as f64 / scale, info.height as f64 / scale);

@@ -26,42 +26,54 @@ Legende: ☐ offen · ◐ implementiert, Tests grün, Praxistest offen · ☑ fe
 
 | ID | Feature | Status | Notizen |
 |---|---|---|---|
-| — | Berechtigungs-Flow Bildschirmaufnahme | ◐ | Preflight vor jeder Aufnahme; sonst System-Anfrage + eigenes Fenster (Einstellungen öffnen, Neu starten) |
-| C1 | Vollbild | ◐ | Bildschirm unter dem Mauszeiger, native Auflösung, eigene Fenster ausgeschlossen |
-| C2 | Bereich | ◐ | Alle Bildschirme eingefroren, Overlay je Bildschirm über der Menüleiste, Fadenkreuz, Lupe, Größenanzeige, Esc bricht ab |
-| C4 | Bereich wiederholen | ◐ | Merkt Bildschirm + Rechteck; Hinweis, wenn noch kein Bereich |
-| C5 | Aktives Fenster | ◐ | Vorderstes Fenster der aktiven App, mit Schatten, transparenter Hintergrund |
-| C6 | Fenster wählen | ◐ | Overlay hebt Fenster unter dem Mauszeiger hervor (App + Titel), Klick nimmt auf |
+| — | Berechtigungs-Flow Bildschirmaufnahme | ☑ | Preflight vor jeder Aufnahme; sonst System-Anfrage + eigenes Fenster (Einstellungen öffnen, Neu starten) |
+| C1 | Vollbild | ☑ | Bildschirm unter dem Mauszeiger, native Auflösung, eigene Fenster ausgeschlossen |
+| C2 | Bereich | ☑ | Alle Bildschirme eingefroren, Overlay je Bildschirm über der Menüleiste, Fadenkreuz, Lupe, Größenanzeige, Esc bricht ab |
+| C4 | Bereich wiederholen | ☑ | Merkt Bildschirm + Rechteck; Hinweis, wenn noch kein Bereich |
+| C5 | Aktives Fenster | ☑ | Vorderstes Fenster der aktiven App, mit Schatten, transparenter Hintergrund |
+| C6 | Fenster wählen | ☑ | Overlay hebt Fenster unter dem Mauszeiger hervor (App + Titel), Klick nimmt auf |
 | C11 | Mauszeiger | ◐ | Auto (nur Vollbild) / immer / nie |
-| C12 | Aus Zwischenablage | ◐ | PNG oder TIFF; Menü + ⇧⌘V |
+| C12 | Aus Zwischenablage | ☑ | PNG oder TIFF; Menü + ⇧⌘V; Retina-Bilder behalten ihre Größe (Pixeldichte 144 dpi wird gelesen) |
 | C13 | Datei öffnen / Drag & Drop / „Öffnen mit“ | ◐ | Dialog, Ziehen ins Editorfenster, Dateizuordnung des Systems; Absturz beim Kaltstart per „Öffnen mit“ behoben (Datei wird bis Ende des Starts zurückgestellt), Kaltstart geprüft |
-| C14 | Instant-OCR/QR | ◐ | Bereich wählen → Text bzw. QR-Inhalt in die Zwischenablage + Mitteilung; Auswahl übersteht jetzt auch sehr schnelles Ziehen |
-| C15 | Retina / 1×-Export | ◐ | Einstellung „Beim Speichern auf 1× verkleinern“ |
+| C14 | Instant-OCR/QR | ☑ | Bereich wählen → Text bzw. QR-Inhalt in die Zwischenablage + Mitteilung; Auswahl übersteht jetzt auch sehr schnelles Ziehen; Mitteilung laut Systemprotokoll zugestellt |
+| C15 | Retina / 1×-Export | ◐ | Einstellung „Beim Speichern auf 1× verkleinern“; Kopien und Dateien tragen die Pixeldichte (144 dpi bei Retina), wie macOS-Bildschirmfotos |
 | A1 | Nach der Aufnahme | ◐ | Zeigen / Kopieren / Speichern kombinierbar |
-| A2 | Mini-Vorschau | ◐ | Unten rechts; Kopieren, Speichern, Bearbeiten, Schließen; Schließen manuell oder bei Klick daneben |
-| A4 | Esc-Verhalten | ◐ | Kopieren-Knopf schließt den Editor bzw. die Vorschau ebenfalls (Wunsch 2026-10-14). |
+| A2 | Mini-Vorschau | ☑ | Unten rechts; Kopieren, Speichern, Bearbeiten, Schließen; Schließen manuell oder bei Klick daneben |
+| A4 | Esc-Verhalten | ☑ | Kopieren-Knopf schließt den Editor bzw. die Vorschau ebenfalls (Wunsch 2026-10-14). |
 | A4 (Detail) | Esc-Verhalten | ◐ | Esc im Editor: optional kopieren/speichern, dann schließen |
 | A5 | Mitteilungen | ◐ | macOS: eigenes UserNotifications-Framework (vorher kamen keine Mitteilungen an), Banner auch im Vordergrund; Windows: Toast. Editor: „Text erkennen“ zeigt jetzt „Text kopiert: …“ bzw. „Kein Text erkannt“ im Fenster (im Editor geprüft) |
-| E1 | Editor-Fenster | ◐ | Werkzeugleiste in der Titelleiste, Infos rechts (Farbe, Größe, Zoom) |
+| E1 | Editor-Fenster | ☑ | Werkzeugleiste in der Titelleiste, Infos rechts (Farbe, Größe, Zoom) |
 | E2 | Zoom | ◐ | Einpassen, 100 %, ⌘+/⌘−/⌘0/⌘1, Pinch/⌘-Scrollrad; „100 % bevorzugen“ |
 | E5 | px/pt | ◐ | Klick auf die Größenanzeige |
-| E6 | Pipette + Farbformate | ◐ | HEX, RGB, CSS rgba, OKLCH; Klick wechselt Format, Tab kopiert |
-| E10 | Undo/Redo | ◐ | ⌘Z / ⇧⌘Z, Ziehbewegungen als ein Schritt, 100 Schritte |
-| T1–T10 | Werkzeuge | ◐ | Texteingabe im Hintergrundtest nicht prüfbar (Fokus) – bitte von Hand testen. |
+| E6 | Pipette + Farbformate | ☑ | HEX, RGB, CSS rgba, OKLCH; Klick wechselt Format, Tab kopiert |
+| E10 | Undo/Redo | ☑ | ⌘Z / ⇧⌘Z, Ziehbewegungen als ein Schritt, 100 Schritte |
+| T1–T10 | Werkzeuge | ◐ | Geprüft: Pfeil, Text, Rechteck, Textmarker (Rechteck ziehen), Unkenntlich, Spotlight, Zähler. Textwerkzeug war defekt (Klick nahm dem neuen Textfeld den Fokus, Text verschwand) – behoben. Oval, Linie, Freihand noch ungeprüft |
 | T1–T10 (Detail) | Werkzeuge | ◐ | Pfeil, Text, Rechteck, Oval, Linie, Freihand, Textmarker, Verpixeln/Weichzeichnen, Spotlight, Zähler; Einzeltasten A T R O L D H B S C, V = Auswahl; ⇧ = 45°/Quadrat |
-| T16 | Zuschneiden | ◐ | Auswahl ziehen, ↩; Zuschnitt zurücksetzen im Menü |
+| T16 | Zuschneiden | ☑ | Auswahl ziehen, ↩; Zuschnitt zurücksetzen im Menü |
 | T20 | Markierungen bearbeiten | ◐ | Auswählen, Verschieben, Griffe, Pfeiltasten (⇧ = 10 pt), ⌘D, Entf |
 | T21 | Farbwahl | ◐ | Eigene Palette + Systemfarbwähler |
 | X1–X4 | Kopieren, Sichern, Sichern unter, Format | ◐ | ⇧⌘C/Esc, ⌘S, ⇧⌘S; PNG oder Auto (PNG/JPEG-Heuristik) |
 | X5 | Drag-out | ☐ | Braucht natives Ziehen aus der Web-Ansicht – folgt |
-| X7 | Pin | ◐ | Rahmenlos, immer vorne, Rechtsklick: 50/100/200 %, halbtransparent, Kopieren, Schließen |
-| X10 | Metadaten | ◐ | xattr `kMDItemIsScreenCapture` (Test vorhanden) |
+| X7 | Pin | ☑ | Rahmenlos, immer vorne, Rechtsklick: 50/100/200 %, halbtransparent, Kopieren, Schließen; Rechtsklickmenü ungeprüft |
+| X10 | Metadaten | ☑ | xattr `kMDItemIsScreenCapture` (Test vorhanden) |
 | O1–O4 | OCR/QR | ◐ | Vision lokal, Zeilen in Lesereihenfolge, Zeilenumbrüche entfernen, QR/Barcode |
-| M1 | Menüleisten-Icon | ◐ | Alle Aufnahmen, OCR, Zwischenablage, Öffnen, Editor, Einstellungen, Beenden; zeigt Kürzel |
+| M1 | Menüleisten-Icon | ☑ | Alle Aufnahmen, OCR, Zwischenablage, Öffnen, Editor, Einstellungen, Beenden; zeigt Kürzel |
 | M2 | Dock-Icon nur bei offenem Fenster | ◐ | |
 | M3 | Autostart | ◐ | `SMAppService` bzw. Registry (Windows) |
 | M4 | Begrüßung beim ersten Start | ☑ | „Installation erfolgreich“ mit Ort des Symbols und den eingestellten Kürzeln (0.1.1) |
-| H1 | Globale Hotkeys | ◐ | 7 belegbare Kürzel mit Recorder; Vorgaben ⇧⌘1, ⇧⌘2, ⌃⌥⌘O; Kürzel während der Aufnahme pausiert |
+| H1 | Globale Hotkeys | ☑ | 7 belegbare Kürzel mit Recorder; Vorgaben ⇧⌘1, ⇧⌘2, ⌃⌥⌘O; Kürzel während der Aufnahme pausiert; Recorder und globales Auslösen geprüft |
+
+## Praxistest 2026-10-14 (macOS 27, installierte App)
+
+Geprüft und in Ordnung: Vollbild, Bereich, Bereich wiederholen, Fenster wählen, Aktives Fenster, Aus Zwischenablage, Texterkennung (Editor und Bereich), Editor-Werkzeuge (s. o.), Zuschneiden, Undo/Redo, Pipette, Sichern (Retina, Bildschirmfoto-Kennzeichnung), Kopieren (schließt Editor), Anpinnen (Verschieben, Esc), Mini-Vorschau (Sichern, Bearbeiten), Kürzel-Recorder, globale Kürzel, „Öffnen mit“ beim Kaltstart.
+
+Dabei gefunden und behoben:
+- Textwerkzeug: Eingabefeld verlor sofort den Fokus.
+- „Text erkennen“ im Editor gab keine Rückmeldung; Mitteilungen kamen auf macOS gar nicht an.
+- Absturz beim Start per „Öffnen mit“.
+- Bilder aus der Zwischenablage/Dateien erschienen doppelt so groß (Pixeldichte fehlte).
+
+Noch nicht in der App geprüft: Oval, Linie, Freihand, Sichern unter, QR-Code, Drag & Drop, „Öffnen …“-Dialog, Pin-Rechtsklickmenü, Reiter „Erweitert“, Windows-Version.
 
 ## Entscheidungen / Hinweise
 

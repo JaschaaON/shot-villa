@@ -3,7 +3,8 @@
 use std::ffi::c_void;
 
 use objc2_core_foundation::{
-    CFData, CFDictionary, CFMutableData, CFNumber, CFRetained, CFString, CGPoint, CGRect, CGSize,
+    CFData, CFDictionary, CFMutableData, CFNumber, CFRetained, CFString, CFType, CGPoint, CGRect,
+    CGSize,
 };
 use objc2_core_graphics::{
     CGBitmapContextCreate, CGBitmapContextCreateImage, CGColorSpace, CGContext, CGImage,
@@ -11,9 +12,23 @@ use objc2_core_graphics::{
 };
 use objc2_image_io::{
     CGImageDestination, CGImageSource, kCGImageDestinationLossyCompressionQuality,
+    kCGImagePropertyDPIHeight, kCGImagePropertyDPIWidth,
 };
 
 use super::{Format, ImageError, JPEG_QUALITY, PixelRect, Pixels};
+
+/// Pixeldichte eines Bildes ohne Retina-Skalierung.
+const BASE_DPI: f64 = 72.0;
+
+/// Leitet die Retina-Skalierung aus der Pixeldichte ab. Nur 144 und 216 dpi
+/// (wie bei Bildschirmfotos) zählen; Fotos mit 300 dpi bleiben in voller Größe.
+fn scale_from_dpi(dpi: Option<f64>) -> f64 {
+    let ratio = dpi.unwrap_or(BASE_DPI) / BASE_DPI;
+    [2.0, 3.0]
+        .into_iter()
+        .find(|scale| (ratio - scale).abs() < 0.05)
+        .unwrap_or(1.0)
+}
 
 /// Ein Bild; Kopien teilen sich die Pixel.
 pub type Image = CFRetained<CGImage>;
@@ -80,17 +95,31 @@ pub fn resize(image: &Image, width: usize, height: usize) -> Result<Image, Image
     CGBitmapContextCreateImage(Some(&context)).ok_or(ImageError::Graphics)
 }
 
-pub fn encode(image: &Image, format: Format) -> Result<Vec<u8>, ImageError> {
+/// Kodiert ein Bild; `scale` landet als Pixeldichte in der Datei (2 = 144 dpi).
+pub fn encode(image: &Image, format: Format, scale: f64) -> Result<Vec<u8>, ImageError> {
     let data = CFMutableData::new(None, 0).ok_or(ImageError::Encoding)?;
     let uti = CFString::from_static_str(uti(format));
     let destination = unsafe { CGImageDestination::with_data(&data, &uti, 1, None) }
         .ok_or(ImageError::Encoding)?;
+    let dpi = CFNumber::new_f64(BASE_DPI * scale);
     let quality = CFNumber::new_f64(JPEG_QUALITY);
-    // SAFETY: Statische Konstante aus ImageIO.
-    let key = unsafe { kCGImageDestinationLossyCompressionQuality };
-    let options = CFDictionary::<CFString, CFNumber>::from_slices(&[key], &[&quality]);
-    let options = (format == Format::Jpeg).then_some(options.as_ref());
-    unsafe { destination.add_image(image, options) };
+    // SAFETY: Statische Konstanten aus ImageIO.
+    let (dpi_width, dpi_height, quality_key) = unsafe {
+        (
+            kCGImagePropertyDPIWidth,
+            kCGImagePropertyDPIHeight,
+            kCGImageDestinationLossyCompressionQuality,
+        )
+    };
+    let options = if format == Format::Jpeg {
+        CFDictionary::<CFString, CFNumber>::from_slices(
+            &[dpi_width, dpi_height, quality_key],
+            &[&dpi, &dpi, &quality],
+        )
+    } else {
+        CFDictionary::<CFString, CFNumber>::from_slices(&[dpi_width, dpi_height], &[&dpi, &dpi])
+    };
+    unsafe { destination.add_image(image, Some(options.as_ref())) };
     if unsafe { destination.finalize() } {
         Ok(data.to_vec())
     } else {
@@ -98,10 +127,21 @@ pub fn encode(image: &Image, format: Format) -> Result<Vec<u8>, ImageError> {
     }
 }
 
-pub fn decode(bytes: &[u8]) -> Result<Image, ImageError> {
+/// Dekodiert ein Bild und liest seine Pixeldichte als Skalierung (144 dpi = 2).
+pub fn decode(bytes: &[u8]) -> Result<(Image, f64), ImageError> {
     let data = CFData::from_bytes(bytes);
     let source = unsafe { CGImageSource::with_data(&data, None) }.ok_or(ImageError::Decoding)?;
-    unsafe { source.image_at_index(0, None) }.ok_or(ImageError::Decoding)
+    let image = unsafe { source.image_at_index(0, None) }.ok_or(ImageError::Decoding)?;
+    // SAFETY: Bildeigenschaften sind ein Wörterbuch mit Zeichenketten als Schlüsseln.
+    let properties = unsafe { source.properties_at_index(0, None) }
+        .map(|dict| unsafe { CFRetained::cast_unchecked::<CFDictionary<CFString, CFType>>(dict) });
+    // SAFETY: Statische Konstante aus ImageIO.
+    let key = unsafe { kCGImagePropertyDPIWidth };
+    let dpi = properties
+        .and_then(|dict| dict.get(key))
+        .and_then(|value| value.downcast::<CFNumber>().ok())
+        .and_then(|number| number.as_f64());
+    Ok((image, scale_from_dpi(dpi)))
 }
 
 fn bitmap_context(
@@ -139,10 +179,29 @@ mod tests {
     #[test]
     fn round_trips_pixels_through_png() -> Result<(), ImageError> {
         let image = from_pixels(&solid(4, 3, [10, 200, 30, 255]))?;
-        let decoded = decode(&encode(&image, Format::Png)?)?;
+        let decoded = decode(&encode(&image, Format::Png, 1.0)?)?.0;
         let pixels = pixels(&decoded)?;
         assert_eq!((pixels.width, pixels.height), (4, 3));
         assert_eq!(&pixels.data[..4], &[10, 200, 30, 255]);
+        Ok(())
+    }
+
+    #[test]
+    fn retina_dpi_becomes_scale() {
+        assert!((scale_from_dpi(Some(144.0)) - 2.0).abs() < f64::EPSILON);
+        assert!((scale_from_dpi(Some(216.0)) - 3.0).abs() < f64::EPSILON);
+        assert!((scale_from_dpi(Some(72.0)) - 1.0).abs() < f64::EPSILON);
+        assert!((scale_from_dpi(Some(300.0)) - 1.0).abs() < f64::EPSILON);
+        assert!((scale_from_dpi(None) - 1.0).abs() < f64::EPSILON);
+    }
+
+    #[test]
+    fn keeps_retina_scale_as_dpi() -> Result<(), ImageError> {
+        let image = from_pixels(&solid(4, 4, [0, 0, 0, 255]))?;
+        for format in [Format::Png, Format::Jpeg] {
+            let (_, scale) = decode(&encode(&image, format, 2.0)?)?;
+            assert!((scale - 2.0).abs() < f64::EPSILON);
+        }
         Ok(())
     }
 
@@ -167,7 +226,7 @@ mod tests {
     #[test]
     fn jpeg_encoding_works() -> Result<(), ImageError> {
         let image = from_pixels(&noise(16, 16))?;
-        let bytes = encode(&image, Format::Jpeg)?;
+        let bytes = encode(&image, Format::Jpeg, 1.0)?;
         assert_eq!(&bytes[..2], &[0xFF, 0xD8]);
         Ok(())
     }

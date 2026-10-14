@@ -64,7 +64,7 @@ mod win {
     }
 
     pub fn write_image(png: &[u8]) {
-        let Ok(image) = imaging::decode(png) else {
+        let Ok((image, _)) = imaging::decode(png) else {
             log::warn!("Zwischenablage: Bild nicht lesbar");
             return;
         };
@@ -86,6 +86,6 @@ mod win {
         let width = u32::try_from(data.width).ok()?;
         let height = u32::try_from(data.height).ok()?;
         let image = image::RgbaImage::from_raw(width, height, data.bytes.into_owned())?;
-        imaging::encode(&std::sync::Arc::new(image), Format::Png).ok()
+        imaging::encode(&std::sync::Arc::new(image), Format::Png, 1.0).ok()
     }
 }

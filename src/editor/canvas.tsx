@@ -443,6 +443,10 @@ export const EditorCanvas = ({
     <canvas
       className="canvas"
       height={doc.crop.height}
+      onMouseDown={(event) => {
+        // Sonst zieht der Klick den Fokus aus einem gerade geöffneten Textfeld.
+        event.preventDefault();
+      }}
       onPointerCancel={onPointerUp}
       onPointerDown={onPointerDown}
       onPointerLeave={() => {
