@@ -1,0 +1,607 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Screeni – Bildschirmfotos für macOS und Windows</title>
+    <meta
+      name="description"
+      content="Screeni nimmt Bildschirmfotos auf, markiert sie und gibt sie weiter – per Tastenkürzel, ohne Umwege. Für macOS 14 und Windows 10/11."
+    />
+    <meta name="theme-color" content="#0f1117" />
+    <link rel="icon" type="image/png" href="favicon.png" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <a class="brand" href="#top" aria-label="Screeni – zum Seitenanfang">
+        <img src="favicon.png" alt="" width="28" height="28" />
+        <span>Screeni</span>
+      </a>
+      <nav aria-label="Seitenbereiche">
+        <a href="#funktionen">Funktionen</a>
+        <a href="#anleitung">Anleitung</a>
+        <a href="#kuerzel">Kürzel</a>
+        <a href="#fragen">Fragen</a>
+        <a class="nav-download" href="#laden">Laden</a>
+      </nav>
+    </header>
+
+    <main id="top">
+      <section class="hero">
+        <div class="hero-text">
+          <p class="eyebrow">Für macOS und Windows</p>
+          <h1>
+            Bildschirmfotos.<br /><span class="gradient"
+              >Markiert und weitergegeben.</span
+            >
+          </h1>
+          <p class="lead">
+            Kürzel drücken, Bereich ziehen, Pfeil setzen, <kbd>Esc</kbd> – und
+            das Bild liegt in der Zwischenablage. Screeni lebt in der Menüleiste
+            und ist da, wenn du es brauchst.
+          </p>
+          <div class="cta">
+            <a class="button primary" href="downloads/Screeni.dmg" download>
+              <svg
+                aria-hidden="true"
+                viewBox="0 0 20 20"
+                width="20"
+                height="20"
+              >
+                <path
+                  d="M10 3v9m-3.5-3.5L10 12l3.5-3.5M4 14v2h12v-2"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.8"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
+              Für macOS laden
+            </a>
+            <a class="button ghost" href="downloads/Screeni-Setup.exe" download>
+              Für Windows laden
+            </a>
+          </div>
+          <p class="meta">
+            Version 0.1.1 · macOS 14 oder neuer (Apple-Chip und Intel) · Windows
+            10 und 11
+          </p>
+        </div>
+        <figure class="hero-shot">
+          <img
+            src="images/editor.jpg"
+            width="1400"
+            height="850"
+            alt="Der Screeni-Editor mit einem Pfeil, einem roten Rahmen, nummerierten Markierungen und gelbem Textmarker auf einer Projektübersicht"
+          />
+        </figure>
+      </section>
+
+      <section class="strip" aria-label="Kurz gesagt">
+        <div><strong>⇧⌘2</strong><span>Bereich aufnehmen</span></div>
+        <div><strong>11</strong><span>Werkzeuge im Editor</span></div>
+        <div>
+          <strong>100 %</strong><span>lokal – nichts verlässt deinen Mac</span>
+        </div>
+        <div><strong>0</strong><span>Konten, Anmeldungen oder Cloud</span></div>
+      </section>
+
+      <section id="funktionen" class="section">
+        <h2>Alles, was ein Bildschirmfoto braucht</h2>
+        <p class="section-lead">
+          Aufnehmen, erklären, teilen – in einem Fenster und mit der Tastatur.
+        </p>
+        <div class="features">
+          <article>
+            <div class="icon">
+              <svg viewBox="0 0 24 24">
+                <path d="M4 8V4h4M16 4h4v4M20 16v4h-4M8 20H4v-4" />
+                <circle cx="12" cy="12" r="2.2" />
+              </svg>
+            </div>
+            <h3>Jede Art von Aufnahme</h3>
+            <p>
+              Vollbild, Bereich mit Lupe für pixelgenaues Ansetzen, Fenster per
+              Klick samt Schatten, aktives Fenster und „Bereich wiederholen“ für
+              Vorher/Nachher.
+            </p>
+          </article>
+          <article>
+            <div class="icon">
+              <svg viewBox="0 0 24 24"><path d="M5 19L18 6M11 6h7v7" /></svg>
+            </div>
+            <h3>Markieren in Sekunden</h3>
+            <p>
+              Pfeile, Rahmen, Ovale, Linien, Freihand, Text und Etiketten. Jedes
+              Werkzeug hat eine eigene Taste – <kbd>A</kbd> für Pfeil,
+              <kbd>R</kbd> für Rechteck.
+            </p>
+          </article>
+          <article>
+            <div class="icon">
+              <svg viewBox="0 0 24 24">
+                <rect x="4" y="4" width="16" height="16" />
+                <path d="M4 9h16M4 14h16M9 4v16M14 4v16" />
+              </svg>
+            </div>
+            <h3>Persönliches unkenntlich</h3>
+            <p>
+              Namen, E-Mail-Adressen oder Passwörter verpixeln oder
+              weichzeichnen, bevor das Bild jemand anderes sieht.
+            </p>
+          </article>
+          <article>
+            <div class="icon">
+              <svg viewBox="0 0 24 24">
+                <circle cx="12" cy="12" r="8" />
+                <path d="M11 9l1.6-1v8" />
+              </svg>
+            </div>
+            <h3>Schritte nummerieren</h3>
+            <p>
+              Zähler setzen sich von selbst fort: 1, 2, 3. Dazu Spotlight, das
+              alles außer dem Wichtigen abdunkelt, und ein Textmarker.
+            </p>
+          </article>
+          <article>
+            <div class="icon">
+              <svg viewBox="0 0 24 24">
+                <path d="M4 7V4h3M17 4h3v3M20 17v3h-3M7 20H4v-3" />
+                <path d="M8 10h8M8 13h8M8 16h5" />
+              </svg>
+            </div>
+            <h3>Text und QR-Codes</h3>
+            <p>
+              Bereich wählen, Text ist kopiert. Funktioniert mit
+              Fehlermeldungen, Videos, PDFs und QR-Codes – erkannt direkt auf
+              dem Mac.
+            </p>
+          </article>
+          <article>
+            <div class="icon">
+              <svg viewBox="0 0 24 24">
+                <path d="M15 4l5 5-3.5 1-3.5 3.5.6 4L7 10.9l4 .6L14.5 8z" />
+                <path d="M8.5 15.5L4 20" />
+              </svg>
+            </div>
+            <h3>Anpinnen</h3>
+            <p>
+              Ein Bild schwebt über allen Fenstern – zum Abtippen, Vergleichen
+              oder als Spickzettel. 50, 100 oder 200 %, auf Wunsch
+              halbtransparent.
+            </p>
+          </article>
+          <article>
+            <div class="icon">
+              <svg viewBox="0 0 24 24">
+                <circle cx="12" cy="12" r="3" />
+                <path d="M12 3v3M12 18v3M3 12h3M18 12h3" />
+              </svg>
+            </div>
+            <h3>Farben aufnehmen</h3>
+            <p>
+              Die Farbe unter dem Mauszeiger steht immer oben rechts.
+              <kbd>Tab</kbd> kopiert sie als HEX, RGB, CSS oder OKLCH.
+            </p>
+          </article>
+          <article>
+            <div class="icon">
+              <svg viewBox="0 0 24 24">
+                <path d="M12 4v11M8 11l4 4 4-4M5 18v2h14v-2" />
+              </svg>
+            </div>
+            <h3>Klug speichern</h3>
+            <p>
+              Oberflächen als PNG, Fotos als JPEG – automatisch. Retina-Bilder
+              auf Wunsch in Originalgröße, Dateinamen mit Datum und Uhrzeit.
+            </p>
+          </article>
+          <article>
+            <div class="icon">
+              <svg viewBox="0 0 24 24">
+                <rect x="3" y="7" width="18" height="11" rx="2" />
+                <path d="M7 11h1M11 11h1M15 11h2M7 14h10" />
+              </svg>
+            </div>
+            <h3>Deine Kürzel</h3>
+            <p>
+              Alle Aufnahmen auf Tasten, die zu dir passen – auch
+              <kbd>⇧⌘4</kbd>, wenn du die Systemkürzel abschaltest.
+            </p>
+          </article>
+        </div>
+      </section>
+
+      <section id="anleitung" class="section">
+        <h2>So geht's – in fünf Schritten</h2>
+        <p class="section-lead">
+          Vom Download bis zum ersten markierten Bildschirmfoto dauert es keine
+          zwei Minuten.
+        </p>
+
+        <ol class="steps">
+          <li class="step">
+            <div class="step-text">
+              <span class="step-number">1</span>
+              <h3>Installieren</h3>
+              <p>
+                Lade <a href="downloads/Screeni.dmg" download>Screeni.dmg</a>,
+                öffne die Datei und zieh Screeni in den Ordner
+                <strong>Programme</strong>.
+              </p>
+              <p class="note">
+                Meldet macOS „Screeni.dmg“ bzw. „Screeni“
+                <em>nicht geöffnet</em>, klick auf <strong>Fertig</strong>.
+                Öffne dann
+                <em>Systemeinstellungen → Datenschutz &amp; Sicherheit</em>,
+                scroll nach unten und klick bei Screeni auf
+                <strong>„Dennoch öffnen“</strong>. Das ist einmal für die DMG
+                und einmal beim ersten Start der App nötig. Grund: Screeni ist
+                nicht bei Apple notarisiert.
+              </p>
+              <p class="note">
+                <strong>Windows:</strong> Lade
+                <a href="downloads/Screeni-Setup.exe" download
+                  >Screeni-Setup.exe</a
+                >
+                und führ die Datei aus. Zeigt Windows „Der Computer wurde durch
+                Windows geschützt“, klick auf
+                <strong>Weitere Informationen → Trotzdem ausführen</strong>.
+                Danach liegt Screeni im Startmenü und im Infobereich der
+                Taskleiste.
+              </p>
+            </div>
+            <div class="step-visual" aria-hidden="true">
+              <div class="dmg">
+                <div class="dmg-item">
+                  <img src="favicon.png" alt="" width="64" height="64" /><span
+                    >Screeni</span
+                  >
+                </div>
+                <svg class="dmg-arrow" viewBox="0 0 120 40">
+                  <path
+                    d="M8 20h96m-14-12l14 12-14 12"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="4"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                </svg>
+                <div class="dmg-item">
+                  <div class="folder"></div>
+                  <span>Programme</span>
+                </div>
+              </div>
+            </div>
+          </li>
+
+          <li class="step">
+            <div class="step-text">
+              <span class="step-number">2</span>
+              <h3>Bildschirmaufnahme erlauben</h3>
+              <p>
+                Drück <kbd>⇧⌘1</kbd>. macOS fragt nach der Berechtigung, Screeni
+                zeigt dazu einen Hinweis. Schalte Screeni unter
+                <em
+                  >Datenschutz &amp; Sicherheit → Bildschirm- &amp;
+                  Systemaudioaufnahme</em
+                >
+                ein und klick auf <strong>Neu starten</strong>.
+              </p>
+              <p class="note">
+                Ohne diese Freigabe zeigt macOS Apps nur den
+                Schreibtischhintergrund. Screeni nimmt dann gar nicht erst auf
+                und erinnert dich stattdessen.
+              </p>
+            </div>
+            <div class="step-visual" aria-hidden="true">
+              <div class="pane">
+                <div class="pane-title">
+                  Bildschirm- &amp; Systemaudioaufnahme
+                </div>
+                <div class="pane-row">
+                  <span class="app-dot muted"></span>Browser<span
+                    class="toggle"
+                  ></span>
+                </div>
+                <div class="pane-row highlight">
+                  <img
+                    src="favicon.png"
+                    alt=""
+                    width="22"
+                    height="22"
+                  />Screeni<span class="toggle on"></span>
+                </div>
+                <div class="pane-row">
+                  <span class="app-dot muted"></span>Videokonferenz<span
+                    class="toggle on"
+                  ></span>
+                </div>
+              </div>
+            </div>
+          </li>
+
+          <li class="step">
+            <div class="step-text">
+              <span class="step-number">3</span>
+              <h3>Aufnehmen</h3>
+              <p>
+                Mit <kbd>⇧⌘2</kbd> wird der Bildschirm eingefroren. Zieh einen
+                Rahmen auf – Lupe und Maße helfen beim genauen Ansetzen.
+                <kbd>Esc</kbd> bricht ab.
+              </p>
+              <p>
+                Für ganze Fenster wählst du im Menüleisten-Symbol
+                <strong>„Fenster wählen …“</strong> und klickst das gewünschte
+                Fenster an.
+              </p>
+            </div>
+            <div class="step-visual" aria-hidden="true">
+              <div class="capture">
+                <img src="images/editor.jpg" alt="" />
+                <div class="capture-shade"></div>
+                <div class="capture-box"><span>812 × 340</span></div>
+                <div class="capture-loupe"></div>
+              </div>
+            </div>
+          </li>
+
+          <li class="step">
+            <div class="step-text">
+              <span class="step-number">4</span>
+              <h3>Markieren</h3>
+              <p>
+                Der Editor öffnet sich mit deiner Aufnahme. Wähl ein Werkzeug
+                per Klick oder Taste, setz Pfeile, Rahmen und Zähler. Farbe und
+                Stärke stellst du darunter ein.
+              </p>
+              <ul class="keys">
+                <li><kbd>A</kbd> Pfeil</li>
+                <li><kbd>T</kbd> Text</li>
+                <li><kbd>R</kbd> Rechteck</li>
+                <li><kbd>H</kbd> Textmarker</li>
+                <li><kbd>B</kbd> Verpixeln</li>
+                <li><kbd>C</kbd> Zähler</li>
+                <li><kbd>↩</kbd> Zuschneiden</li>
+                <li><kbd>⌘Z</kbd> Widerrufen</li>
+              </ul>
+            </div>
+            <div class="step-visual">
+              <img
+                class="shot"
+                src="images/editor.jpg"
+                width="1400"
+                height="850"
+                alt="Editor mit Werkzeugleiste und markierter Projektübersicht"
+                loading="lazy"
+              />
+            </div>
+          </li>
+
+          <li class="step">
+            <div class="step-text">
+              <span class="step-number">5</span>
+              <h3>Weitergeben</h3>
+              <p>
+                Drück <kbd>Esc</kbd> – das Bild wird kopiert und der Editor
+                schließt. In Mail, Chat oder Ticket fügst du es mit
+                <kbd>⌘V</kbd> ein.
+              </p>
+              <p>
+                <kbd>⌘S</kbd> speichert auf dem Schreibtisch,
+                <kbd>⌘P</kbd> pinnt das Bild über alle Fenster,
+                <kbd>⇧⌘T</kbd> erkennt den Text darin.
+              </p>
+            </div>
+            <div class="step-visual" aria-hidden="true">
+              <div class="share">
+                <div class="share-card"><kbd>Esc</kbd><span>kopiert</span></div>
+                <div class="share-card">
+                  <kbd>⌘S</kbd><span>speichert</span>
+                </div>
+                <div class="share-card"><kbd>⌘P</kbd><span>pinnt an</span></div>
+                <div class="share-card">
+                  <kbd>⇧⌘T</kbd><span>liest Text</span>
+                </div>
+              </div>
+            </div>
+          </li>
+        </ol>
+      </section>
+
+      <section class="section">
+        <h2>Einstellen, wie du arbeitest</h2>
+        <p class="section-lead">
+          Speicherort, Format, was nach der Aufnahme passiert und jedes Kürzel –
+          erreichbar über das Menüleisten-Symbol oder <kbd>⌘,</kbd>.
+        </p>
+        <div class="gallery">
+          <figure>
+            <img
+              src="images/settings-general.jpg"
+              width="1140"
+              height="1064"
+              alt="Einstellungen, Reiter Allgemein: Ordner, Format, Verhalten nach der Aufnahme, Autostart"
+              loading="lazy"
+            />
+            <figcaption>Allgemein</figcaption>
+          </figure>
+          <figure>
+            <img
+              src="images/settings-shortcuts.jpg"
+              width="1140"
+              height="1064"
+              alt="Einstellungen, Reiter Tastenkürzel mit Feldern für alle Aufnahmearten"
+              loading="lazy"
+            />
+            <figcaption>Tastenkürzel</figcaption>
+          </figure>
+          <figure>
+            <img
+              src="images/settings-advanced.jpg"
+              width="1140"
+              height="1064"
+              alt="Einstellungen, Reiter Erweitert: Mauszeiger, Texterkennung, Esc-Verhalten, Farbformat"
+              loading="lazy"
+            />
+            <figcaption>Erweitert</figcaption>
+          </figure>
+        </div>
+      </section>
+
+      <section id="kuerzel" class="section">
+        <h2>Die wichtigsten Kürzel</h2>
+        <div class="shortcut-grid">
+          <div>
+            <h3>Überall</h3>
+            <dl>
+              <div>
+                <dt><kbd>⇧⌘1</kbd></dt>
+                <dd>Vollbild aufnehmen</dd>
+              </div>
+              <div>
+                <dt><kbd>⇧⌘2</kbd></dt>
+                <dd>Bereich aufnehmen</dd>
+              </div>
+              <div>
+                <dt><kbd>⌃⌥⌘O</kbd></dt>
+                <dd>Text oder QR-Code erkennen</dd>
+              </div>
+            </dl>
+            <p class="note">
+              Weitere Aufnahmen – Fenster, aktives Fenster, Bereich wiederholen
+              – belegst du in den Einstellungen.
+            </p>
+          </div>
+          <div>
+            <h3>Im Editor</h3>
+            <dl>
+              <div>
+                <dt><kbd>Esc</kbd></dt>
+                <dd>Kopieren und schließen</dd>
+              </div>
+              <div>
+                <dt><kbd>⌘S</kbd></dt>
+                <dd>Sichern</dd>
+              </div>
+              <div>
+                <dt><kbd>⌘P</kbd></dt>
+                <dd>Anpinnen</dd>
+              </div>
+              <div>
+                <dt><kbd>⇧⌘T</kbd></dt>
+                <dd>Text erkennen</dd>
+              </div>
+              <div>
+                <dt><kbd>↩</kbd></dt>
+                <dd>Auf Auswahl zuschneiden</dd>
+              </div>
+              <div>
+                <dt><kbd>Tab</kbd></dt>
+                <dd>Farbe unter dem Mauszeiger kopieren</dd>
+              </div>
+              <div>
+                <dt><kbd>⌘0</kbd> <kbd>⌘1</kbd></dt>
+                <dd>100 % · Einpassen</dd>
+              </div>
+            </dl>
+          </div>
+        </div>
+      </section>
+
+      <section id="fragen" class="section faq">
+        <h2>Fragen</h2>
+        <details>
+          <summary>Schickt Screeni Daten ins Internet?</summary>
+          <p>
+            Nein. Aufnahmen, Texterkennung und Einstellungen bleiben auf deinem
+            Mac. Es gibt keine Konten, keine Statistiken und keine Cloud.
+          </p>
+        </details>
+        <details>
+          <summary>Was ist unter Windows anders?</summary>
+          <p>
+            Die Kürzel nutzen Strg statt ⌘, also Strg+Umschalt+1 für Vollbild
+            und Strg+Umschalt+2 für einen Bereich. Screeni sitzt im Infobereich
+            der Taskleiste statt in der Menüleiste. Eine Freigabe für die
+            Bildschirmaufnahme braucht Windows nicht. Die Texterkennung nutzt
+            die Sprachen, die in Windows installiert sind.
+          </p>
+        </details>
+        <details>
+          <summary>Warum fragt macOS nach der Bildschirmaufnahme?</summary>
+          <p>
+            macOS schützt den Bildschirminhalt vor Apps. Ohne Freigabe sähe
+            Screeni nur den Schreibtischhintergrund. Die Freigabe gibst du
+            einmal unter
+            <em
+              >Datenschutz &amp; Sicherheit → Bildschirm- &amp;
+              Systemaudioaufnahme</em
+            >.
+          </p>
+        </details>
+        <details>
+          <summary>
+            Der Hinweis zur Bildschirmaufnahme kommt immer wieder.
+          </summary>
+          <p>
+            Entferne Screeni in der Liste mit „−“, erlaube es neu und starte
+            Screeni neu. Alternativ im Terminal:
+            <code>tccutil reset ScreenCapture de.villalife.screeni</code>
+          </p>
+        </details>
+        <details>
+          <summary>Ein Kürzel reagiert nicht.</summary>
+          <p>
+            Eine andere App nutzt dieselbe Kombination. Screeni meldet das in
+            den Einstellungen unter den Kürzeln – wähl dort eine andere
+            Kombination.
+          </p>
+        </details>
+        <details>
+          <summary>Ich sehe das Symbol in der Menüleiste nicht.</summary>
+          <p>
+            Bei vielen Symbolen blendet macOS manche hinter der
+            Kamera-Aussparung aus. Die Kürzel funktionieren trotzdem; schaff in
+            der Menüleiste Platz oder nutze ein Tool zum Sortieren der
+            Menüleiste.
+          </p>
+        </details>
+      </section>
+
+      <section id="laden" class="final">
+        <h2>Bereit für dein nächstes Bildschirmfoto?</h2>
+        <div class="cta">
+          <a class="button primary" href="downloads/Screeni.dmg" download
+            >Für macOS laden</a
+          >
+          <a class="button primary" href="downloads/Screeni-Setup.exe" download
+            >Für Windows laden</a
+          >
+        </div>
+        <p class="meta">
+          macOS 14 oder neuer (Apple-Chip und Intel) · Windows 10 und 11
+        </p>
+        <p class="meta">
+          Unter Windows heißen die Kürzel Strg statt ⌘ – z. B. Strg+Umschalt+2
+          für einen Bereich.
+        </p>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <span>
+        © 2026 Jascha Coenen · <a href="license.txt">MIT-Lizenz</a> ·
+        <a href="https://github.com/JaschaaON/screeni">Quellcode auf GitHub</a>
+      </span>
+      <span>
+        <a href="third-party-notices.txt">Lizenzen der Drittsoftware</a> ·
+        <a href="impressum.html">Impressum</a> ·
+        <a href="datenschutz.html">Datenschutz</a>
+      </span>
+    </footer>
+  </body>
+</html>

@@ -1,0 +1,48 @@
+{
+  "name": "screeni",
+  "version": "0.1.1",
+  "private": true,
+  "license": "MIT",
+  "author": "Jascha Coenen",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "tauri": "tauri",
+    "lint": "oxlint && oxfmt --check",
+    "fix": "oxlint --fix && oxfmt",
+    "typecheck": "tsc",
+    "test": "vitest run",
+    "rust:fmt": "cargo fmt --manifest-path src-tauri/Cargo.toml --check",
+    "rust:clippy": "cargo clippy --manifest-path src-tauri/Cargo.toml --all-targets -- -D warnings",
+    "rust:test": "cargo test --manifest-path src-tauri/Cargo.toml",
+    "check": "pnpm lint && pnpm typecheck && pnpm rust:fmt && pnpm rust:clippy && pnpm rust:clippy:windows && pnpm test && pnpm rust:test",
+    "prepare": "lefthook install",
+    "rust:clippy:windows": "PATH=\"/opt/homebrew/opt/llvm/bin:$PATH\" cargo clippy --manifest-path src-tauri/Cargo.toml --target x86_64-pc-windows-msvc --all-targets -- -D warnings",
+    "notices": "node --experimental-strip-types scripts/notices.ts"
+  },
+  "dependencies": {
+    "@tauri-apps/api": "^2.12.3",
+    "@tauri-apps/plugin-dialog": "^2.8.2",
+    "react": "^19.3.0",
+    "react-dom": "^19.3.0"
+  },
+  "devDependencies": {
+    "@tauri-apps/cli": "^2.12.2",
+    "@testing-library/dom": "^10.4.2",
+    "@testing-library/react": "^16.3.3",
+    "@types/node": "^22.20.5",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "@vitejs/plugin-react": "^6.1.2",
+    "jsdom": "^30.1.2",
+    "lefthook": "^2.2.1",
+    "oxfmt": "^0.72.0",
+    "oxlint": "^1.87.0",
+    "oxlint-tsgolint": "^7.0.2004",
+    "typescript": "^7.0.2",
+    "ultracite": "^8.0.0",
+    "vite": "^8.3.4",
+    "vitest": "^5.0.4"
+  }
+}

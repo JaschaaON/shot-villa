@@ -1,0 +1,15 @@
+# Compose-Stack für die Website. Das Image baut GitHub Actions bei jedem Push bzw. Release.
+services:
+  website:
+    image: ghcr.io/jaschaaon/screeni-web:latest
+    restart: unless-stopped
+    ports:
+      # Nur lokal erreichbar; davor sitzt ein Reverse Proxy. Nie auf 0.0.0.0 binden.
+      - "127.0.0.1:8098:80"
+    # Zugriffsprotokolle begrenzen; ältere Einträge werden überschrieben
+    # (so in der Datenschutzerklärung beschrieben).
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
