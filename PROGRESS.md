@@ -47,16 +47,16 @@ Legende: ☐ offen · ◐ implementiert, Tests grün, Praxistest offen · ☑ fe
 | E5 | px/pt | ◐ | Klick auf die Größenanzeige |
 | E6 | Pipette + Farbformate | ☑ | HEX, RGB, CSS rgba, OKLCH; Klick wechselt Format, Tab kopiert |
 | E10 | Undo/Redo | ☑ | ⌘Z / ⇧⌘Z, Ziehbewegungen als ein Schritt, 100 Schritte |
-| T1–T10 | Werkzeuge | ◐ | Geprüft: Pfeil, Text, Rechteck, Textmarker (Rechteck ziehen), Unkenntlich, Spotlight, Zähler. Textwerkzeug war defekt (Klick nahm dem neuen Textfeld den Fokus, Text verschwand) – behoben. Oval, Linie, Freihand noch ungeprüft |
+| T1–T10 | Werkzeuge | ☑ | Alle zehn in der App geprüft. Textwerkzeug war defekt (Klick nahm dem neuen Textfeld den Fokus, Text verschwand) – behoben |
 | T1–T10 (Detail) | Werkzeuge | ◐ | Pfeil, Text, Rechteck, Oval, Linie, Freihand, Textmarker, Verpixeln/Weichzeichnen, Spotlight, Zähler; Einzeltasten A T R O L D H B S C, V = Auswahl; ⇧ = 45°/Quadrat |
 | T16 | Zuschneiden | ☑ | Auswahl ziehen, ↩; Zuschnitt zurücksetzen im Menü |
 | T20 | Markierungen bearbeiten | ◐ | Auswählen, Verschieben, Griffe, Pfeiltasten (⇧ = 10 pt), ⌘D, Entf |
 | T21 | Farbwahl | ◐ | Eigene Palette + Systemfarbwähler |
 | X1–X4 | Kopieren, Sichern, Sichern unter, Format | ◐ | ⇧⌘C/Esc, ⌘S, ⇧⌘S; PNG oder Auto (PNG/JPEG-Heuristik) |
 | X5 | Drag-out | ☐ | Braucht natives Ziehen aus der Web-Ansicht – folgt |
-| X7 | Pin | ☑ | Rahmenlos, immer vorne, Rechtsklick: 50/100/200 %, halbtransparent, Kopieren, Schließen; Rechtsklickmenü ungeprüft |
+| X7 | Pin | ☑ | Rahmenlos, immer vorne, Rechtsklick: 50/100/200 %, halbtransparent, Kopieren, Schließen; Rechtsklickmenü (50/100/200 %, halbtransparent, Schließen) geprüft |
 | X10 | Metadaten | ☑ | xattr `kMDItemIsScreenCapture` (Test vorhanden) |
-| O1–O4 | OCR/QR | ◐ | Vision lokal, Zeilen in Lesereihenfolge, Zeilenumbrüche entfernen, QR/Barcode |
+| O1–O4 | OCR/QR | ☑ | Vision lokal, Zeilen in Lesereihenfolge, Zeilenumbrüche entfernen, QR/Barcode |
 | M1 | Menüleisten-Icon | ☑ | Alle Aufnahmen, OCR, Zwischenablage, Öffnen, Editor, Einstellungen, Beenden; zeigt Kürzel |
 | M2 | Dock-Icon nur bei offenem Fenster | ◐ | |
 | M3 | Autostart | ◐ | `SMAppService` bzw. Registry (Windows) |
@@ -65,7 +65,7 @@ Legende: ☐ offen · ◐ implementiert, Tests grün, Praxistest offen · ☑ fe
 
 ## Praxistest 2026-10-14 (macOS 27, installierte App)
 
-Geprüft und in Ordnung: Vollbild, Bereich, Bereich wiederholen, Fenster wählen, Aktives Fenster, Aus Zwischenablage, Texterkennung (Editor und Bereich), Editor-Werkzeuge (s. o.), Zuschneiden, Undo/Redo, Pipette, Sichern (Retina, Bildschirmfoto-Kennzeichnung), Kopieren (schließt Editor), Anpinnen (Verschieben, Esc), Mini-Vorschau (Sichern, Bearbeiten), Kürzel-Recorder, globale Kürzel, „Öffnen mit“ beim Kaltstart.
+Geprüft und in Ordnung: Vollbild, Bereich, Bereich wiederholen, Fenster wählen, Aktives Fenster, Aus Zwischenablage, Texterkennung (Editor und Bereich), alle Editor-Werkzeuge, QR-Code, Pin-Kontextmenü, Reiter „Erweitert“, Zuschneiden, Undo/Redo, Pipette, Sichern (Retina, Bildschirmfoto-Kennzeichnung), Kopieren (schließt Editor), Anpinnen (Verschieben, Esc), Mini-Vorschau (Sichern, Bearbeiten), Kürzel-Recorder, globale Kürzel, „Öffnen mit“ beim Kaltstart.
 
 Dabei gefunden und behoben:
 - Textwerkzeug: Eingabefeld verlor sofort den Fokus.
@@ -73,7 +73,7 @@ Dabei gefunden und behoben:
 - Absturz beim Start per „Öffnen mit“.
 - Bilder aus der Zwischenablage/Dateien erschienen doppelt so groß (Pixeldichte fehlte).
 
-Noch nicht in der App geprüft: Oval, Linie, Freihand, Sichern unter, QR-Code, Drag & Drop, „Öffnen …“-Dialog, Pin-Rechtsklickmenü, Reiter „Erweitert“, Windows-Version.
+Noch nicht in der App geprüft: Sichern unter, Drag & Drop ins Editorfenster, „Öffnen …“-Dialog, Sichtbarkeit der Mitteilungs-Banner (Zustellung laut Systemprotokoll ok), Windows-Version.
 
 ## Entscheidungen / Hinweise
 
