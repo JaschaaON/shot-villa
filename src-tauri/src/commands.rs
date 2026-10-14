@@ -282,10 +282,13 @@ pub fn export_shot(
 
 /// Erkennt Text im übergebenen Bildausschnitt (PNG) und kopiert ihn.
 #[tauri::command]
-pub async fn recognize_text(request: Request<'_>, app: AppHandle) -> CommandResult {
+pub async fn recognize_text(
+    request: Request<'_>,
+    app: AppHandle,
+) -> CommandResult<actions::Recognized> {
     let (png, ScaleParams { .. }) = raw_request(&request)?;
     let image = imaging::decode(&png).map_err(text)?;
-    actions::recognize_into_clipboard(&app, &image).map_err(text)
+    actions::recognize_to_clipboard(&app, &image).map_err(text)
 }
 
 /// Pinnt ein gerendertes Bild an den Bildschirm.

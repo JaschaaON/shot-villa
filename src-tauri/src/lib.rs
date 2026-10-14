@@ -8,6 +8,7 @@ mod files;
 mod hotkeys;
 mod imaging;
 mod menu;
+mod notify;
 mod ocr;
 mod output;
 mod permission;
@@ -16,7 +17,14 @@ mod shots;
 mod tray;
 mod windows;
 
+use std::path::PathBuf;
+use std::sync::Mutex;
+
 use tauri::{App, AppHandle, Manager, RunEvent, Window, WindowEvent};
+
+/// Dateien, die macOS schon vor dem Ende von `setup` zum Öffnen übergibt.
+#[derive(Default)]
+struct PendingFiles(Mutex<Vec<PathBuf>>);
 
 pub fn run() {
     let builder = tauri::Builder::default();
@@ -24,7 +32,9 @@ pub fn run() {
     #[cfg(target_os = "macos")]
     let builder = builder.menu(menu::build);
     #[cfg(windows)]
-    let builder = builder.plugin(tauri_plugin_autostart::Builder::new().build());
+    let builder = builder
+        .plugin(tauri_plugin_autostart::Builder::new().build())
+        .plugin(tauri_plugin_notification::init());
 
     let app = builder
         .plugin(
@@ -34,9 +44,9 @@ pub fn run() {
         )
         .plugin(tauri_plugin_global_shortcut::Builder::new().build())
         .plugin(tauri_plugin_dialog::init())
-        .plugin(tauri_plugin_notification::init())
         .manage(shots::Shots::default())
         .manage(actions::Session::default())
+        .manage(PendingFiles::default())
         .on_menu_event(|app, event| menu::handle(app, &event))
         .setup(setup)
         .on_window_event(on_window_event)
@@ -93,10 +103,13 @@ fn on_run_event(app: &AppHandle, event: RunEvent) {
             api, code: None, ..
         } => api.prevent_exit(),
         RunEvent::Opened { urls } => {
-            if let Some(path) = urls.iter().find_map(|url| url.to_file_path().ok())
-                && let Err(error) = actions::open_file(app, &path)
-            {
-                log::error!("{error}");
+            if let Some(path) = urls.iter().find_map(|url| url.to_file_path().ok()) {
+                // Beim Start per „Öffnen mit“ kommt die Datei vor `setup`.
+                if app.try_state::<settings::Store>().is_some() {
+                    open_file(app, &path);
+                } else if let Ok(mut pending) = app.state::<PendingFiles>().0.lock() {
+                    pending.push(path);
+                }
             }
         }
         _ => {}
@@ -120,6 +133,7 @@ fn setup(app: &mut App) -> Result<(), Box<dyn std::error::Error>> {
         }
     }
     app.manage(store);
+    notify::init();
     if first_start {
         windows::show_welcome(app.handle())?;
     }
@@ -129,13 +143,27 @@ fn setup(app: &mut App) -> Result<(), Box<dyn std::error::Error>> {
     }
     // Unter Windows kommt eine per „Öffnen mit“ gewählte Datei als Argument.
     #[cfg(windows)]
-    if let Some(path) = std::env::args_os().nth(1).map(std::path::PathBuf::from)
+    if let Some(path) = std::env::args_os().nth(1).map(PathBuf::from)
         && path.is_file()
-        && let Err(error) = actions::open_file(app.handle(), &path)
     {
-        log::error!("{error}");
+        open_file(app.handle(), &path);
+    }
+    let pending = app
+        .state::<PendingFiles>()
+        .0
+        .lock()
+        .map(|mut pending| std::mem::take(&mut *pending))
+        .unwrap_or_default();
+    for path in pending {
+        open_file(app.handle(), &path);
     }
     Ok(())
+}
+
+fn open_file(app: &AppHandle, path: &std::path::Path) {
+    if let Err(error) = actions::open_file(app, path) {
+        log::error!("{error}");
+    }
 }
 
 /// Editor und Einstellungen nur verstecken; beim Schließen aufräumen.

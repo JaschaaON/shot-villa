@@ -34,14 +34,14 @@ Legende: ☐ offen · ◐ implementiert, Tests grün, Praxistest offen · ☑ fe
 | C6 | Fenster wählen | ◐ | Overlay hebt Fenster unter dem Mauszeiger hervor (App + Titel), Klick nimmt auf |
 | C11 | Mauszeiger | ◐ | Auto (nur Vollbild) / immer / nie |
 | C12 | Aus Zwischenablage | ◐ | PNG oder TIFF; Menü + ⇧⌘V |
-| C13 | Datei öffnen / Drag & Drop / „Öffnen mit“ | ◐ | Dialog, Ziehen ins Editorfenster, Dateizuordnung des Systems |
-| C14 | Instant-OCR/QR | ◐ | Bereich wählen → Text bzw. QR-Inhalt in die Zwischenablage + Mitteilung |
+| C13 | Datei öffnen / Drag & Drop / „Öffnen mit“ | ◐ | Dialog, Ziehen ins Editorfenster, Dateizuordnung des Systems; Absturz beim Kaltstart per „Öffnen mit“ behoben (Datei wird bis Ende des Starts zurückgestellt), Kaltstart geprüft |
+| C14 | Instant-OCR/QR | ◐ | Bereich wählen → Text bzw. QR-Inhalt in die Zwischenablage + Mitteilung; Auswahl übersteht jetzt auch sehr schnelles Ziehen |
 | C15 | Retina / 1×-Export | ◐ | Einstellung „Beim Speichern auf 1× verkleinern“ |
 | A1 | Nach der Aufnahme | ◐ | Zeigen / Kopieren / Speichern kombinierbar |
 | A2 | Mini-Vorschau | ◐ | Unten rechts; Kopieren, Speichern, Bearbeiten, Schließen; Schließen manuell oder bei Klick daneben |
 | A4 | Esc-Verhalten | ◐ | Kopieren-Knopf schließt den Editor bzw. die Vorschau ebenfalls (Wunsch 2026-10-14). |
 | A4 (Detail) | Esc-Verhalten | ◐ | Esc im Editor: optional kopieren/speichern, dann schließen |
-| A5 | Mitteilungen | ◐ | Systemmitteilungen; im Editor zusätzlich Hinweise im Fenster |
+| A5 | Mitteilungen | ◐ | macOS: eigenes UserNotifications-Framework (vorher kamen keine Mitteilungen an), Banner auch im Vordergrund; Windows: Toast. Editor: „Text erkennen“ zeigt jetzt „Text kopiert: …“ bzw. „Kein Text erkannt“ im Fenster (im Editor geprüft) |
 | E1 | Editor-Fenster | ◐ | Werkzeugleiste in der Titelleiste, Infos rechts (Farbe, Größe, Zoom) |
 | E2 | Zoom | ◐ | Einpassen, 100 %, ⌘+/⌘−/⌘0/⌘1, Pinch/⌘-Scrollrad; „100 % bevorzugen“ |
 | E5 | px/pt | ◐ | Klick auf die Größenanzeige |

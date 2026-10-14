@@ -20,7 +20,6 @@ tauri = { version = "2.12", features = ["tray-icon", "image-png", "macos-private
 tauri-plugin-global-shortcut = "2.4"
 tauri-plugin-log = "2"
 tauri-plugin-dialog = "2"
-tauri-plugin-notification = "2"
 chrono = { version = "0.4", default-features = false, features = ["clock", "std"] }
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"
@@ -39,12 +38,14 @@ objc2-screen-capture-kit = "0.3"
 objc2-image-io = "0.3"
 objc2-vision = "0.3"
 objc2-service-management = "0.3"
+objc2-user-notifications = "0.3"
 
 [target.'cfg(windows)'.dependencies]
 arboard = "3.6"
 image = { version = "0.25", default-features = false, features = ["png", "jpeg", "gif", "bmp", "tiff", "webp"] }
 rqrr = "0.11"
 tauri-plugin-autostart = "2"
+tauri-plugin-notification = "2"
 xcap = "0.9"
 windows = { version = "0.62", features = [
   "Foundation",

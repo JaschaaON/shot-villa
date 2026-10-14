@@ -3,11 +3,10 @@
 use std::path::{Path, PathBuf};
 
 use tauri::AppHandle;
-use tauri_plugin_notification::NotificationExt;
 
 use crate::imaging::{self, Format, Image, ImageError};
 use crate::settings::{SaveFormat, Settings};
-use crate::{clipboard, files};
+use crate::{clipboard, files, notify};
 
 #[derive(Debug, thiserror::Error)]
 pub enum OutputError {
@@ -91,9 +90,7 @@ fn scaled_size(width: usize, height: usize, scale: f64) -> (usize, usize) {
 }
 
 pub fn notify(app: &AppHandle, title: &str, body: &str) {
-    if let Err(error) = app.notification().builder().title(title).body(body).show() {
-        log::warn!("Benachrichtigung fehlgeschlagen: {error}");
-    }
+    notify::show(app, title, body);
 }
 
 #[cfg(test)]

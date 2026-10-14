@@ -29,6 +29,7 @@ import { createDoc } from "../editor/model";
 import type { Doc, Rect } from "../editor/model";
 import { Options } from "../editor/options";
 import { PixelReader } from "../editor/pixels";
+import { recognitionMessage } from "../editor/recognition";
 import { editorReducer, initialState } from "../editor/state";
 import { TextEditor } from "../editor/text-editor";
 import { TOOLS, toolForKey } from "../editor/tools";
@@ -45,7 +46,7 @@ const STAGE_PADDING = 32;
 const ZOOM_STEP = 1.25;
 const MIN_ZOOM = 0.05;
 const MAX_ZOOM = 16;
-const TOAST_MS = 1800;
+const TOAST_MS = 3000;
 const NUDGE_FAST = 10;
 
 type ZoomMode = "fit" | number;
@@ -208,8 +209,16 @@ const Workspace = ({ shot, settings }: WorkspaceProps) => {
 
   const recognize = async () => {
     const area = region();
-    if (area.width >= 1 && area.height >= 1) {
-      await recognizeText(await cropPng(shot.image, area));
+    if (area.width < 1 || area.height < 1) {
+      return;
+    }
+    setToast("Text wird erkannt …");
+    try {
+      setToast(
+        recognitionMessage(await recognizeText(await cropPng(shot.image, area)))
+      );
+    } catch (error) {
+      setToast(String(error));
     }
   };
 

@@ -422,30 +422,60 @@ fn select_window(app: &AppHandle, id: u32) -> ActionResult {
     deliver(app, &shot.image, shot.scale, Kind::Window, screen)
 }
 
+/// Was die Texterkennung gefunden hat.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize)]
+#[serde(rename_all = "camelCase")]
+pub enum Found {
+    Text,
+    Code,
+    Nothing,
+}
+
+#[derive(Debug, Clone, Serialize)]
+pub struct Recognized {
+    pub found: Found,
+    pub text: String,
+}
+
 /// Erkennt Text und QR-Codes und legt das Ergebnis in die Zwischenablage.
-pub fn recognize_into_clipboard(app: &AppHandle, image: &Image) -> ActionResult {
+pub fn recognize_to_clipboard(app: &AppHandle, image: &Image) -> Result<Recognized, ocr::OcrError> {
     let recognition = ocr::recognize(image)?;
     let remove_breaks = app.state::<Store>().get().ocr_remove_line_breaks;
-    let text = if recognition.codes.is_empty() {
-        ocr::join_lines(&recognition.lines, remove_breaks)
+    let (found, text) = if recognition.codes.is_empty() {
+        (
+            Found::Text,
+            ocr::join_lines(&recognition.lines, remove_breaks),
+        )
     } else {
-        recognition.codes.join("\n")
+        (Found::Code, recognition.codes.join("\n"))
     };
     if text.is_empty() {
-        output::notify(
-            app,
-            "Kein Text erkannt",
-            "Im gewählten Bereich wurde kein Text gefunden.",
-        );
-    } else {
-        clipboard::write_text(&text);
-        let title = if recognition.codes.is_empty() {
-            "Text kopiert"
-        } else {
-            "QR-Code kopiert"
-        };
-        output::notify(app, title, &preview(&text));
+        return Ok(Recognized {
+            found: Found::Nothing,
+            text,
+        });
     }
+    clipboard::write_text(&text);
+    Ok(Recognized { found, text })
+}
+
+/// Wie [`recognize_to_clipboard`], meldet das Ergebnis aber per Mitteilung –
+/// für Erkennung per Kürzel, wenn kein Fenster offen ist.
+pub fn recognize_into_clipboard(app: &AppHandle, image: &Image) -> ActionResult {
+    let recognized = recognize_to_clipboard(app, image)?;
+    let title = match recognized.found {
+        Found::Text => "Text kopiert",
+        Found::Code => "QR-Code kopiert",
+        Found::Nothing => {
+            output::notify(
+                app,
+                "Kein Text erkannt",
+                "Im gewählten Bereich wurde kein Text gefunden.",
+            );
+            return Ok(());
+        }
+    };
+    output::notify(app, title, &preview(&recognized.text));
     Ok(())
 }
 

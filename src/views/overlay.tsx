@@ -142,6 +142,8 @@ interface SelectorProps {
 const Selector = ({ info, image, onFinish }: SelectorProps) => {
   const [pointer, setPointer] = useState<Point | null>(null);
   const [start, setStart] = useState<Point | null>(null);
+  // Bei schnellem Ziehen kommt pointerup vor dem nächsten Rendern an.
+  const startRef = useRef<Point | null>(null);
   const { frame, scale } = info.display;
   const selection = start && pointer ? rectFromPoints(start, pointer) : null;
   const hovered =
@@ -160,13 +162,16 @@ const Selector = ({ info, image, onFinish }: SelectorProps) => {
           return;
         }
         event.currentTarget.setPointerCapture(event.pointerId);
-        setStart(toPoint(event));
+        startRef.current = toPoint(event);
+        setStart(startRef.current);
       }}
       onPointerMove={(event) => {
         setPointer(toPoint(event));
       }}
       onPointerUp={(event) => {
-        const rect = start ? rectFromPoints(start, toPoint(event)) : null;
+        const from = startRef.current;
+        const rect = from ? rectFromPoints(from, toPoint(event)) : null;
+        startRef.current = null;
         setStart(null);
         if (
           rect &&

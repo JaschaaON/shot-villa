@@ -160,9 +160,13 @@ export const exportImage = async (
 export const exportShot = async (id: number, target: ExportTarget) =>
   await invoke<string | null>("export_shot", { id, target });
 
-export const recognizeText = async (png: Uint8Array) => {
-  await invokeRaw("recognize_text", png, { scale: 1 });
-};
+export interface Recognized {
+  found: "text" | "code" | "nothing";
+  text: string;
+}
+
+export const recognizeText = async (png: Uint8Array) =>
+  await invokeRaw<Recognized>("recognize_text", png, { scale: 1 });
 
 export const pinImage = async (png: Uint8Array, scale: number) => {
   await invokeRaw("pin_image", png, { scale });
