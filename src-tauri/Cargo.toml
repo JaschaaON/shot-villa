@@ -1,6 +1,6 @@
 [package]
-name = "screeni"
-version = "0.1.2"
+name = "shot-villa"
+version = "0.2.0"
 description = "Screenshot- und Annotationswerkzeug für macOS und Windows"
 edition = "2024"
 rust-version = "1.90"
@@ -9,7 +9,7 @@ authors = ["Jascha Coenen"]
 publish = false
 
 [lib]
-name = "screeni_lib"
+name = "shot_villa_lib"
 crate-type = ["staticlib", "cdylib", "rlib"]
 
 [build-dependencies]

@@ -1,7 +1,7 @@
 # Lizenzen der Drittsoftware
 
-Screeni © 2026 Jascha Coenen steht unter der MIT-Lizenz (siehe LICENSE).
-Screeni enthält 598 Bibliotheken anderer Autorinnen und Autoren.
+Shot-VILLA © 2026 Jascha Coenen steht unter der MIT-Lizenz (siehe LICENSE).
+Shot-VILLA enthält 598 Bibliotheken anderer Autorinnen und Autoren.
 Ihre Lizenzen folgen hier; Pakete mit gleichem Lizenztext stehen zusammen.
 Diese Datei wird mit `pnpm notices` erzeugt.
 

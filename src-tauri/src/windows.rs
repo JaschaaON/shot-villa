@@ -31,7 +31,7 @@ fn needs_dock(label: &str) -> bool {
 pub fn show_editor(app: &AppHandle, always_on_top: bool) -> tauri::Result<WebviewWindow> {
     let window = existing_or(app, EDITOR, |app| {
         let builder = WebviewWindowBuilder::new(app, EDITOR, WebviewUrl::default())
-            .title("Screeni")
+            .title("Shot-VILLA")
             .inner_size(1100.0, 720.0)
             .min_inner_size(560.0, 360.0)
             .visible(false)
@@ -66,7 +66,7 @@ pub fn show_settings(app: &AppHandle) -> tauri::Result<()> {
 pub fn show_welcome(app: &AppHandle) -> tauri::Result<()> {
     let window = existing_or(app, WELCOME, |app| {
         WebviewWindowBuilder::new(app, WELCOME, WebviewUrl::default())
-            .title("Willkommen bei Screeni")
+            .title("Willkommen bei Shot-VILLA")
             .inner_size(520.0, 500.0)
             .resizable(false)
             .minimizable(false)

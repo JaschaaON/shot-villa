@@ -354,9 +354,9 @@ export const Settings = () => {
               </p>
             ) : (
               <p className="note">
-                Die Druck-Taste belegt Windows selbst. Soll Screeni sie nutzen,
-                schalte unter Einstellungen → Barrierefreiheit → Tastatur
-                „Bildschirmausschnitt mit der Druck-Taste öffnen“ aus.
+                Die Druck-Taste belegt Windows selbst. Soll Shot-VILLA sie
+                nutzen, schalte unter Einstellungen → Barrierefreiheit →
+                Tastatur „Bildschirmausschnitt mit der Druck-Taste öffnen“ aus.
               </p>
             )}
           </>

@@ -1,5 +1,5 @@
 //! Mitteilungen über das UserNotifications-Framework. Ein eigener Delegate
-//! sorgt dafür, dass sie auch erscheinen, während ein Screeni-Fenster aktiv ist.
+//! sorgt dafür, dass sie auch erscheinen, während ein Shot-VILLA-Fenster aktiv ist.
 
 use std::path::Path;
 
@@ -18,7 +18,7 @@ use tauri::AppHandle;
 define_class!(
     // SAFETY: NSObject stellt keine Anforderungen an Unterklassen, kein Drop.
     #[unsafe(super(NSObject))]
-    #[name = "ScreeniNotificationDelegate"]
+    #[name = "ShotVillaNotificationDelegate"]
     struct Delegate;
 
     unsafe impl NSObjectProtocol for Delegate {}

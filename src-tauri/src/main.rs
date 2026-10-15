@@ -2,5 +2,5 @@
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
 fn main() {
-    screeni_lib::run();
+    shot_villa_lib::run();
 }

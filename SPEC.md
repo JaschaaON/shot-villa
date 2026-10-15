@@ -1,6 +1,6 @@
-# Spezifikation – Screeni
+# Spezifikation – Shot-VILLA
 
-Screeni nimmt Bildschirmfotos auf, markiert sie und gibt sie weiter – per Tastenkürzel, lokal und ohne Konten. Diese Datei beschreibt Funktionsumfang, Datenmodell, Dateiformate, Tastenkürzel und Plattformanforderungen. Den Umsetzungsstand je Funktion führt [PROGRESS.md](PROGRESS.md).
+Shot-VILLA nimmt Bildschirmfotos auf, markiert sie und gibt sie weiter – per Tastenkürzel, lokal und ohne Konten. Diese Datei beschreibt Funktionsumfang, Datenmodell, Dateiformate, Tastenkürzel und Plattformanforderungen. Den Umsetzungsstand je Funktion führt [PROGRESS.md](PROGRESS.md).
 
 - **Plattformen:** macOS 14 oder neuer (Apple-Chip und Intel), Windows 10 und 11
 - **Technik:** Tauri 2 mit Rust-Backend (Aufnahme, Kürzel, Menüleiste/Infobereich, Dateien, Texterkennung) und React/TypeScript-Frontend (Editor, Einstellungen, Overlay)
@@ -21,8 +21,8 @@ Prioritäten: **Muss** (Version 1), **Später**, **Nicht**.
 | C5 | Aktives Fenster | Vorderstes Fenster der aktiven App. | Muss |
 | C6 | Fenster wählen | Fenster unter dem Mauszeiger hervorheben, per Klick aufnehmen. | Muss |
 | C7 | Fensterhintergrund | Für Fensteraufnahmen: Schreibtischbild, transparent, Vollton oder ohne Schatten. | Später |
-| C8 | Scrollende Aufnahme (automatisch) | Bereich wählen, Screeni scrollt selbst und setzt die Teilbilder zusammen. | Später |
-| C9 | Scrollende Aufnahme (manuell) | Nutzer scrollt, Screeni setzt zusammen. | Später |
+| C8 | Scrollende Aufnahme (automatisch) | Bereich wählen, Shot-VILLA scrollt selbst und setzt die Teilbilder zusammen. | Später |
+| C9 | Scrollende Aufnahme (manuell) | Nutzer scrollt, Shot-VILLA setzt zusammen. | Später |
 | C10 | Zeitverzögert | Vollbild nach einigen Sekunden. | Später |
 | C11 | Mauszeiger | Nur bei Vollbild, immer oder nie mit aufnehmen. | Muss |
 | C12 | Aus Zwischenablage | Bild aus der Zwischenablage im Editor öffnen. | Muss |
@@ -134,7 +134,7 @@ Prioritäten: **Muss** (Version 1), **Später**, **Nicht**.
 | H1 | Globale Kürzel | sieben frei belegbare Kürzel mit Aufnahmefeld | Muss |
 | H2 | Konflikte | belegte Kürzel melden | Muss |
 | H3 | Systemkürzel | Hinweis, wie die Systemkürzel freigegeben werden | Muss |
-| U1 | URL-Schema | Aufnahmen per Link `screeni://…` auslösen | Später |
+| U1 | URL-Schema | Aufnahmen per Link `shot-villa://…` auslösen | Später |
 
 ## 2. Datenmodell
 
@@ -167,8 +167,8 @@ Der Editorzustand (Dokument, Historie, Werkzeug, Stil, Auswahl) liegt in einem r
 
 | Datei | Ort | Inhalt |
 |---|---|---|
-| Einstellungen | `settings.json` im App-Konfigurationsordner (macOS: `~/Library/Application Support/de.villalife.screeni/`, Windows: `%APPDATA%\de.villalife.screeni\`) | JSON, fehlende Felder bekommen Vorgaben; wird atomar geschrieben |
-| Aufnahmen | eingestellter Ordner, Vorgabe Schreibtisch | `Screeni JJJJ-MM-TT um HH.MM.SS.png` bzw. `.jpg`; bei gleichem Namen „ 2“, „ 3“ … |
+| Einstellungen | `settings.json` im App-Konfigurationsordner (macOS: `~/Library/Application Support/de.villalife.shot-villa/`, Windows: `%APPDATA%\de.villalife.shot-villa\`) | JSON, fehlende Felder bekommen Vorgaben; wird atomar geschrieben |
+| Aufnahmen | eingestellter Ordner, Vorgabe Schreibtisch | `Shot-VILLA JJJJ-MM-TT um HH.MM.SS.png` bzw. `.jpg`; bei gleichem Namen „ 2“, „ 3“ … |
 | Metadaten | macOS: erweitertes Attribut `com.apple.metadata:kMDItemIsScreenCapture` | kennzeichnet die Datei als Bildschirmfoto |
 
 ## 4. Tastenkürzel

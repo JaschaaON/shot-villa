@@ -1,30 +1,46 @@
 :root {
-  --bg: #f6f7fb;
-  --bg-soft: #eceef5;
-  --surface: #ffffff;
-  --text: #14161d;
-  --muted: #5d6272;
-  --border: #dfe2ec;
-  --accent: #3a6df0;
-  --accent-2: #19a59a;
+  /* Silber-Grau mit Grafit-Akzenten */
+  --bg: #eef0f2;
+  --bg-soft: #e2e5e9;
+  --surface: #fafbfc;
+  --text: #15181c;
+  --muted: #5b616a;
+  --border: #d3d7dc;
+  --accent: #4a5361;
+  --accent-2: #6b7684;
   --accent-text: #ffffff;
-  --shadow: 0 24px 60px -24px rgb(20 30 70 / 35%);
+  --shadow: 0 24px 60px -24px rgb(25 30 40 / 38%);
   --radius: 18px;
-  --gradient: linear-gradient(120deg, #19a59a 0%, #3a86ff 55%, #6b4ee6 100%);
+  --gradient: linear-gradient(135deg, #949daa 0%, #5a6370 48%, #2f353d 100%);
+  --headline: linear-gradient(120deg, #2a2f37 0%, #8b939e 52%, #3b424b 100%);
+  --primary-fill: linear-gradient(180deg, #6a7381 0%, #3f4652 100%);
+  --primary-text: #ffffff;
+  --primary-glow: 0 12px 30px -10px rgb(35 42 52 / 55%);
+  --metal: linear-gradient(180deg, #ffffff 0%, #e6e8eb 100%);
+  --glow-a: rgb(150 158 170 / 26%);
+  --glow-b: rgb(95 105 120 / 18%);
 
   color-scheme: light dark;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --bg: #0f1117;
-    --bg-soft: #161925;
-    --surface: #1b1e2a;
-    --text: #eef0f6;
-    --muted: #9aa0b4;
-    --border: #2a2e3d;
-    --accent: #5b8cff;
-    --shadow: 0 30px 80px -30px rgb(0 0 0 / 70%);
+    --bg: #111214;
+    --bg-soft: #17191c;
+    --surface: #1c1e22;
+    --text: #eceef1;
+    --muted: #9aa1aa;
+    --border: #2e3136;
+    --accent: #c9ced6;
+    --accent-2: #a7afba;
+    --shadow: 0 30px 80px -30px rgb(0 0 0 / 75%);
+    --headline: linear-gradient(120deg, #f4f5f7 0%, #9aa2ad 52%, #e3e6ea 100%);
+    --primary-fill: linear-gradient(180deg, #f1f3f5 0%, #aeb5bf 100%);
+    --primary-text: #15171a;
+    --primary-glow: 0 12px 30px -12px rgb(200 206 214 / 30%);
+    --metal: linear-gradient(180deg, #2a2d32 0%, #1f2125 100%);
+    --glow-a: rgb(170 178 190 / 14%);
+    --glow-b: rgb(120 130 145 / 12%);
   }
 }
 
@@ -161,11 +177,7 @@ main {
   inset: -40% -30% auto auto;
   width: 900px;
   height: 900px;
-  background: radial-gradient(
-    closest-side,
-    rgb(58 134 255 / 22%),
-    transparent 70%
-  );
+  background: radial-gradient(closest-side, var(--glow-a), transparent 70%);
   pointer-events: none;
   z-index: -1;
 }
@@ -187,7 +199,7 @@ h1 {
 }
 
 .gradient {
-  background: var(--gradient);
+  background: var(--headline);
   background-clip: text;
   -webkit-background-clip: text;
   color: transparent;
@@ -224,15 +236,18 @@ h1 {
 }
 
 .button.primary {
-  background: var(--gradient);
-  color: var(--accent-text);
-  box-shadow: 0 12px 30px -10px rgb(58 110 240 / 60%);
+  background: var(--primary-fill);
+  color: var(--primary-text);
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 25%),
+    var(--primary-glow);
 }
 
 .button.ghost {
   border: 1px solid var(--border);
   color: var(--text);
-  background: var(--surface);
+  background: var(--metal);
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / 60%);
 }
 
 .meta {
@@ -415,8 +430,8 @@ h3 {
   padding: 24px;
   border-radius: 18px;
   background:
-    radial-gradient(circle at 30% 20%, rgb(25 165 154 / 18%), transparent 55%),
-    radial-gradient(circle at 80% 80%, rgb(107 78 230 / 18%), transparent 55%),
+    radial-gradient(circle at 30% 20%, var(--glow-a), transparent 55%),
+    radial-gradient(circle at 80% 80%, var(--glow-b), transparent 55%),
     var(--bg-soft);
 }
 
@@ -609,7 +624,7 @@ h3 {
     linear-gradient(rgb(255 255 255 / 50%) 1px, transparent 1px) 0 0 / 9px 9px,
     linear-gradient(90deg, rgb(255 255 255 / 50%) 1px, transparent 1px) 0 0 /
       9px 9px,
-    #3a86ff;
+    #8d97a5;
   box-shadow: 0 4px 14px rgb(0 0 0 / 40%);
 }
 
@@ -759,8 +774,8 @@ h3 {
   padding: 72px 20px;
   border-radius: 28px;
   background:
-    radial-gradient(circle at 20% 0%, rgb(25 165 154 / 22%), transparent 50%),
-    radial-gradient(circle at 80% 100%, rgb(107 78 230 / 22%), transparent 50%),
+    radial-gradient(circle at 20% 0%, var(--glow-a), transparent 50%),
+    radial-gradient(circle at 80% 100%, var(--glow-b), transparent 50%),
     var(--surface);
   border: 1px solid var(--border);
 }

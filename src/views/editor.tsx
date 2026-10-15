@@ -195,7 +195,7 @@ const Workspace = ({ shot, settings }: WorkspaceProps) => {
 
   const saveImageAs = async () => {
     const path = await saveDialog({
-      defaultPath: "Screeni.png",
+      defaultPath: "Shot-VILLA.png",
       filters: [{ extensions: ["png", "jpg"], name: "Bild" }],
     });
     if (path !== null) {

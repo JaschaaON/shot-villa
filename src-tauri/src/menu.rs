@@ -19,10 +19,10 @@ pub fn build(app: &AppHandle) -> tauri::Result<tauri::menu::Menu<tauri::Wry>> {
         MenuItem::with_id(app, action.id(), title, true, accelerator)
     };
 
-    let app_menu = SubmenuBuilder::new(app, "Screeni")
+    let app_menu = SubmenuBuilder::new(app, "Shot-VILLA")
         .item(&PredefinedMenuItem::about(
             app,
-            Some("Über Screeni"),
+            Some("Über Shot-VILLA"),
             Some(AboutMetadata::default()),
         )?)
         .separator()
@@ -32,14 +32,17 @@ pub fn build(app: &AppHandle) -> tauri::Result<tauri::menu::Menu<tauri::Wry>> {
             Some("CmdOrCtrl+,"),
         )?)
         .separator()
-        .item(&PredefinedMenuItem::hide(app, Some("Screeni ausblenden"))?)
+        .item(&PredefinedMenuItem::hide(
+            app,
+            Some("Shot-VILLA ausblenden"),
+        )?)
         .item(&PredefinedMenuItem::hide_others(
             app,
             Some("Andere ausblenden"),
         )?)
         .item(&PredefinedMenuItem::show_all(app, Some("Alle einblenden"))?)
         .separator()
-        .item(&PredefinedMenuItem::quit(app, Some("Screeni beenden"))?)
+        .item(&PredefinedMenuItem::quit(app, Some("Shot-VILLA beenden"))?)
         .build()?;
 
     let file = SubmenuBuilder::new(app, "Ablage")

@@ -29,13 +29,16 @@ export const Permission = () => {
     <main className="permission">
       <h1>Bildschirmaufnahme erlauben</h1>
       <p>
-        Screeni braucht die Berechtigung „Bildschirm- und Systemaudioaufnahme“,
-        sonst enthalten Aufnahmen nur den Schreibtischhintergrund.
+        Shot-VILLA braucht die Berechtigung „Bildschirm- und
+        Systemaudioaufnahme“, sonst enthalten Aufnahmen nur den
+        Schreibtischhintergrund.
       </p>
       <ol>
         <li>Systemeinstellungen öffnen.</li>
-        <li>Screeni in der Liste einschalten.</li>
-        <li>Screeni neu starten – macOS übernimmt die Freigabe erst danach.</li>
+        <li>Shot-VILLA in der Liste einschalten.</li>
+        <li>
+          Shot-VILLA neu starten – macOS übernimmt die Freigabe erst danach.
+        </li>
       </ol>
       <div className="actions">
         <button

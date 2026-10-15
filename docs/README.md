@@ -1,6 +1,6 @@
-# Screeni – Handbuch
+# Shot-VILLA – Handbuch
 
-Screeni nimmt Bildschirmfotos auf, markiert sie und gibt sie weiter – schnell per Tastenkürzel, ohne Umwege über Ordner. Die App lebt in der Menüleiste; ein Fenster erscheint erst, wenn du eine Aufnahme bearbeitest.
+Shot-VILLA nimmt Bildschirmfotos auf, markiert sie und gibt sie weiter – schnell per Tastenkürzel, ohne Umwege über Ordner. Die App lebt in der Menüleiste; ein Fenster erscheint erst, wenn du eine Aufnahme bearbeitest.
 
 ![Editor mit Pfeil, Rahmen, Zählern und Textmarker](images/editor.jpg)
 
@@ -18,30 +18,30 @@ Screeni nimmt Bildschirmfotos auf, markiert sie und gibt sie weiter – schnell 
 
 ## Installation
 
-1. `Screeni.dmg` laden und öffnen.
-2. **Screeni** in den Ordner **Programme** ziehen.
-3. Screeni aus „Programme“ starten.
+1. `Shot-VILLA.dmg` laden und öffnen.
+2. **Shot-VILLA** in den Ordner **Programme** ziehen.
+3. Shot-VILLA aus „Programme“ starten.
 
-Screeni ist nicht bei Apple notarisiert. macOS meldet deshalb beim Öffnen der DMG und beim ersten Start der App „… nicht geöffnet“. Jeweils so freigeben:
+Shot-VILLA ist nicht bei Apple notarisiert. macOS meldet deshalb beim Öffnen der DMG und beim ersten Start der App „… nicht geöffnet“. Jeweils so freigeben:
 
 1. In der Meldung auf **Fertig** klicken.
 2. *Systemeinstellungen → Datenschutz & Sicherheit* öffnen und ganz nach unten scrollen.
-3. Bei „Screeni.dmg“ bzw. „Screeni“ auf **„Dennoch öffnen“** klicken und mit dem Passwort bestätigen.
+3. Bei „Shot-VILLA.dmg“ bzw. „Shot-VILLA“ auf **„Dennoch öffnen“** klicken und mit dem Passwort bestätigen.
 
 Alternativ im Terminal die Download-Sperre der DMG aufheben, dann entfällt beides:
 
 ```bash
-xattr -d com.apple.quarantine ~/Downloads/Screeni.dmg
+xattr -d com.apple.quarantine ~/Downloads/Shot-VILLA.dmg
 ```
 
-Danach erscheint in der Menüleiste das Screeni-Symbol (vier Ecken mit einem Punkt). Ein Dock-Symbol gibt es nur, solange ein Screeni-Fenster offen ist.
+Danach erscheint in der Menüleiste das Shot-VILLA-Symbol (vier Ecken mit einem Punkt). Ein Dock-Symbol gibt es nur, solange ein Shot-VILLA-Fenster offen ist.
 
 Voraussetzung: macOS 14 (Sonoma) oder neuer, Apple-Chip oder Intel.
 
 ### Windows
 
-1. `Screeni-Setup.exe` laden und ausführen. Zeigt Windows „Der Computer wurde durch Windows geschützt“, auf **Weitere Informationen → Trotzdem ausführen** klicken – der Installer ist nicht mit einem gekauften Zertifikat signiert.
-2. Screeni startet und erscheint im **Infobereich der Taskleiste** (ggf. hinter dem Pfeil ˄).
+1. `Shot-VILLA-Setup.exe` laden und ausführen. Zeigt Windows „Der Computer wurde durch Windows geschützt“, auf **Weitere Informationen → Trotzdem ausführen** klicken – der Installer ist nicht mit einem gekauften Zertifikat signiert.
+2. Shot-VILLA startet und erscheint im **Infobereich der Taskleiste** (ggf. hinter dem Pfeil ˄).
 
 Unter Windows gilt dieses Handbuch mit drei Unterschieden: Kürzel nutzen **Strg** statt ⌘ (z. B. Strg+Umschalt+2 für einen Bereich, Strg+Z zum Widerrufen), eine Freigabe für die Bildschirmaufnahme ist nicht nötig, und die Texterkennung verwendet die in Windows installierten Sprachen. Fenster werden ohne Schatten aufgenommen. Voraussetzung: Windows 10 oder 11.
 
@@ -49,11 +49,11 @@ Unter Windows gilt dieses Handbuch mit drei Unterschieden: Kürzel nutzen **Strg
 
 macOS lässt Apps den Bildschirm nur aufnehmen, wenn du es erlaubst.
 
-1. Drück **⇧⌘1**. macOS fragt nach der Berechtigung, und Screeni zeigt ein Hinweisfenster.
-2. Klick auf **Systemeinstellungen öffnen** und schalte **Screeni** unter *Datenschutz & Sicherheit → Bildschirm- & Systemaudioaufnahme* ein.
-3. Klick im Screeni-Fenster auf **Neu starten**.
+1. Drück **⇧⌘1**. macOS fragt nach der Berechtigung, und Shot-VILLA zeigt ein Hinweisfenster.
+2. Klick auf **Systemeinstellungen öffnen** und schalte **Shot-VILLA** unter *Datenschutz & Sicherheit → Bildschirm- & Systemaudioaufnahme* ein.
+3. Klick im Shot-VILLA-Fenster auf **Neu starten**.
 
-Ab jetzt funktionieren alle Aufnahmen. Ohne diese Berechtigung würden Bilder nur den Schreibtischhintergrund zeigen – Screeni nimmt in diesem Fall gar nicht erst auf, sondern zeigt wieder den Hinweis.
+Ab jetzt funktionieren alle Aufnahmen. Ohne diese Berechtigung würden Bilder nur den Schreibtischhintergrund zeigen – Shot-VILLA nimmt in diesem Fall gar nicht erst auf, sondern zeigt wieder den Hinweis.
 
 ## Aufnehmen
 
@@ -108,7 +108,7 @@ Unter der Werkzeugleiste wählst du Farbe (acht Vorgaben plus freie Farbe), Stä
 | Aktion | Kürzel | Ergebnis |
 |---|---|---|
 | Bild kopieren | ⇧⌘C (oder **Esc**) | Das bearbeitete Bild liegt in der Zwischenablage, der Editor schließt sich – einfach in der Ziel-App mit ⌘V einfügen. |
-| Sichern | ⌘S | Speichert im eingestellten Ordner (Vorgabe: Schreibtisch) als „Screeni JJJJ-MM-TT um HH.MM.SS“. |
+| Sichern | ⌘S | Speichert im eingestellten Ordner (Vorgabe: Schreibtisch) als „Shot-VILLA JJJJ-MM-TT um HH.MM.SS“. |
 | Sichern unter … | ⇧⌘S | Ort und Format (PNG/JPEG) frei wählen. |
 | Anpinnen | ⌘P | Das Bild schwebt rahmenlos über allen Fenstern – praktisch zum Abtippen oder Vergleichen. Verschieben per Ziehen, **Rechtsklick** für 50/100/200 %, halbtransparent, Kopieren und Schließen, **Doppelklick** oder **Esc** schließt. |
 
@@ -140,7 +140,7 @@ Erreichbar über das Menüleisten-Symbol → *Einstellungen …* oder **⌘,**.
 
 ![Einstellungen – Tastenkürzel](images/settings-shortcuts.jpg)
 
-Klick in ein Feld und drück die gewünschte Kombination; **×** entfernt ein Kürzel, **Esc** bricht ab. Während der Eingabe sind alle Screeni-Kürzel pausiert. Ist eine Kombination schon vergeben, meldet Screeni das unter den Feldern.
+Klick in ein Feld und drück die gewünschte Kombination; **×** entfernt ein Kürzel, **Esc** bricht ab. Während der Eingabe sind alle Shot-VILLA-Kürzel pausiert. Ist eine Kombination schon vergeben, meldet Shot-VILLA das unter den Feldern.
 
 Willst du **⇧⌘3 / ⇧⌘4** nutzen, schalte zuerst die Bildschirmfoto-Kürzel von macOS aus: *Systemeinstellungen → Tastatur → Tastaturkurzbefehle → Bildschirmfotos*.
 
@@ -154,7 +154,7 @@ Willst du **⇧⌘3 / ⇧⌘4** nutzen, schalte zuerst die Bildschirmfoto-Kürze
 - **Editor:** immer im Vordergrund; 100 % bevorzugen, wenn das Bild ins Fenster passt.
 - **Farbformat** für die Pipette.
 
-Die Einstellungen liegen in `~/Library/Application Support/de.villalife.screeni/settings.json`.
+Die Einstellungen liegen in `~/Library/Application Support/de.villalife.shot-villa/settings.json`.
 
 ## Tastenkürzel im Überblick
 
@@ -180,13 +180,13 @@ Die Einstellungen liegen in `~/Library/Application Support/de.villalife.screeni/
 ## Fragen und Probleme
 
 **Es erscheint immer wieder der Hinweis zur Bildschirmaufnahme.**
-Entferne Screeni unter *Datenschutz & Sicherheit → Bildschirm- & Systemaudioaufnahme* mit „−“, erlaube es neu und starte Screeni neu. Im Terminal geht das Zurücksetzen mit `tccutil reset ScreenCapture de.villalife.screeni`.
+Entferne Shot-VILLA unter *Datenschutz & Sicherheit → Bildschirm- & Systemaudioaufnahme* mit „−“, erlaube es neu und starte Shot-VILLA neu. Im Terminal geht das Zurücksetzen mit `tccutil reset ScreenCapture de.villalife.shot-villa`.
 
 **Ein Kürzel reagiert nicht.**
-Eine andere App nutzt dieselbe Kombination. Screeni zeigt das in den Einstellungen unter den Kürzeln an – wähl eine andere Kombination oder schalte das Kürzel in der anderen App ab.
+Eine andere App nutzt dieselbe Kombination. Shot-VILLA zeigt das in den Einstellungen unter den Kürzeln an – wähl eine andere Kombination oder schalte das Kürzel in der anderen App ab.
 
 **Das Menüleisten-Symbol fehlt.**
-Bei vielen Symbolen blendet macOS manche hinter der Kamera-Aussparung aus. Die Aufnahmen funktionieren trotzdem per Kürzel; die Einstellungen öffnest du dann mit **⌘,**, sobald ein Screeni-Fenster vorne ist.
+Bei vielen Symbolen blendet macOS manche hinter der Kamera-Aussparung aus. Die Aufnahmen funktionieren trotzdem per Kürzel; die Einstellungen öffnest du dann mit **⌘,**, sobald ein Shot-VILLA-Fenster vorne ist.
 
 **Wird etwas ins Internet geschickt?**
 Nein. Aufnahmen, Texterkennung und Einstellungen bleiben auf deinem Mac.

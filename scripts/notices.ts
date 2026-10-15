@@ -1,5 +1,5 @@
 /**
- * Sammelt die Lizenztexte aller Bibliotheken, die in Screeni ausgeliefert
+ * Sammelt die Lizenztexte aller Bibliotheken, die in Shot-VILLA ausgeliefert
  * werden (Rust-Crates und npm-Pakete des Frontends), und schreibt sie nach
  * THIRD-PARTY-NOTICES.md und website/third-party-notices.txt.
  *
@@ -60,7 +60,7 @@ const isNpmPackage = (value: unknown): value is NpmPackage =>
   "paths" in value &&
   isStringArray(value.paths);
 
-/** Liest `cargo metadata` und gibt alle Crates außer Screeni selbst zurück. */
+/** Liest `cargo metadata` und gibt alle Crates außer Shot-VILLA selbst zurück. */
 const cargoComponents = (): Component[] => {
   const output = execFileSync(
     "cargo",
@@ -81,7 +81,7 @@ const cargoComponents = (): Component[] => {
       ? metadata.packages.filter(isCargoPackage)
       : [];
   return packages
-    .filter((pkg) => pkg.name !== "screeni")
+    .filter((pkg) => pkg.name !== "shot-villa")
     .map((pkg) => ({
       directory: path.dirname(pkg.manifest_path),
       license: pkg.license ?? "siehe Lizenztext",
@@ -139,8 +139,8 @@ const build = (): string => {
   const header = [
     "# Lizenzen der Drittsoftware",
     "",
-    "Screeni © 2026 Jascha Coenen steht unter der MIT-Lizenz (siehe LICENSE).",
-    `Screeni enthält ${components.length} Bibliotheken anderer Autorinnen und Autoren.`,
+    "Shot-VILLA © 2026 Jascha Coenen steht unter der MIT-Lizenz (siehe LICENSE).",
+    `Shot-VILLA enthält ${components.length} Bibliotheken anderer Autorinnen und Autoren.`,
     "Ihre Lizenzen folgen hier; Pakete mit gleichem Lizenztext stehen zusammen.",
     "Diese Datei wird mit `pnpm notices` erzeugt.",
     "",

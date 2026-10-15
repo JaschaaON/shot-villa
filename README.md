@@ -1,8 +1,8 @@
-# Screeni
+# Shot-VILLA
 
 Bildschirmfotos für macOS und Windows: aufnehmen, markieren, weitergeben – per Tastenkürzel und ohne Umwege.
 
-![Screeni-Editor](docs/images/editor.jpg)
+![Shot-VILLA-Editor](docs/images/editor.jpg)
 
 - **Aufnahmen:** Vollbild, Bereich (eingefrorener Bildschirm mit Lupe), Bereich wiederholen, Fenster wählen, aktives Fenster
 - **Editor:** Pfeil, Text, Rechteck, Oval, Linie, Freihand, Textmarker, Verpixeln/Weichzeichnen, Spotlight, Zähler, Zuschneiden, Pipette mit HEX/RGB/CSS/OKLCH
@@ -14,7 +14,7 @@ Bildschirmfotos für macOS und Windows: aufnehmen, markieren, weitergeben – pe
 
 ## Installation
 
-`Screeni.dmg` aus den Releases bzw. von der Website laden, Screeni in „Programme“ ziehen, beim Öffnen der DMG und beim ersten Start jeweils unter Systemeinstellungen → Datenschutz & Sicherheit „Dennoch öffnen“ wählen (Screeni ist nicht notarisiert) und die Bildschirmaufnahme erlauben. Details im [Handbuch](docs/README.md#installation). Voraussetzung: macOS 14 oder neuer. Für Windows 10/11 gibt es `Screeni-Setup.exe` ([Hinweise](docs/README.md#windows)).
+`Shot-VILLA.dmg` aus den Releases bzw. von der Website laden, Shot-VILLA in „Programme“ ziehen, beim Öffnen der DMG und beim ersten Start jeweils unter Systemeinstellungen → Datenschutz & Sicherheit „Dennoch öffnen“ wählen (Shot-VILLA ist nicht notarisiert) und die Bildschirmaufnahme erlauben. Details im [Handbuch](docs/README.md#installation). Voraussetzung: macOS 14 oder neuer. Für Windows 10/11 gibt es `Shot-VILLA-Setup.exe` ([Hinweise](docs/README.md#windows)).
 
 ## Entwicklung
 
@@ -33,7 +33,7 @@ pnpm tauri dev
 
 ### Signieren
 
-Die Bildschirmaufnahme-Freigabe von macOS hängt an der Signatur. Mit Ad-hoc-Signatur verfällt sie bei jedem Build. Deshalb signiert der Build mit einem lokalen, selbst erstellten Zertifikat **„Screeni Dev“** (`signingIdentity` in `src-tauri/tauri.conf.json`). Wer das Repo auf einem anderen Mac baut, legt ein eigenes Code-Signing-Zertifikat mit diesem Namen an oder setzt `signingIdentity` auf `"-"`.
+Die Bildschirmaufnahme-Freigabe von macOS hängt an der Signatur. Mit Ad-hoc-Signatur verfällt sie bei jedem Build. Deshalb signiert der Build mit einem lokalen, selbst erstellten Zertifikat **„Shot-VILLA Dev“** (`signingIdentity` in `src-tauri/tauri.conf.json`). Wer das Repo auf einem anderen Mac baut, legt ein eigenes Code-Signing-Zertifikat mit diesem Namen an oder setzt `signingIdentity` auf `"-"`.
 
 ### Aufbau
 
@@ -59,4 +59,4 @@ Analyse und Feature-Liste: [SPEC.md](SPEC.md) · Fortschritt: [PROGRESS.md](PROG
 
 ## Lizenz
 
-Screeni © 2026 Jascha Coenen, veröffentlicht unter der [MIT-Lizenz](LICENSE). Die Lizenzen der enthaltenen Bibliotheken stehen in [THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md) (neu erzeugen mit `pnpm notices`, z. B. nach Abhängigkeits-Updates); beide Dateien liegen auch in jedem App-Paket und auf der Website.
+Shot-VILLA © 2026 Jascha Coenen, veröffentlicht unter der [MIT-Lizenz](LICENSE). Die Lizenzen der enthaltenen Bibliotheken stehen in [THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md) (neu erzeugen mit `pnpm notices`, z. B. nach Abhängigkeits-Updates); beide Dateien liegen auch in jedem App-Paket und auf der Website.

@@ -14,6 +14,9 @@ import type {
 } from "./model";
 import { unreachable } from "./unreachable";
 
+/** Stahlgrau für Auswahlrahmen und Griffe, passend zum Silber-Design. */
+const SELECTION_COLOR = "#5f6f84";
+
 const FONT_STACK =
   '-apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", sans-serif';
 const LINE_HEIGHT = 1.25;
@@ -338,7 +341,7 @@ const drawUi = (
   ctx.save();
   ctx.lineWidth = px;
   if (handles.length === 0 || selected.kind === "highlight") {
-    ctx.strokeStyle = "#3a86ff";
+    ctx.strokeStyle = SELECTION_COLOR;
     ctx.setLineDash([4 * px, 3 * px]);
     const pad = 4 * px;
     ctx.strokeRect(
@@ -352,7 +355,7 @@ const drawUi = (
   const size = 8 * px;
   for (const [, point] of handles) {
     ctx.fillStyle = "#ffffff";
-    ctx.strokeStyle = "#3a86ff";
+    ctx.strokeStyle = SELECTION_COLOR;
     ctx.beginPath();
     ctx.rect(point.x - size / 2, point.y - size / 2, size, size);
     ctx.fill();

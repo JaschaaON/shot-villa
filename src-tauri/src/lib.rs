@@ -22,6 +22,9 @@ use std::sync::Mutex;
 
 use tauri::{App, AppHandle, Manager, RunEvent, Window, WindowEvent};
 
+/// Bundle-Kennung vor der Umbenennung; nur noch für die Übernahme der Einstellungen.
+const LEGACY_IDENTIFIER: &str = "de.villalife.screeni";
+
 /// Dateien, die macOS schon vor dem Ende von `setup` zum Öffnen übergibt.
 #[derive(Default)]
 struct PendingFiles(Mutex<Vec<PathBuf>>);
@@ -121,9 +124,23 @@ fn on_run_event(app: &AppHandle, event: RunEvent) {
 fn setup(app: &mut App) -> Result<(), Box<dyn std::error::Error>> {
     #[cfg(target_os = "macos")]
     app.set_activation_policy(tauri::ActivationPolicy::Accessory);
-    let path = app.path().app_config_dir()?.join("settings.json");
-    let store = settings::Store::load(path);
+    let config = app.path().app_config_dir()?;
+    // Bis Version 0.1.2 lag der Konfigurationsordner unter dem früheren App-Namen.
+    let legacy = config
+        .parent()
+        .map(|parent| parent.join(LEGACY_IDENTIFIER).join("settings.json"));
+    let path = config.join("settings.json");
+    let migrating = !path.exists() && legacy.as_deref().is_some_and(std::path::Path::exists);
+    let store = settings::Store::load(path, legacy.as_deref());
     let mut settings = store.get();
+    // Der Autostart hängt an der App selbst und muss nach dem Umzug neu angemeldet werden.
+    if migrating
+        && settings.launch_at_login
+        && !autostart::is_enabled(app.handle())
+        && let Err(error) = autostart::set_enabled(app.handle(), true)
+    {
+        log::warn!("Autostart nicht übernommen: {error}");
+    }
     let hotkeys = settings.hotkeys.clone();
     let first_start = !settings.welcome_shown;
     if first_start {

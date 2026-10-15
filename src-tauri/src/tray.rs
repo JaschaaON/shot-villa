@@ -15,7 +15,7 @@ pub fn create(app: &AppHandle, hotkeys: &Hotkeys) -> tauri::Result<()> {
     TrayIconBuilder::with_id(TRAY_ID)
         .icon(tray_icon())
         .icon_as_template(cfg!(target_os = "macos"))
-        .tooltip("Screeni")
+        .tooltip("Shot-VILLA")
         .menu(&menu(app, hotkeys)?)
         .build(app)?;
     Ok(())
@@ -89,6 +89,6 @@ fn menu(app: &AppHandle, hotkeys: &Hotkeys) -> tauri::Result<Menu<Wry>> {
         )?)
         .item(&item(Action::Settings, "Einstellungen …", None)?)
         .separator()
-        .item(&PredefinedMenuItem::quit(app, Some("Screeni beenden"))?)
+        .item(&PredefinedMenuItem::quit(app, Some("Shot-VILLA beenden"))?)
         .build()
 }

@@ -163,9 +163,19 @@ pub struct Store {
 }
 
 impl Store {
-    /// Lädt die Einstellungen. Eine fehlende oder kaputte Datei ergibt die Vorgaben.
-    pub fn load(path: PathBuf) -> Self {
-        let current = read(&path).unwrap_or_default();
+    /// Lädt die Einstellungen. Fehlt die Datei, werden die einer früheren
+    /// Installation (`legacy`) übernommen und am neuen Ort gespeichert; sonst
+    /// gelten die Vorgaben, ebenso bei einer kaputten Datei.
+    pub fn load(path: PathBuf, legacy: Option<&Path>) -> Self {
+        let current = read(&path)
+            .or_else(|| {
+                let settings = read(legacy?)?;
+                if let Err(error) = write(&path, &settings) {
+                    log::warn!("Übernommene Einstellungen nicht gespeichert: {error}");
+                }
+                Some(settings)
+            })
+            .unwrap_or_default();
         Self {
             path,
             current: Mutex::new(current),
@@ -217,25 +227,39 @@ mod tests {
 
     fn temp_path(name: &str) -> PathBuf {
         std::env::temp_dir()
-            .join(format!("screeni-test-{}-{name}", std::process::id()))
+            .join(format!("shot-villa-test-{}-{name}", std::process::id()))
             .join("settings.json")
     }
 
     #[test]
+    fn takes_over_legacy_settings_once() -> std::io::Result<()> {
+        let legacy = temp_path("legacy-old");
+        let path = temp_path("legacy-new");
+        let mut old = Settings::default();
+        old.hotkeys.area = None;
+        write(&legacy, &old)?;
+        assert_eq!(Store::load(path.clone(), Some(&legacy)).get(), old);
+        // Ab jetzt gilt die neue Datei, auch wenn sich die alte ändert.
+        write(&legacy, &Settings::default())?;
+        assert_eq!(Store::load(path, Some(&legacy)).get(), old);
+        Ok(())
+    }
+
+    #[test]
     fn missing_file_yields_defaults() {
-        let store = Store::load(temp_path("missing"));
+        let store = Store::load(temp_path("missing"), None);
         assert_eq!(store.get(), Settings::default());
     }
 
     #[test]
     fn round_trips_through_disk() -> std::io::Result<()> {
         let path = temp_path("roundtrip");
-        let store = Store::load(path.clone());
+        let store = Store::load(path.clone(), None);
         let mut settings = store.get();
         settings.save_format = SaveFormat::Png;
         settings.hotkeys.area = None;
         store.set(settings.clone())?;
-        assert_eq!(Store::load(path).get(), settings);
+        assert_eq!(Store::load(path, None).get(), settings);
         Ok(())
     }
 

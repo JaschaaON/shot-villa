@@ -18,10 +18,10 @@ const BPLIST_TRUE: &[u8] = &[
     0, 0, 0, 0, 0, 0, 0, 9, // Position der Offset-Tabelle
 ];
 
-/// Dateiname aus Zeitstempel, z. B. `Screeni 2026-10-14 um 11.32.05.png`.
+/// Dateiname aus Zeitstempel, z. B. `Shot-VILLA 2026-10-14 um 11.32.05.png`.
 pub fn file_name(time: DateTime<Local>, extension: &str) -> String {
     format!(
-        "Screeni {} um {}.{extension}",
+        "Shot-VILLA {} um {}.{extension}",
         time.format("%Y-%m-%d"),
         time.format("%H.%M.%S")
     )
@@ -94,7 +94,7 @@ mod tests {
     use super::*;
 
     fn temp_folder(name: &str) -> PathBuf {
-        std::env::temp_dir().join(format!("screeni-files-{}-{name}", std::process::id()))
+        std::env::temp_dir().join(format!("shot-villa-files-{}-{name}", std::process::id()))
     }
 
     #[test]
@@ -102,7 +102,7 @@ mod tests {
         let time = Local.with_ymd_and_hms(2026, 10, 14, 9, 5, 7).single();
         assert_eq!(
             time.map(|t| file_name(t, "png")),
-            Some("Screeni 2026-10-14 um 09.05.07.png".to_owned())
+            Some("Shot-VILLA 2026-10-14 um 09.05.07.png".to_owned())
         );
     }
 

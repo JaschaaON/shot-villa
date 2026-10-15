@@ -1,4 +1,4 @@
-# PROGRESS – Screeni
+# PROGRESS – Shot-VILLA
 
 Legende: ☐ offen · ◐ implementiert, Tests grün, Praxistest offen · ☑ fertig (implementiert, getestet, im Betrieb geprüft)
 
@@ -6,20 +6,20 @@ Legende: ☐ offen · ◐ implementiert, Tests grün, Praxistest offen · ☑ fe
 
 - ☑ Projekt-Setup: Tauri 2.12, React 19.3, Vite 8, TypeScript 7 strict, Oxlint + Ultracite (core, react, vitest, anti-slop, type-aware), Oxfmt, rustfmt, clippy pedantic (unwrap/expect/panic verboten), Vitest, Lefthook (pre-commit → `pnpm check`)
 - ☑ Eigenes App-Icon und Menüleisten-Icon (prozedural erzeugt)
-- ☑ Lokaler Release-Build, ad-hoc signiert; installiert unter `/Applications/Screeni.app`
+- ☑ Lokaler Release-Build, ad-hoc signiert; installiert unter `/Applications/Shot-VILLA.app`
 - ☑ Einstellungen als `settings.json` (App-Config-Ordner), atomar geschrieben, fehlertolerant geladen
 
 ## Windows
 
 - ◐ Windows-Version: Aufnahme (xcap), Texterkennung (Windows.Media.Ocr), QR (rqrr), Zwischenablage (arboard), Autostart, Strg-Kürzel im Editor, NSIS-Installer per GitHub Actions. Kompiliert und besteht clippy pedantic; auf einem echten Windows-Rechner noch nicht getestet.
-- 0.1.1: Kein Konsolenfenster mehr unter Windows (Fenster-Subsystem); Schließen einer Konsole beendet Screeni damit auch nicht mehr.
+- 0.1.1: Kein Konsolenfenster mehr unter Windows (Fenster-Subsystem); Schließen einer Konsole beendet Shot-VILLA damit auch nicht mehr.
 - Bekannte Unterschiede: kein Fensterschatten, Mauszeiger wird nicht mit aufgenommen, eigene Fenster werden vor Vollbild-/Bereichsaufnahmen kurz ausgeblendet.
 
 ## Dokumentation und Website
 
 - ☑ Handbuch mit Screenshots (`docs/README.md`), README, Betriebsanleitung (`docs/deploy.md`)
 - ☑ Produktseite `website/` (statisch, Hell/Dunkel, responsiv), Download der Universal-DMG
-- ☑ Release v0.1.0 mit `Screeni_0.1.0_universal.dmg`
+- ☑ Release v0.1.0 mit `Shot-VILLA_0.1.0_universal.dmg`
 - ◐ Image-Build per GitHub Actions nach GHCR, Compose-Stack – Deployment auf dem Server steht aus
 
 ## Muss-Features
@@ -75,11 +75,18 @@ Dabei gefunden und behoben:
 
 Noch nicht in der App geprüft: Sichern unter, Drag & Drop ins Editorfenster, „Öffnen …“-Dialog, Sichtbarkeit der Mitteilungs-Banner (Zustellung laut Systemprotokoll ok), Windows-Version.
 
+## 0.2.0 – Umbenennung und neues Design (2026-10-15)
+
+- Name aus markenrechtlichen Gründen: **Shot-VILLA** (Bundle-Kennung `de.villalife.shot-villa`, Programmdatei `shot-villa`, Repo `JaschaaON/shot-villa`, Website shot-villa.villalife.de, Container-Image `shot-villa-web`).
+- Einstellungen der früheren Installation werden beim ersten Start übernommen (Test vorhanden), ein eingeschalteter Autostart wird für die neue App neu angemeldet.
+- Design Silber-Grau: kühle Neutraltöne, Grafit als Akzent, metallische Leisten und Knöpfe, Glas-Meldungen, Steel-Grau für Auswahlrahmen; Hell- und Dunkelmodus. Neues Icon (gebürstetes Silber, Grafit-Sucher) als SVG in `src-tauri/icons/icon.svg`. Website und Screenshots angepasst.
+- Signatur jetzt mit dem selbstsignierten Zertifikat „Shot-VILLA Dev“; die Bildschirmaufnahme muss für die umbenannte App einmal neu erlaubt werden.
+
 ## Entscheidungen / Hinweise
 
 - 2026-10-14: `clippy::needless_pass_by_value` wird an Tauri-Commands per `#[expect(..., reason)]` gezielt ausgenommen (vom Nutzer freigegeben).
 - Markdown-Dateien sind von `oxfmt` ausgenommen, damit `CLAUDE.md` unverändert bleibt.
 - Anti-Slop verbietet „shape“ in Bezeichnern: das Editor-Modell heißt deshalb „Mark“ (Markierung).
 - Bilddaten zwischen Frontend und Rust laufen als Raw-Body (keine JSON-Zahlenlisten).
-- 2026-10-14: Builds werden mit dem selbstsignierten Zertifikat „Screeni Dev“ (Anmelde-Schlüsselbund) signiert. Die Freigabe für die Bildschirmaufnahme hängt damit am Zertifikat und bleibt über Builds hinweg erhalten (bei ad-hoc-Signatur hing sie am Code-Hash und verfiel bei jedem Build).
+- 2026-10-14: Builds werden mit dem selbstsignierten Zertifikat „Shot-VILLA Dev“ (Anmelde-Schlüsselbund) signiert. Die Freigabe für die Bildschirmaufnahme hängt damit am Zertifikat und bleibt über Builds hinweg erhalten (bei ad-hoc-Signatur hing sie am Code-Hash und verfiel bei jedem Build).
 - Die Berechtigungsprüfung nutzt zusätzlich zum Preflight den Abruf der aufnehmbaren Inhalte, weil der Preflight-Wert nach einer Freigabe bis zum Neustart veraltet ist.

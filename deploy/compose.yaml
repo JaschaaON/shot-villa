@@ -1,7 +1,7 @@
 # Compose-Stack für die Website. Das Image baut GitHub Actions bei jedem Push bzw. Release.
 services:
   website:
-    image: ghcr.io/jaschaaon/screeni-web:latest
+    image: ghcr.io/jaschaaon/shot-villa-web:latest
     restart: unless-stopped
     ports:
       # Nur lokal erreichbar; davor sitzt ein Reverse Proxy. Nie auf 0.0.0.0 binden.
