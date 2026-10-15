@@ -770,10 +770,6 @@ select {
   line-height: 1.5;
 }
 
-.welcome-icon {
-  filter: drop-shadow(0 6px 14px rgb(0 0 0 / 18%));
-}
-
 .welcome h1 {
   margin: 0;
   font-size: 20px;

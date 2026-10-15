@@ -82,6 +82,11 @@ Noch nicht in der App geprüft: Sichern unter, Drag & Drop ins Editorfenster, �
 - Design Silber-Grau: kühle Neutraltöne, Grafit als Akzent, metallische Leisten und Knöpfe, Glas-Meldungen, Steel-Grau für Auswahlrahmen; Hell- und Dunkelmodus. Neues Icon (gebürstetes Silber, Grafit-Sucher) als SVG in `src-tauri/icons/icon.svg`. Website und Screenshots angepasst.
 - Signatur jetzt mit dem selbstsignierten Zertifikat „Shot-VILLA Dev“; die Bildschirmaufnahme muss für die umbenannte App einmal neu erlaubt werden.
 
+## 0.2.1 – Neues Icon (2026-10-15)
+
+- Icon „Grafit“ (Auswahl aus fünf Entwürfen): dunkles Grafit-Squircle in macOS-Form (Superellipse im Apple-Raster) mit silbernen Sucherecken und Silberpunkt.
+- Ursache des weißen Rands beim alten Icon: `qlmanage` hatte das SVG auf deckend Weiß gerastert. Jetzt Rastern per Browser-Canvas mit echter Transparenz (Ecken 0 % deckend), im Dock geprüft.
+
 ## Entscheidungen / Hinweise
 
 - 2026-10-14: `clippy::needless_pass_by_value` wird an Tauri-Commands per `#[expect(..., reason)]` gezielt ausgenommen (vom Nutzer freigegeben).
