@@ -248,9 +248,6 @@ mod recording {
     use std::path::PathBuf;
 
     use windows_capture::capture::{CaptureControl, Context, GraphicsCaptureApiHandler};
-    use windows_capture::encoder::{
-        AudioSettingsBuilder, ContainerSettingsBuilder, VideoEncoder, VideoSettingsBuilder,
-    };
     use windows_capture::frame::Frame;
     use windows_capture::graphics_capture_api::{GraphicsCaptureApi, InternalCaptureControl};
     use windows_capture::monitor::Monitor as CaptureMonitor;
@@ -259,6 +256,7 @@ mod recording {
         MinimumUpdateIntervalSettings, SecondaryWindowSettings, Settings,
     };
 
+    use super::super::mp4::Mp4Writer;
     use super::{CaptureError, PixelCrop, system};
 
     const FRAMES_PER_SECOND: u32 = 30;
@@ -270,11 +268,9 @@ mod recording {
 
     pub struct Recorder {
         crop: PixelCrop,
-        encoder: Option<VideoEncoder>,
+        encoder: Option<Mp4Writer>,
         /// Zwischenspeicher für die Zeilen ohne Auffüllung.
         rows: Vec<u8>,
-        /// Bild von unten nach oben, so wie der Encoder es für Puffer erwartet.
-        flipped: Vec<u8>,
     }
 
     impl GraphicsCaptureApiHandler for Recorder {
@@ -283,18 +279,11 @@ mod recording {
 
         fn new(context: Context<Self::Flags>) -> Result<Self, Self::Error> {
             let Flags { crop, path } = context.flags;
-            let encoder = VideoEncoder::new(
-                VideoSettingsBuilder::new(crop.width, crop.height).frame_rate(FRAMES_PER_SECOND),
-                AudioSettingsBuilder::default().disabled(true),
-                ContainerSettingsBuilder::default(),
-                path,
-            )
-            .map_err(|error| error.to_string())?;
+            let encoder = Mp4Writer::create(&path, crop.width, crop.height, FRAMES_PER_SECOND)?;
             Ok(Self {
                 crop,
                 encoder: Some(encoder),
                 rows: Vec::new(),
-                flipped: Vec::new(),
             })
         }
 
@@ -321,20 +310,21 @@ mod recording {
                 .buffer_crop(x, y, x + width, y + height)
                 .map_err(|error| error.to_string())?;
             let pixels = buffer.as_nopadding_buffer(&mut self.rows);
-            flip_rows(pixels, width as usize * 4, &mut self.flipped);
-            if let Some(encoder) = self.encoder.as_mut() {
-                encoder
-                    .send_frame_buffer(&self.flipped, timestamp)
-                    .map_err(|error| error.to_string())?;
+            if let Some(encoder) = self.encoder.as_ref() {
+                encoder.send(flip_rows(pixels, width as usize * 4), timestamp)?;
             }
             Ok(())
         }
     }
 
     /// Kehrt die Zeilenreihenfolge um (oben nach unten ↔ unten nach oben).
-    pub fn flip_rows(pixels: &[u8], row_length: usize, target: &mut Vec<u8>) {
-        target.clear();
-        target.extend(pixels.chunks_exact(row_length).rev().flatten());
+    pub fn flip_rows(pixels: &[u8], row_length: usize) -> Vec<u8> {
+        pixels
+            .chunks_exact(row_length)
+            .rev()
+            .flatten()
+            .copied()
+            .collect()
     }
 
     /// Bildschirm mit dem Handle `display_id` als Quelle der Aufnahme.
@@ -427,9 +417,10 @@ mod tests {
 
     #[test]
     fn flips_rows_bottom_up() {
-        let mut target = Vec::new();
-        recording::flip_rows(&[1, 2, 3, 4, 5, 6], 2, &mut target);
-        assert_eq!(target, vec![5, 6, 3, 4, 1, 2]);
+        assert_eq!(
+            recording::flip_rows(&[1, 2, 3, 4, 5, 6], 2),
+            vec![5, 6, 3, 4, 1, 2]
+        );
     }
 
     #[test]

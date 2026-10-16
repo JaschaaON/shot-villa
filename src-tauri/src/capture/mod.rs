@@ -20,6 +20,8 @@ pub use mac::{
 };
 
 #[cfg(windows)]
+mod mp4;
+#[cfg(windows)]
 mod win;
 #[cfg(windows)]
 pub use win::{
