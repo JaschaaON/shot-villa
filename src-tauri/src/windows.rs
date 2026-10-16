@@ -155,13 +155,37 @@ pub fn show_recording(app: &AppHandle, area: Rect, screen: Rect) -> tauri::Resul
     frame.set_ignore_cursor_events(true)?;
     let (x, y) = recording_bar_position(area, screen);
     // Fokus, damit Esc die noch nicht gestartete Aufnahme verwirft.
-    floating(app, RECORDING_BAR, "Bildschirmaufnahme")
+    let bar = floating(app, RECORDING_BAR, "Bildschirmaufnahme")
         .inner_size(RECORDING_BAR_WIDTH, RECORDING_BAR_HEIGHT)
         .position(x, y)
         .focused(true)
         .accept_first_mouse(true)
         .build()?;
+    // macOS lässt die Fenster der App selbst weg, Windows nur auf Wunsch.
+    #[cfg(windows)]
+    for window in [&frame, &bar] {
+        exclude_from_capture(window);
+    }
+    #[cfg(target_os = "macos")]
+    let _ = bar;
     Ok(())
+}
+
+/// Nimmt ein Fenster aus Bildschirmaufnahmen heraus (ab Windows 10 2004).
+#[cfg(windows)]
+fn exclude_from_capture(window: &WebviewWindow) {
+    use windows::Win32::UI::WindowsAndMessaging::{
+        SetWindowDisplayAffinity, WDA_EXCLUDEFROMCAPTURE,
+    };
+    match window.hwnd() {
+        // SAFETY: Tauri liefert das gültige Handle des eigenen Fensters.
+        Ok(hwnd) => {
+            if let Err(error) = unsafe { SetWindowDisplayAffinity(hwnd, WDA_EXCLUDEFROMCAPTURE) } {
+                log::warn!("Fenster nicht von der Aufnahme ausgenommen: {error}");
+            }
+        }
+        Err(error) => log::warn!("Fenster-Handle fehlt: {error}"),
+    }
 }
 
 pub fn close_recording(app: &AppHandle) {

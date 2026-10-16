@@ -33,6 +33,8 @@ pub enum CaptureError {
     System(String),
     #[error("Die Bildschirmaufnahme hat nicht rechtzeitig geantwortet")]
     Timeout,
+    /// Videoaufnahmen brauchen unter macOS Version 15.
+    #[cfg(target_os = "macos")]
     #[error("{0}")]
     Unsupported(&'static str),
     #[error("Kein Bildschirm gefunden")]
@@ -109,10 +111,6 @@ impl Recording {
     /// Längste Wartezeit, bis das Video nach dem Stopp fertig geschrieben ist.
     const FINISH_TIMEOUT: Duration = Duration::from_secs(30);
 
-    #[cfg_attr(
-        windows,
-        expect(dead_code, reason = "Videoaufnahme gibt es nur unter macOS")
-    )]
     fn new(stop: mpsc::Sender<()>, finished: mpsc::Receiver<Result<(), CaptureError>>) -> Self {
         Self { stop, finished }
     }

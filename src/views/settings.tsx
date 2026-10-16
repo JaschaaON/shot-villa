@@ -339,10 +339,7 @@ export const Settings = () => {
         ) : null}
         {tab === "hotkeys" ? (
           <>
-            {HOTKEY_LABELS.filter(
-              // Videoaufnahmen gibt es bisher nur unter macOS.
-              ({ key }) => isMac || key !== "record"
-            ).map(({ key, label }) => (
+            {HOTKEY_LABELS.map(({ key, label }) => (
               <Row key={key} label={label}>
                 <ShortcutRecorder
                   onChange={setHotkey(key)}

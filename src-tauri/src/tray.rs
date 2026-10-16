@@ -67,20 +67,13 @@ fn menu(app: &AppHandle, hotkeys: &Hotkeys) -> tauri::Result<Menu<Wry>> {
         RecordingPhase::Ready => "Bildschirmaufnahme starten",
         RecordingPhase::Running => "Bildschirmaufnahme beenden",
     };
-    let builder = MenuBuilder::new(app);
-    // Videoaufnahmen gibt es bisher nur unter macOS.
-    let builder = if cfg!(target_os = "macos") {
-        builder
-            .item(&item(
-                Action::Record,
-                record_title,
-                hotkeys.record.as_ref(),
-            )?)
-            .separator()
-    } else {
-        builder
-    };
-    builder
+    MenuBuilder::new(app)
+        .item(&item(
+            Action::Record,
+            record_title,
+            hotkeys.record.as_ref(),
+        )?)
+        .separator()
         .item(&item(
             Action::Fullscreen,
             "Vollbild aufnehmen",

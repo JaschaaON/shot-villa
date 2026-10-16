@@ -48,6 +48,7 @@ rqrr = "0.11"
 tauri-plugin-autostart = "2"
 tauri-plugin-notification = "2"
 xcap = "0.9"
+windows-capture = "2.0"
 windows = { version = "0.62", features = [
   "Foundation",
   "Foundation_Collections",

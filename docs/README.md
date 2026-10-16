@@ -126,14 +126,14 @@ Der Text wird in Lesereihenfolge in die Zwischenablage gelegt; eine Mitteilung z
 
 ## Bildschirmaufnahme (Video)
 
-Nimmt einen Bereich des Bildschirms als Video auf (macOS 15 oder neuer).
+Nimmt einen Bereich des Bildschirms als Video auf (macOS 15 oder neuer; Windows 10 ab Version 2004 oder Windows 11).
 
 1. **⌃⌥⌘R** drücken oder im Menüleisten-Symbol **Bildschirmaufnahme (Bereich) …** wählen.
 2. Den Bereich aufziehen – wie beim Bereichsfoto. Ein gestrichelter Rahmen markiert ihn, mittig darunter erscheint eine Leiste mit **Start**. Noch wird nichts aufgenommen.
 3. Auf **Start** klicken (oder erneut **⌃⌥⌘R**). Jetzt läuft die Aufnahme: Der Rahmen wird rot, die Leiste zeigt die Laufzeit, ebenso die Menüleiste neben dem Symbol. **×** oder **Esc** verwirft den Bereich vorher wieder.
 4. Zum Beenden auf **Stopp** klicken, erneut **⌃⌥⌘R** drücken oder im Menü **Bildschirmaufnahme beenden** wählen.
 
-Das Video landet als MP4 (H.264, Retina-Auflösung, 30 Bilder pro Sekunde, mit Mauszeiger, ohne Ton) im eingestellten Ordner, z. B. „Shot-VILLA 2026-10-16 um 17.19.46.mp4“; der Finder zeigt es danach an. Rahmen und Leiste erscheinen nicht im Video. Unter Windows gibt es die Videoaufnahme noch nicht.
+Das Video landet als MP4 (H.264, Retina-Auflösung, 30 Bilder pro Sekunde, mit Mauszeiger, ohne Ton) im eingestellten Ordner, z. B. „Shot-VILLA 2026-10-16 um 17.19.46.mp4“; der Finder (unter Windows der Explorer) zeigt es danach an. Rahmen und Leiste erscheinen nicht im Video. Unter Windows lautet das Kürzel **Strg+Alt+R**; die Laufzeit steht dort nur in der Leiste unter dem Bereich, weil der Infobereich keinen Text neben dem Symbol kennt.
 
 ## Einstellungen
 

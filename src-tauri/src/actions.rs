@@ -478,14 +478,6 @@ fn select_area(
 /// Je nach Stand: Bereich wählen, die bereite Aufnahme starten oder die
 /// laufende beenden. Menü, Kürzel und die Leiste unter dem Bereich nutzen das.
 fn toggle_recording(app: &AppHandle) {
-    if cfg!(windows) {
-        output::notify(
-            app,
-            "Bildschirmaufnahme",
-            "Videoaufnahmen gibt es bisher nur unter macOS.",
-        );
-        return;
-    }
     match app.state::<Session>().recording_phase() {
         RecordingPhase::Idle => {
             with_screen_access(app, |app| start_overlay(app, OverlayMode::Record));

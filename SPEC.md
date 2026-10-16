@@ -29,7 +29,7 @@ Prioritäten: **Muss** (Version 1), **Später**, **Nicht**.
 | C13 | Datei öffnen | PNG, JPEG, GIF, HEIC, TIFF, WebP; Dialog, Drag & Drop, „Öffnen mit“. | Muss |
 | C14 | Text/QR sofort erkennen | Bereich wählen, Text bzw. QR-Inhalt landet in der Zwischenablage. | Muss |
 | C15 | Retina | Native Auflösung; beim Speichern optional auf 1× verkleinern. | Muss |
-| C16 | Bildschirmaufnahme (Video) | Bereich wählen, Video (MP4/H.264, 30 fps, mit Mauszeiger, ohne Ton) läuft bis Stopp per Knopf, Kürzel oder Menü; Rahmen und Steuerleiste sind nicht im Video. macOS 15+, Windows später. | Muss |
+| C16 | Bildschirmaufnahme (Video) | Bereich wählen, Video (MP4/H.264, 30 fps, mit Mauszeiger, ohne Ton) läuft bis Stopp per Knopf, Kürzel oder Menü; Rahmen und Steuerleiste sind nicht im Video. macOS 15+ (ScreenCaptureKit), Windows 10 2004+/11 (Windows Graphics Capture, Media Foundation). | Muss |
 
 ### 1.2 Nach der Aufnahme
 
