@@ -1,6 +1,6 @@
 [package]
 name = "shot-villa"
-version = "0.2.1"
+version = "0.3.0"
 description = "Screenshot- und Annotationswerkzeug für macOS und Windows"
 edition = "2024"
 rust-version = "1.90"
