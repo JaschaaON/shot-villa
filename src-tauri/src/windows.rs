@@ -142,8 +142,9 @@ pub fn open_pin(app: &AppHandle, shot_id: u32, frame: Rect) -> tauri::Result<()>
     Ok(())
 }
 
-/// Rahmen um den aufgenommenen Bereich und eine Leiste mit Laufzeit und
-/// Stopp-Knopf. Beide gehören zur App und erscheinen deshalb nicht im Video.
+/// Rahmen um den gewählten Bereich und mittig darunter eine Leiste mit
+/// Start/Abbrechen bzw. Laufzeit und Stopp. Beide gehören zur App und
+/// erscheinen deshalb nicht im Video.
 pub fn show_recording(app: &AppHandle, area: Rect, screen: Rect) -> tauri::Result<()> {
     let gap = RECORDING_FRAME_GAP;
     let frame = floating(app, RECORDING_FRAME, "Aufnahmebereich")
@@ -153,10 +154,11 @@ pub fn show_recording(app: &AppHandle, area: Rect, screen: Rect) -> tauri::Resul
         .build()?;
     frame.set_ignore_cursor_events(true)?;
     let (x, y) = recording_bar_position(area, screen);
+    // Fokus, damit Esc die noch nicht gestartete Aufnahme verwirft.
     floating(app, RECORDING_BAR, "Bildschirmaufnahme")
         .inner_size(RECORDING_BAR_WIDTH, RECORDING_BAR_HEIGHT)
         .position(x, y)
-        .focused(false)
+        .focused(true)
         .accept_first_mouse(true)
         .build()?;
     Ok(())

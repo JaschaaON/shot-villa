@@ -134,6 +134,12 @@ export const RedoIcon = () => (
   </Icon>
 );
 
+export const RecordIcon = () => (
+  <Icon>
+    <circle cx="10" cy="10" fill="currentColor" r="5" stroke="none" />
+  </Icon>
+);
+
 export const StopIcon = () => (
   <Icon>
     <rect height="10" rx="2" width="10" x="5" y="5" />

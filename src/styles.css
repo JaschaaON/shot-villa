@@ -211,8 +211,13 @@ button.primary {
 .recording-frame {
   position: fixed;
   inset: 0;
-  border: 2px dashed rgb(232 72 72 / 90%);
+  border: 2px dashed rgb(200 206 214 / 95%);
   border-radius: 4px;
+  box-shadow: 0 0 0 1px rgb(30 34 40 / 45%);
+}
+
+.recording-frame.running {
+  border-color: rgb(232 72 72 / 90%);
   box-shadow: 0 0 0 1px rgb(255 255 255 / 45%);
 }
 
@@ -250,6 +255,38 @@ button.primary {
   flex: 1;
   font-weight: 600;
   font-variant-numeric: tabular-nums;
+}
+
+.recording-hint {
+  flex: 1;
+  color: rgb(242 244 246 / 70%);
+  font-size: 12px;
+}
+
+.recording-bar .recording-start {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 5px 14px 5px 8px;
+  border: none;
+  border-radius: 999px;
+  background: linear-gradient(180deg, #f06262 0%, #c93b3b 100%);
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / 30%);
+  color: #ffffff;
+  font-weight: 600;
+}
+
+.recording-bar .recording-cancel {
+  display: inline-grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+  background: rgb(255 255 255 / 10%);
+  box-shadow: none;
+  color: #f2f4f6;
 }
 
 .recording-bar .recording-stop {

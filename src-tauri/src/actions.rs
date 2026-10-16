@@ -25,6 +25,7 @@ pub enum Action {
     ActiveWindow,
     Ocr,
     Record,
+    RecordCancel,
     ShowApp,
     LoadClipboard,
     OpenFile,
@@ -32,7 +33,7 @@ pub enum Action {
 }
 
 impl Action {
-    pub const ALL: [Self; 11] = [
+    pub const ALL: [Self; 12] = [
         Self::Fullscreen,
         Self::Area,
         Self::RepeatArea,
@@ -40,6 +41,7 @@ impl Action {
         Self::ActiveWindow,
         Self::Ocr,
         Self::Record,
+        Self::RecordCancel,
         Self::ShowApp,
         Self::LoadClipboard,
         Self::OpenFile,
@@ -55,6 +57,7 @@ impl Action {
             Self::ActiveWindow => "capture-active-window",
             Self::Ocr => "recognize-text",
             Self::Record => "record-area",
+            Self::RecordCancel => "record-cancel",
             Self::ShowApp => "show-app",
             Self::LoadClipboard => "load-clipboard",
             Self::OpenFile => "open-file",
@@ -119,27 +122,57 @@ struct ActiveRecording {
     started: Instant,
 }
 
+/// Bildschirmaufnahme: Bereich gewählt und bereit, oder sie läuft.
+enum RecordingState {
+    /// Bereich in Punkten relativ zum Bildschirm `display_id`; wartet auf „Start“.
+    Ready {
+        display_id: u32,
+        rect: Rect,
+    },
+    Running(ActiveRecording),
+}
+
+/// Wo die Bildschirmaufnahme gerade steht.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum RecordingPhase {
+    Idle,
+    Ready,
+    Running,
+}
+
+/// Ereignis an Rahmen und Leiste: Die Aufnahme läuft jetzt.
+const RECORDING_STARTED: &str = "recording-started";
+
 /// Laufzustand der Aufnahme-Abläufe.
 #[derive(Default)]
 pub struct Session {
     overlay: Mutex<Option<Overlay>>,
     /// Zuletzt gewählter Bereich: Bildschirm und Rechteck relativ dazu.
     last_area: Mutex<Option<(u32, Rect)>>,
-    recording: Mutex<Option<ActiveRecording>>,
+    recording: Mutex<Option<RecordingState>>,
 }
 
 impl Session {
-    fn recording(&self) -> MutexGuard<'_, Option<ActiveRecording>> {
+    fn recording(&self) -> MutexGuard<'_, Option<RecordingState>> {
         self.recording
             .lock()
             .unwrap_or_else(PoisonError::into_inner)
     }
 
+    pub fn recording_phase(&self) -> RecordingPhase {
+        match *self.recording() {
+            None => RecordingPhase::Idle,
+            Some(RecordingState::Ready { .. }) => RecordingPhase::Ready,
+            Some(RecordingState::Running(_)) => RecordingPhase::Running,
+        }
+    }
+
     /// Wie lange die laufende Bildschirmaufnahme schon dauert.
     pub fn recording_elapsed(&self) -> Option<Duration> {
-        self.recording()
-            .as_ref()
-            .map(|active| active.started.elapsed())
+        match &*self.recording() {
+            Some(RecordingState::Running(active)) => Some(active.started.elapsed()),
+            _ => None,
+        }
     }
 
     fn overlay(&self) -> MutexGuard<'_, Option<Overlay>> {
@@ -176,6 +209,7 @@ pub fn run(app: &AppHandle, action: Action) {
         Action::AnyWindow => with_screen_access(app, |app| start_overlay(app, OverlayMode::Window)),
         Action::Ocr => with_screen_access(app, |app| start_overlay(app, OverlayMode::Ocr)),
         Action::Record => toggle_recording(app),
+        Action::RecordCancel => in_background(app, cancel_recording),
         Action::RepeatArea => with_screen_access(app, repeat_area),
         Action::ActiveWindow => with_screen_access(app, capture_active_window),
         Action::LoadClipboard => in_background(app, load_clipboard),
@@ -434,14 +468,15 @@ fn select_area(
     let image = imaging::crop(&frozen, pixel_rect(rect, scale))?;
     match mode {
         OverlayMode::Ocr => return recognize_into_clipboard(app, &image),
-        OverlayMode::Record => return start_recording(app, display, rect),
+        OverlayMode::Record => return prepare_recording(app, display, rect),
         OverlayMode::Area | OverlayMode::Window => {}
     }
     *app.state::<Session>().last_area() = Some((display.display_id, rect));
     deliver(app, &image, scale, Kind::Area, display.frame)
 }
 
-/// Startet die Bereichsauswahl für ein Video oder beendet die laufende Aufnahme.
+/// Je nach Stand: Bereich wählen, die bereite Aufnahme starten oder die
+/// laufende beenden. Menü, Kürzel und die Leiste unter dem Bereich nutzen das.
 fn toggle_recording(app: &AppHandle) {
     if cfg!(windows) {
         output::notify(
@@ -449,21 +484,22 @@ fn toggle_recording(app: &AppHandle) {
             "Bildschirmaufnahme",
             "Videoaufnahmen gibt es bisher nur unter macOS.",
         );
-    } else if app.state::<Session>().recording_elapsed().is_some() {
-        in_background(app, stop_recording);
-    } else {
-        with_screen_access(app, |app| start_overlay(app, OverlayMode::Record));
+        return;
+    }
+    match app.state::<Session>().recording_phase() {
+        RecordingPhase::Idle => {
+            with_screen_access(app, |app| start_overlay(app, OverlayMode::Record));
+        }
+        RecordingPhase::Ready => in_background(app, begin_recording),
+        RecordingPhase::Running => in_background(app, stop_recording),
     }
 }
 
-fn start_recording(app: &AppHandle, display: &OverlayDisplay, rect: Rect) -> ActionResult {
-    let folder = app.state::<Store>().get().save_folder();
-    let path = files::new_recording_path(&folder)?;
-    let recording = capture::start_recording(display.display_id, rect, &path)?;
-    *app.state::<Session>().recording() = Some(ActiveRecording {
-        recording,
-        path,
-        started: Instant::now(),
+/// Zeigt Rahmen und Leiste mit „Start“; aufgenommen wird erst danach.
+fn prepare_recording(app: &AppHandle, display: &OverlayDisplay, rect: Rect) -> ActionResult {
+    *app.state::<Session>().recording() = Some(RecordingState::Ready {
+        display_id: display.display_id,
+        rect,
     });
     let area = Rect {
         x: display.frame.x + rect.x,
@@ -471,6 +507,47 @@ fn start_recording(app: &AppHandle, display: &OverlayDisplay, rect: Rect) -> Act
         ..rect
     };
     windows::show_recording(app, area, display.frame)?;
+    tray::refresh(app, &app.state::<Store>().get().hotkeys)?;
+    Ok(())
+}
+
+/// Verwirft den gewählten Bereich, solange die Aufnahme noch nicht läuft.
+fn cancel_recording(app: &AppHandle) -> ActionResult {
+    {
+        let session = app.state::<Session>();
+        let mut state = session.recording();
+        if !matches!(*state, Some(RecordingState::Ready { .. })) {
+            return Ok(());
+        }
+        *state = None;
+    }
+    windows::close_recording(app);
+    tray::refresh(app, &app.state::<Store>().get().hotkeys)?;
+    Ok(())
+}
+
+fn begin_recording(app: &AppHandle) -> ActionResult {
+    let Some((display_id, rect)) = (match *app.state::<Session>().recording() {
+        Some(RecordingState::Ready { display_id, rect }) => Some((display_id, rect)),
+        _ => None,
+    }) else {
+        return Ok(());
+    };
+    let folder = app.state::<Store>().get().save_folder();
+    let path = files::new_recording_path(&folder)?;
+    let recording = match capture::start_recording(display_id, rect, &path) {
+        Ok(recording) => recording,
+        Err(error) => {
+            cancel_recording(app)?;
+            return Err(error.into());
+        }
+    };
+    *app.state::<Session>().recording() = Some(RecordingState::Running(ActiveRecording {
+        recording,
+        path,
+        started: Instant::now(),
+    }));
+    app.emit(RECORDING_STARTED, ())?;
     tray::refresh(app, &app.state::<Store>().get().hotkeys)?;
     // Laufzeit in der Menüleiste, solange die Aufnahme läuft.
     let app = app.clone();
@@ -485,8 +562,16 @@ fn start_recording(app: &AppHandle, display: &OverlayDisplay, rect: Rect) -> Act
 }
 
 fn stop_recording(app: &AppHandle) -> ActionResult {
-    let Some(active) = app.state::<Session>().recording().take() else {
-        return Ok(());
+    let active = {
+        let session = app.state::<Session>();
+        let mut state = session.recording();
+        match state.take() {
+            Some(RecordingState::Running(active)) => active,
+            other => {
+                *state = other;
+                return Ok(());
+            }
+        }
     };
     windows::close_recording(app);
     tray::refresh(app, &app.state::<Store>().get().hotkeys)?;

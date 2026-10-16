@@ -81,6 +81,7 @@ export type ActionId =
   | "capture-active-window"
   | "recognize-text"
   | "record-area"
+  | "record-cancel"
   | "show-app"
   | "load-clipboard"
   | "open-file"
@@ -119,6 +120,14 @@ export const onShotReady = async (
 ): Promise<UnlistenFn> =>
   await listen<ShotInfo>("shot-ready", (event) => {
     handler(event.payload);
+  });
+
+/** Die Bildschirmaufnahme läuft jetzt (nach „Start“ oder per Kürzel). */
+export const onRecordingStarted = async (
+  handler: () => void
+): Promise<UnlistenFn> =>
+  await listen("recording-started", () => {
+    handler();
   });
 
 export const runAction = async (id: ActionId) => {

@@ -10,7 +10,7 @@ use std::time::Duration;
 
 use tauri::Manager;
 
-use crate::actions::{Action, Session};
+use crate::actions::{Action, RecordingPhase, Session};
 use crate::settings::Hotkeys;
 
 const TRAY_ID: &str = "main";
@@ -62,11 +62,10 @@ fn menu(app: &AppHandle, hotkeys: &Hotkeys) -> tauri::Result<Menu<Wry>> {
     let item = |action: Action, title: &str, shortcut: Option<&String>| {
         MenuItem::with_id(app, action.id(), title, true, shortcut.map(String::as_str))
     };
-    let recording = app.state::<Session>().recording_elapsed().is_some();
-    let record_title = if recording {
-        "Bildschirmaufnahme beenden"
-    } else {
-        "Bildschirmaufnahme (Bereich) …"
+    let record_title = match app.state::<Session>().recording_phase() {
+        RecordingPhase::Idle => "Bildschirmaufnahme (Bereich) …",
+        RecordingPhase::Ready => "Bildschirmaufnahme starten",
+        RecordingPhase::Running => "Bildschirmaufnahme beenden",
     };
     let builder = MenuBuilder::new(app);
     // Videoaufnahmen gibt es bisher nur unter macOS.
