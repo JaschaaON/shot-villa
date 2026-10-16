@@ -1,6 +1,6 @@
 [package]
 name = "shot-villa"
-version = "0.3.0"
+version = "0.3.1"
 description = "Screenshot- und Annotationswerkzeug für macOS und Windows"
 edition = "2024"
 rust-version = "1.90"
@@ -19,6 +19,7 @@ tauri-build = { version = "2.6", features = [] }
 tauri = { version = "2.12", features = ["tray-icon", "image-png", "macos-private-api"] }
 tauri-plugin-global-shortcut = "2.4"
 tauri-plugin-log = "2"
+dirs = "6"
 tauri-plugin-dialog = "2"
 chrono = { version = "0.4", default-features = false, features = ["clock", "std"] }
 serde = { version = "1", features = ["derive"] }

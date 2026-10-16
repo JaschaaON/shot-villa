@@ -151,11 +151,9 @@ impl Settings {
     }
 }
 
+/// Schreibtisch des Nutzers; unter Windows auch ein umgeleiteter (etwa in die Cloud).
 fn default_save_folder() -> PathBuf {
-    std::env::var_os("HOME").map_or_else(
-        || PathBuf::from("/tmp"),
-        |home| PathBuf::from(home).join("Desktop"),
-    )
+    dirs::desktop_dir().unwrap_or_else(std::env::temp_dir)
 }
 
 /// Einstellungen samt Speicherort.

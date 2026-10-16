@@ -67,9 +67,16 @@ pub fn reveal(path: &Path) {
 /// Zeigt die Datei im Finder bzw. Explorer.
 #[cfg(windows)]
 pub fn reveal(path: &Path) {
-    let mut argument = std::ffi::OsString::from("/select,");
+    use std::os::windows::process::CommandExt;
+    // Der Explorer erwartet `/select,"Pfad"`; `arg` würde das Ganze in
+    // Anführungszeichen setzen, sobald der Pfad Leerzeichen enthält.
+    let mut argument = std::ffi::OsString::from("/select,\"");
     argument.push(path);
-    if let Err(error) = std::process::Command::new("explorer").arg(argument).spawn() {
+    argument.push("\"");
+    if let Err(error) = std::process::Command::new("explorer")
+        .raw_arg(argument)
+        .spawn()
+    {
         log::warn!("Explorer nicht gestartet: {error}");
     }
 }

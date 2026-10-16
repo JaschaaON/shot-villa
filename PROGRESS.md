@@ -37,7 +37,7 @@ Legende: ☐ offen · ◐ implementiert, Tests grün, Praxistest offen · ☑ fe
 | C13 | Datei öffnen / Drag & Drop / „Öffnen mit“ | ◐ | Dialog, Ziehen ins Editorfenster, Dateizuordnung des Systems; Absturz beim Kaltstart per „Öffnen mit“ behoben (Datei wird bis Ende des Starts zurückgestellt), Kaltstart geprüft |
 | C14 | Instant-OCR/QR | ☑ | Bereich wählen → Text bzw. QR-Inhalt in die Zwischenablage + Mitteilung; Auswahl übersteht jetzt auch sehr schnelles Ziehen; Mitteilung laut Systemprotokoll zugestellt |
 | C15 | Retina / 1×-Export | ◐ | Einstellung „Beim Speichern auf 1× verkleinern“; Kopien und Dateien tragen die Pixeldichte (144 dpi bei Retina), wie macOS-Bildschirmfotos |
-| C16 | Bildschirmaufnahme (Video) | ☑ | macOS 15+: `SCStream` mit `SCRecordingOutput` (H.264/MP4, 30 fps, Retina, mit Mauszeiger, ohne Ton); Menü oder ⌃⌥⌘R, Bereich wie beim Bereichsfoto; danach Rahmen (silber) und mittig darunter Leiste mit **Start** und **×**/Esc – aufgenommen wird erst nach Start; dann Rahmen rot, Leiste mit Laufzeit und **Stopp** (gehören zur App, daher nicht im Video), Laufzeit in der Menüleiste; Stopp per Knopf, Kürzel oder Menü; Datei im Bildordner, als Bildschirmaufnahme gekennzeichnet, Finder zeigt sie. In der App geprüft (Menü und Kürzel, 11-s-Video 1512×756, Einzelbild ohne Rahmen/Leiste; Start erst per Klick, Stopp per Knopf, Abbrechen per Esc und ×, ohne Datei). Windows: Windows Graphics Capture über `windows-capture` (Bildschirm aufnehmen, Bereich ausschneiden, H.264/MP4 über Media Foundation, Mauszeiger an und gelber Rand aus, wo das System es erlaubt); Rahmen und Leiste per `WDA_EXCLUDEFROMCAPTURE` aus der Aufnahme genommen; besteht clippy pedantic, auf einem echten Windows-Rechner noch nicht getestet |
+| C16 | Bildschirmaufnahme (Video) | ☑ | macOS 15+: `SCStream` mit `SCRecordingOutput` (H.264/MP4, 30 fps, Retina, mit Mauszeiger, ohne Ton); Menü oder ⌃⌥⌘R, Bereich wie beim Bereichsfoto; danach Rahmen (silber) und mittig darunter Leiste mit **Start** und **×**/Esc – aufgenommen wird erst nach Start; dann Rahmen rot, Leiste mit Laufzeit und **Stopp** (gehören zur App, daher nicht im Video), Laufzeit in der Menüleiste; Stopp per Knopf, Kürzel oder Menü; Datei im Bildordner, als Bildschirmaufnahme gekennzeichnet, Finder zeigt sie. In der App geprüft (Menü und Kürzel, 11-s-Video 1512×756, Einzelbild ohne Rahmen/Leiste; Start erst per Klick, Stopp per Knopf, Abbrechen per Esc und ×, ohne Datei). Windows: Windows Graphics Capture über `windows-capture` (Bildschirm aufnehmen, Bereich ausschneiden, Mauszeiger an und gelber Rand aus, wo das System es erlaubt), H.264/MP4 über einen eigenen Sink Writer von Media Foundation (Software-Encoder, nur Video); Rahmen und Leiste per `WDA_EXCLUDEFROMCAPTURE` aus der Aufnahme genommen. Auf einer Windows-11-VM (per Remotedesktop) geprüft: Start, Laufzeit, Stopp, Video richtig herum und scharf |
 | A1 | Nach der Aufnahme | ◐ | Zeigen / Kopieren / Speichern kombinierbar |
 | A2 | Mini-Vorschau | ☑ | Unten rechts; Kopieren, Speichern, Bearbeiten, Schließen; Schließen manuell oder bei Klick daneben |
 | A4 | Esc-Verhalten | ☑ | Kopieren-Knopf schließt den Editor bzw. die Vorschau ebenfalls (Wunsch 2026-10-14). |
@@ -87,6 +87,13 @@ Noch nicht in der App geprüft: Sichern unter, Drag & Drop ins Editorfenster, �
 
 - Icon „Grafit“ (Auswahl aus fünf Entwürfen): dunkles Grafit-Squircle in macOS-Form (Superellipse im Apple-Raster) mit silbernen Sucherecken und Silberpunkt.
 - Ursache des weißen Rands beim alten Icon: `qlmanage` hatte das SVG auf deckend Weiß gerastert. Jetzt Rastern per Browser-Canvas mit echter Transparenz (Ecken 0 % deckend), im Dock geprüft.
+
+## 0.3.1 – Bildschirmaufnahme unter Windows (2026-10-16)
+
+- Klick auf „Start“ schloss nur das Fenster: Der Encoder von `windows-capture` (WinRT-`MediaTranscoder` mit fester AAC-Tonspur und erzwungener Hardware-Beschleunigung) scheiterte auf einer Windows-11-VM mit `0xC00D6D60`. Ersetzt durch einen eigenen Sink Writer von Media Foundation (`capture/mp4.rs`): nur Video, Software-H.264, eigener Thread. Auf der VM geprüft.
+- Standard-Bildordner unter Windows war `C:\tmp` (aus der dort fehlenden Variable `HOME`); jetzt der Schreibtisch des Nutzers über die Systemordner-Abfrage, auch wenn er umgeleitet ist.
+- Explorer markierte die Datei nicht, wenn der Pfad Leerzeichen enthielt (`/select,` mit falschen Anführungszeichen).
+- Schlägt der Start fehl, bleibt keine leere MP4-Datei mehr liegen.
 
 ## Entscheidungen / Hinweise
 

@@ -530,6 +530,8 @@ fn begin_recording(app: &AppHandle) -> ActionResult {
     let recording = match capture::start_recording(display_id, rect, &path) {
         Ok(recording) => recording,
         Err(error) => {
+            // Eine angelegte, aber leere Datei bliebe sonst liegen.
+            let _ = std::fs::remove_file(&path);
             cancel_recording(app)?;
             return Err(error.into());
         }
