@@ -3,23 +3,29 @@
 //! Alle Funktionen blockieren, bis `ScreenCaptureKit` geantwortet hat. Sie
 //! dürfen deshalb nicht auf dem Main-Thread laufen.
 
+use std::path::Path;
 use std::ptr::NonNull;
-use std::sync::mpsc;
+use std::sync::{Mutex, mpsc};
 use std::time::Duration;
 
 use block2::RcBlock;
-use objc2::AnyThread;
 use objc2::rc::Retained;
+use objc2::runtime::{NSObject, NSObjectProtocol, ProtocolObject};
+use objc2::{AnyThread, DefinedClass, define_class, msg_send};
 use objc2_app_kit::NSWorkspace;
-use objc2_core_foundation::{CFRetained, CGPoint, CGRect};
+use objc2_core_foundation::{CFRetained, CGPoint, CGRect, CGSize};
 use objc2_core_graphics::{CGEvent, CGImage, CGWindowListCreate, CGWindowListOption};
-use objc2_foundation::{NSArray, NSError};
+use objc2_core_media::CMTime;
+use objc2_foundation::{
+    NSArray, NSError, NSOperatingSystemVersion, NSProcessInfo, NSString, NSURL,
+};
 use objc2_screen_capture_kit::{
-    SCCaptureResolutionType, SCContentFilter, SCDisplay, SCScreenshotManager, SCShareableContent,
-    SCStreamConfiguration, SCWindow,
+    SCCaptureResolutionType, SCContentFilter, SCDisplay, SCRecordingOutput,
+    SCRecordingOutputConfiguration, SCRecordingOutputDelegate, SCScreenshotManager,
+    SCShareableContent, SCStream, SCStreamConfiguration, SCWindow,
 };
 
-use super::{CaptureError, DisplayShot, Rect, WindowInfo, WindowShot};
+use super::{CaptureError, DisplayShot, Recording, Rect, WindowInfo, WindowShot};
 
 const TIMEOUT: Duration = Duration::from_secs(10);
 
@@ -69,20 +75,7 @@ fn capture_display(
     display: &SCDisplay,
     shows_cursor: bool,
 ) -> Result<DisplayShot, CaptureError> {
-    // Eigene Fenster (Editor, Vorschau, Overlay) dürfen nie in der Aufnahme landen.
-    let own_pid = std::process::id();
-    let own_apps: Vec<_> = unsafe { content.applications() }
-        .iter()
-        .filter(|app| u32::try_from(unsafe { app.processID() }).is_ok_and(|pid| pid == own_pid))
-        .collect();
-    let filter = unsafe {
-        SCContentFilter::initWithDisplay_excludingApplications_exceptingWindows(
-            SCContentFilter::alloc(),
-            display,
-            &NSArray::from_retained_slice(&own_apps),
-            &NSArray::new(),
-        )
-    };
+    let filter = display_filter(content, display);
     let frame: Rect = unsafe { display.frame() }.into();
     let (scale, image) = screenshot(&filter, frame, shows_cursor)?;
     Ok(DisplayShot {
@@ -91,6 +84,221 @@ fn capture_display(
         scale,
         image,
     })
+}
+
+/// Ganzer Bildschirm ohne eigene Fenster (Editor, Vorschau, Overlay, Aufnahme-Leiste).
+fn display_filter(content: &SCShareableContent, display: &SCDisplay) -> Retained<SCContentFilter> {
+    let own_pid = std::process::id();
+    let own_apps: Vec<_> = unsafe { content.applications() }
+        .iter()
+        .filter(|app| u32::try_from(unsafe { app.processID() }).is_ok_and(|pid| pid == own_pid))
+        .collect();
+    unsafe {
+        SCContentFilter::initWithDisplay_excludingApplications_exceptingWindows(
+            SCContentFilter::alloc(),
+            display,
+            &NSArray::from_retained_slice(&own_apps),
+            &NSArray::new(),
+        )
+    }
+}
+
+/// Bilder pro Sekunde der Videoaufnahme.
+const FRAMES_PER_SECOND: i32 = 30;
+
+/// Startet eine Videoaufnahme (H.264 in MP4) vom Bereich `area` des Bildschirms
+/// `display_id`; `area` in Punkten relativ zum Bildschirm. Braucht macOS 15.
+pub fn start_recording(
+    display_id: u32,
+    area: Rect,
+    path: &Path,
+) -> Result<Recording, CaptureError> {
+    let macos_15 = NSOperatingSystemVersion {
+        majorVersion: 15,
+        minorVersion: 0,
+        patchVersion: 0,
+    };
+    if !NSProcessInfo::processInfo().isOperatingSystemAtLeastVersion(macos_15) {
+        return Err(CaptureError::Unsupported(
+            "Bildschirmaufnahmen brauchen macOS 15 oder neuer",
+        ));
+    }
+    let (started_sender, started) = mpsc::channel();
+    let (stop, stop_requested) = mpsc::channel::<()>();
+    let (finished_sender, finished) = mpsc::channel();
+    let path = path.to_owned();
+    // Die Systemobjekte bleiben in diesem Thread, bis die Aufnahme endet.
+    std::thread::spawn(move || {
+        let stream = match ActiveStream::start(display_id, area, &path) {
+            Ok(stream) => {
+                let _ = started_sender.send(Ok(()));
+                stream
+            }
+            Err(error) => {
+                let _ = started_sender.send(Err(error));
+                return;
+            }
+        };
+        // Endet auch, wenn die Gegenseite verschwindet.
+        let _ = stop_requested.recv();
+        let _ = finished_sender.send(stream.finish());
+    });
+    started
+        .recv_timeout(TIMEOUT)
+        .map_err(|_| CaptureError::Timeout)??;
+    Ok(Recording::new(stop, finished))
+}
+
+/// Meldungen der Datei-Ausgabe.
+enum RecordingEvent {
+    Started,
+    Failed(String),
+    Finished,
+}
+
+define_class!(
+    // SAFETY: NSObject stellt keine Anforderungen an Unterklassen, kein Drop.
+    #[unsafe(super(NSObject))]
+    #[name = "ShotVillaRecordingDelegate"]
+    #[ivars = Mutex<mpsc::Sender<RecordingEvent>>]
+    struct RecordingDelegate;
+
+    unsafe impl NSObjectProtocol for RecordingDelegate {}
+
+    unsafe impl SCRecordingOutputDelegate for RecordingDelegate {
+        #[unsafe(method(recordingOutputDidStartRecording:))]
+        fn did_start(&self, _output: &SCRecordingOutput) {
+            self.send(RecordingEvent::Started);
+        }
+
+        #[unsafe(method(recordingOutput:didFailWithError:))]
+        fn did_fail(&self, _output: &SCRecordingOutput, error: &NSError) {
+            self.send(RecordingEvent::Failed(error.localizedDescription().to_string()));
+        }
+
+        #[unsafe(method(recordingOutputDidFinishRecording:))]
+        fn did_finish(&self, _output: &SCRecordingOutput) {
+            self.send(RecordingEvent::Finished);
+        }
+    }
+);
+
+impl RecordingDelegate {
+    fn new(events: mpsc::Sender<RecordingEvent>) -> Retained<Self> {
+        let this = Self::alloc().set_ivars(Mutex::new(events));
+        // SAFETY: `init` von NSObject.
+        unsafe { msg_send![super(this), init] }
+    }
+
+    fn send(&self, event: RecordingEvent) {
+        if let Ok(events) = self.ivars().lock() {
+            // Nach dem Ende der Aufnahme hört niemand mehr zu.
+            let _ = events.send(event);
+        }
+    }
+}
+
+/// Laufender Stream mit Datei-Ausgabe.
+struct ActiveStream {
+    stream: Retained<SCStream>,
+    // Stream und Ausgabe halten ihren Delegate nur schwach.
+    _output: Retained<SCRecordingOutput>,
+    _delegate: Retained<RecordingDelegate>,
+    events: mpsc::Receiver<RecordingEvent>,
+}
+
+impl ActiveStream {
+    fn start(display_id: u32, area: Rect, path: &Path) -> Result<Self, CaptureError> {
+        let content = shareable_content()?;
+        let display = unsafe { content.displays() }
+            .iter()
+            .find(|d| unsafe { d.displayID() } == display_id)
+            .ok_or(CaptureError::NoDisplay)?;
+        let filter = display_filter(&content, &display);
+        let info = unsafe { SCShareableContent::infoForFilter(&filter) };
+        let scale = f64::from(unsafe { info.pointPixelScale() });
+        let (width, height) = even_pixel_size(area, scale);
+
+        let config = unsafe { SCStreamConfiguration::new() };
+        unsafe {
+            config.setSourceRect(CGRect::new(
+                CGPoint::new(area.x, area.y),
+                CGSize::new(area.width, area.height),
+            ));
+            config.setWidth(width);
+            config.setHeight(height);
+            config.setShowsCursor(true);
+            config.setMinimumFrameInterval(CMTime::new(1, FRAMES_PER_SECOND));
+        }
+
+        let (sender, events) = mpsc::channel();
+        let delegate = RecordingDelegate::new(sender);
+        let output_config = unsafe { SCRecordingOutputConfiguration::new() };
+        let url = NSURL::fileURLWithPath(&NSString::from_str(&path.to_string_lossy()));
+        unsafe { output_config.setOutputURL(&url) };
+        let output = unsafe {
+            SCRecordingOutput::initWithConfiguration_delegate(
+                SCRecordingOutput::alloc(),
+                &output_config,
+                ProtocolObject::from_ref(&*delegate),
+            )
+        };
+        let stream = unsafe {
+            SCStream::initWithFilter_configuration_delegate(
+                SCStream::alloc(),
+                &filter,
+                &config,
+                None,
+            )
+        };
+        unsafe { stream.addRecordingOutput_error(&output) }
+            .map_err(|error| system_error(&error))?;
+        await_completion(|done| {
+            let handler = RcBlock::new(move |error: *mut NSError| {
+                let _ = done.send(if error.is_null() {
+                    Ok(())
+                } else {
+                    Err(ns_error(error))
+                });
+            });
+            unsafe { stream.startCaptureWithCompletionHandler(Some(&handler)) };
+        })?;
+        Ok(Self {
+            stream,
+            _output: output,
+            _delegate: delegate,
+            events,
+        })
+    }
+
+    /// Stoppt den Stream und wartet, bis die Datei fertig geschrieben ist.
+    fn finish(self) -> Result<(), CaptureError> {
+        await_completion(|done| {
+            let handler = RcBlock::new(move |error: *mut NSError| {
+                let _ = done.send(if error.is_null() {
+                    Ok(())
+                } else {
+                    Err(ns_error(error))
+                });
+            });
+            unsafe { self.stream.stopCaptureWithCompletionHandler(Some(&handler)) };
+        })?;
+        loop {
+            match self.events.recv_timeout(TIMEOUT) {
+                Ok(RecordingEvent::Started) => {}
+                Ok(RecordingEvent::Finished) => return Ok(()),
+                Ok(RecordingEvent::Failed(message)) => return Err(CaptureError::System(message)),
+                Err(_) => return Err(CaptureError::Timeout),
+            }
+        }
+    }
+}
+
+/// Pixelgröße des Videos; H.264 verlangt gerade Kantenlängen.
+#[allow(clippy::cast_possible_truncation, clippy::cast_sign_loss)]
+fn even_pixel_size(area: Rect, scale: f64) -> (usize, usize) {
+    let even = |points: f64| (((points * scale) / 2.0).round() as usize * 2).max(2);
+    (even(area.width), even(area.height))
 }
 
 /// Sichtbare Fenster anderer Apps, vorderstes zuerst.
@@ -254,6 +462,10 @@ fn await_completion<T>(
         .map_err(|_| CaptureError::Timeout)?
 }
 
+fn system_error(error: &NSError) -> CaptureError {
+    CaptureError::System(error.localizedDescription().to_string())
+}
+
 fn ns_error(error: *mut NSError) -> CaptureError {
     // SAFETY: Der Zeiger ist entweder null oder ein gültiges NSError.
     let message = unsafe { Retained::retain(error) }.map_or_else(
@@ -300,6 +512,19 @@ mod tests {
             width,
             height,
         }
+    }
+
+    #[test]
+    fn video_size_is_even() {
+        assert_eq!(
+            even_pixel_size(rect(0.0, 0.0, 300.5, 201.0), 2.0),
+            (602, 402)
+        );
+        assert_eq!(
+            even_pixel_size(rect(0.0, 0.0, 301.0, 201.0), 1.0),
+            (302, 202)
+        );
+        assert_eq!(even_pixel_size(rect(0.0, 0.0, 0.2, 0.2), 1.0), (2, 2));
     }
 
     #[test]

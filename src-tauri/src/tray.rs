@@ -6,7 +6,11 @@ use tauri::{
     tray::TrayIconBuilder,
 };
 
-use crate::actions::Action;
+use std::time::Duration;
+
+use tauri::Manager;
+
+use crate::actions::{Action, Session};
 use crate::settings::Hotkeys;
 
 const TRAY_ID: &str = "main";
@@ -39,11 +43,45 @@ pub fn refresh(app: &AppHandle, hotkeys: &Hotkeys) -> tauri::Result<()> {
     Ok(())
 }
 
+/// Zeigt die Laufzeit der Bildschirmaufnahme neben dem Symbol (nur macOS).
+pub fn show_recording_time(app: &AppHandle, elapsed: Option<Duration>) {
+    if let Some(tray) = app.tray_by_id(TRAY_ID)
+        && let Err(error) = tray.set_title(elapsed.map(format_elapsed).as_deref())
+    {
+        log::warn!("Laufzeit nicht angezeigt: {error}");
+    }
+}
+
+/// „● 1:05“ – Minuten und Sekunden der laufenden Aufnahme.
+fn format_elapsed(elapsed: Duration) -> String {
+    let seconds = elapsed.as_secs();
+    format!("● {}:{:02}", seconds / 60, seconds % 60)
+}
+
 fn menu(app: &AppHandle, hotkeys: &Hotkeys) -> tauri::Result<Menu<Wry>> {
     let item = |action: Action, title: &str, shortcut: Option<&String>| {
         MenuItem::with_id(app, action.id(), title, true, shortcut.map(String::as_str))
     };
-    MenuBuilder::new(app)
+    let recording = app.state::<Session>().recording_elapsed().is_some();
+    let record_title = if recording {
+        "Bildschirmaufnahme beenden"
+    } else {
+        "Bildschirmaufnahme (Bereich) …"
+    };
+    let builder = MenuBuilder::new(app);
+    // Videoaufnahmen gibt es bisher nur unter macOS.
+    let builder = if cfg!(target_os = "macos") {
+        builder
+            .item(&item(
+                Action::Record,
+                record_title,
+                hotkeys.record.as_ref(),
+            )?)
+            .separator()
+    } else {
+        builder
+    };
+    builder
         .item(&item(
             Action::Fullscreen,
             "Vollbild aufnehmen",
@@ -91,4 +129,15 @@ fn menu(app: &AppHandle, hotkeys: &Hotkeys) -> tauri::Result<Menu<Wry>> {
         .separator()
         .item(&PredefinedMenuItem::quit(app, Some("Shot-VILLA beenden"))?)
         .build()
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn elapsed_shows_minutes_and_seconds() {
+        assert_eq!(format_elapsed(Duration::from_secs(5)), "● 0:05");
+        assert_eq!(format_elapsed(Duration::from_secs(125)), "● 2:05");
+    }
 }

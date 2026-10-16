@@ -14,6 +14,7 @@ pub struct Hotkeys {
     pub any_window: Option<String>,
     pub active_window: Option<String>,
     pub ocr: Option<String>,
+    pub record: Option<String>,
     pub show_app: Option<String>,
 }
 
@@ -26,6 +27,7 @@ impl Default for Hotkeys {
             any_window: None,
             active_window: None,
             ocr: Some("Control+Alt+CmdOrCtrl+O".into()),
+            record: Some("Control+Alt+CmdOrCtrl+R".into()),
             show_app: None,
         }
     }

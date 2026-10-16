@@ -13,6 +13,14 @@ pub const SETTINGS: &str = "settings";
 pub const THUMBNAIL: &str = "thumbnail";
 pub const OVERLAY_PREFIX: &str = "overlay-";
 pub const PIN_PREFIX: &str = "pin-";
+pub const RECORDING_FRAME: &str = "recording-frame";
+pub const RECORDING_BAR: &str = "recording-bar";
+
+/// Abstand des Aufnahme-Rahmens zum aufgenommenen Bereich, damit er nicht im Video landet.
+const RECORDING_FRAME_GAP: f64 = 4.0;
+const RECORDING_BAR_WIDTH: f64 = 230.0;
+const RECORDING_BAR_HEIGHT: f64 = 48.0;
+const RECORDING_BAR_GAP: f64 = 12.0;
 
 const THUMBNAIL_WIDTH: f64 = 260.0;
 const THUMBNAIL_MARGIN: f64 = 20.0;
@@ -132,6 +140,69 @@ pub fn open_pin(app: &AppHandle, shot_id: u32, frame: Rect) -> tauri::Result<()>
         .position(frame.x, frame.y)
         .build()?;
     Ok(())
+}
+
+/// Rahmen um den aufgenommenen Bereich und eine Leiste mit Laufzeit und
+/// Stopp-Knopf. Beide gehören zur App und erscheinen deshalb nicht im Video.
+pub fn show_recording(app: &AppHandle, area: Rect, screen: Rect) -> tauri::Result<()> {
+    let gap = RECORDING_FRAME_GAP;
+    let frame = floating(app, RECORDING_FRAME, "Aufnahmebereich")
+        .inner_size(area.width + gap * 2.0, area.height + gap * 2.0)
+        .position(area.x - gap, area.y - gap)
+        .focused(false)
+        .build()?;
+    frame.set_ignore_cursor_events(true)?;
+    let (x, y) = recording_bar_position(area, screen);
+    floating(app, RECORDING_BAR, "Bildschirmaufnahme")
+        .inner_size(RECORDING_BAR_WIDTH, RECORDING_BAR_HEIGHT)
+        .position(x, y)
+        .focused(false)
+        .accept_first_mouse(true)
+        .build()?;
+    Ok(())
+}
+
+pub fn close_recording(app: &AppHandle) {
+    for label in [RECORDING_FRAME, RECORDING_BAR] {
+        if let Some(window) = app.get_webview_window(label)
+            && let Err(error) = window.destroy()
+        {
+            log::warn!("{label} ließ sich nicht schließen: {error}");
+        }
+    }
+}
+
+/// Rahmenloses, durchsichtiges Fenster, immer im Vordergrund.
+fn floating<'a>(
+    app: &'a AppHandle,
+    label: &str,
+    title: &str,
+) -> WebviewWindowBuilder<'a, tauri::Wry, AppHandle> {
+    WebviewWindowBuilder::new(app, label, WebviewUrl::default())
+        .title(title)
+        .decorations(false)
+        .transparent(true)
+        .shadow(false)
+        .resizable(false)
+        .always_on_top(true)
+        .skip_taskbar(true)
+        .visible_on_all_workspaces(true)
+}
+
+/// Mittig unter dem Bereich; ist dort kein Platz, darüber, sonst innen am unteren Rand.
+fn recording_bar_position(area: Rect, screen: Rect) -> (f64, f64) {
+    let x = (area.x + (area.width - RECORDING_BAR_WIDTH) / 2.0)
+        .clamp(screen.x, screen.x + screen.width - RECORDING_BAR_WIDTH);
+    let below = area.y + area.height + RECORDING_FRAME_GAP + RECORDING_BAR_GAP;
+    let above = area.y - RECORDING_FRAME_GAP - RECORDING_BAR_GAP - RECORDING_BAR_HEIGHT;
+    let y = if below + RECORDING_BAR_HEIGHT <= screen.y + screen.height {
+        below
+    } else if above >= screen.y {
+        above
+    } else {
+        area.y + area.height - RECORDING_BAR_HEIGHT - RECORDING_BAR_GAP
+    };
+    (x, y)
 }
 
 /// Vollflächiges Fenster über einem Bildschirm, auch über Menü- bzw. Taskleiste.
@@ -281,4 +352,35 @@ fn raise_above_menu_bar(window: &WebviewWindow) -> tauri::Result<()> {
                 | NSWindowCollectionBehavior::Stationary,
         );
     })
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    const fn rect(x: f64, y: f64, width: f64, height: f64) -> Rect {
+        Rect {
+            x,
+            y,
+            width,
+            height,
+        }
+    }
+
+    #[test]
+    fn recording_bar_sits_below_above_or_inside() {
+        let screen = rect(0.0, 0.0, 1000.0, 800.0);
+        assert_eq!(
+            recording_bar_position(rect(100.0, 100.0, 430.0, 200.0), screen),
+            (200.0, 316.0)
+        );
+        assert_eq!(
+            recording_bar_position(rect(100.0, 600.0, 430.0, 190.0), screen),
+            (200.0, 536.0)
+        );
+        assert_eq!(
+            recording_bar_position(rect(0.0, 0.0, 1000.0, 800.0), screen),
+            (385.0, 740.0)
+        );
+    }
 }

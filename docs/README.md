@@ -12,9 +12,10 @@ Shot-VILLA nimmt Bildschirmfotos auf, markiert sie und gibt sie weiter – schne
 4. [Bearbeiten im Editor](#bearbeiten-im-editor)
 5. [Ausgeben: Kopieren, Sichern, Anpinnen](#ausgeben-kopieren-sichern-anpinnen)
 6. [Text und QR-Codes erkennen](#text-und-qr-codes-erkennen)
-7. [Einstellungen](#einstellungen)
-8. [Tastenkürzel im Überblick](#tastenkürzel-im-überblick)
-9. [Fragen und Probleme](#fragen-und-probleme)
+7. [Bildschirmaufnahme (Video)](#bildschirmaufnahme-video)
+8. [Einstellungen](#einstellungen)
+9. [Tastenkürzel im Überblick](#tastenkürzel-im-überblick)
+10. [Fragen und Probleme](#fragen-und-probleme)
 
 ## Installation
 
@@ -123,6 +124,17 @@ Gespeicherte Bilder sind als Bildschirmfoto markiert, Finder und Spotlight erken
 
 Der Text wird in Lesereihenfolge in die Zwischenablage gelegt; eine Mitteilung zeigt den Anfang. Enthält der Bereich einen QR- oder Barcode, wird dessen Inhalt kopiert. Die Erkennung läuft vollständig auf deinem Mac (Apple Vision), es verlässt nichts den Rechner. Unter *Erweitert → Texterkennung* lassen sich Zeilenumbrüche entfernen – getrennte Wörter am Zeilenende werden dabei wieder zusammengefügt.
 
+## Bildschirmaufnahme (Video)
+
+Nimmt einen Bereich des Bildschirms als Video auf (macOS 15 oder neuer).
+
+1. **⌃⌥⌘R** drücken oder im Menüleisten-Symbol **Bildschirmaufnahme (Bereich) …** wählen.
+2. Den Bereich aufziehen – wie beim Bereichsfoto. Die Aufnahme beginnt sofort.
+3. Ein roter Rahmen zeigt den Bereich, darunter läuft die Zeit mit; auch in der Menüleiste steht sie neben dem Symbol.
+4. Zum Beenden auf **Stopp** klicken, erneut **⌃⌥⌘R** drücken oder im Menü **Bildschirmaufnahme beenden** wählen.
+
+Das Video landet als MP4 (H.264, Retina-Auflösung, 30 Bilder pro Sekunde, mit Mauszeiger, ohne Ton) im eingestellten Ordner, z. B. „Shot-VILLA 2026-10-16 um 17.19.46.mp4“; der Finder zeigt es danach an. Rahmen und Leiste erscheinen nicht im Video. Unter Windows gibt es die Videoaufnahme noch nicht.
+
 ## Einstellungen
 
 Erreichbar über das Menüleisten-Symbol → *Einstellungen …* oder **⌘,**.
@@ -158,7 +170,7 @@ Die Einstellungen liegen in `~/Library/Application Support/de.villalife.shot-vil
 
 ## Tastenkürzel im Überblick
 
-**Global** (überall, frei belegbar): ⇧⌘1 Vollbild · ⇧⌘2 Bereich · ⌃⌥⌘O Text erkennen · weitere in den Einstellungen.
+**Global** (überall, frei belegbar): ⇧⌘1 Vollbild · ⇧⌘2 Bereich · ⌃⌥⌘O Text erkennen · ⌃⌥⌘R Bildschirmaufnahme starten/beenden · weitere in den Einstellungen.
 
 **Im Editor**
 

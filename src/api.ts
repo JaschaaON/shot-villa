@@ -21,6 +21,7 @@ export interface Hotkeys {
   anyWindow: string | null;
   activeWindow: string | null;
   ocr: string | null;
+  record: string | null;
   showApp: string | null;
 }
 
@@ -57,7 +58,7 @@ export interface WindowInfo {
 }
 
 export interface OverlayInfo {
-  mode: "area" | "window" | "ocr";
+  mode: "area" | "window" | "ocr" | "record";
   display: { displayId: number; shotId: number; frame: Rect; scale: number };
   windows: WindowInfo[];
 }
@@ -79,6 +80,7 @@ export type ActionId =
   | "capture-any-window"
   | "capture-active-window"
   | "recognize-text"
+  | "record-area"
   | "show-app"
   | "load-clipboard"
   | "open-file"

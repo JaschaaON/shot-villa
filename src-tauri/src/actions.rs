@@ -3,8 +3,9 @@
 //! Aufnahmen laufen in eigenen Threads, weil `ScreenCaptureKit` blockierend
 //! abgewartet wird.
 
+use std::path::PathBuf;
 use std::sync::{Mutex, MutexGuard, PoisonError};
-use std::time::Duration;
+use std::time::{Duration, Instant};
 
 use serde::Serialize;
 use tauri::{AppHandle, Emitter, Manager};
@@ -13,7 +14,7 @@ use crate::capture::{self, Rect, WindowInfo};
 use crate::imaging::{self, Format, Image, PixelRect};
 use crate::settings::{AreaOpens, CursorCapture, Store};
 use crate::shots::Shots;
-use crate::{clipboard, ocr, output, permission, windows};
+use crate::{clipboard, files, ocr, output, permission, tray, windows};
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum Action {
@@ -23,6 +24,7 @@ pub enum Action {
     AnyWindow,
     ActiveWindow,
     Ocr,
+    Record,
     ShowApp,
     LoadClipboard,
     OpenFile,
@@ -30,13 +32,14 @@ pub enum Action {
 }
 
 impl Action {
-    pub const ALL: [Self; 10] = [
+    pub const ALL: [Self; 11] = [
         Self::Fullscreen,
         Self::Area,
         Self::RepeatArea,
         Self::AnyWindow,
         Self::ActiveWindow,
         Self::Ocr,
+        Self::Record,
         Self::ShowApp,
         Self::LoadClipboard,
         Self::OpenFile,
@@ -51,6 +54,7 @@ impl Action {
             Self::AnyWindow => "capture-any-window",
             Self::ActiveWindow => "capture-active-window",
             Self::Ocr => "recognize-text",
+            Self::Record => "record-area",
             Self::ShowApp => "show-app",
             Self::LoadClipboard => "load-clipboard",
             Self::OpenFile => "open-file",
@@ -78,6 +82,7 @@ pub enum OverlayMode {
     Area,
     Window,
     Ocr,
+    Record,
 }
 
 /// Ein Overlay-Fenster über einem Bildschirm mit dessen eingefrorenem Bild.
@@ -107,15 +112,36 @@ struct Overlay {
     windows: Vec<WindowInfo>,
 }
 
+/// Eine laufende Bildschirmaufnahme (Video).
+struct ActiveRecording {
+    recording: capture::Recording,
+    path: PathBuf,
+    started: Instant,
+}
+
 /// Laufzustand der Aufnahme-Abläufe.
 #[derive(Default)]
 pub struct Session {
     overlay: Mutex<Option<Overlay>>,
     /// Zuletzt gewählter Bereich: Bildschirm und Rechteck relativ dazu.
     last_area: Mutex<Option<(u32, Rect)>>,
+    recording: Mutex<Option<ActiveRecording>>,
 }
 
 impl Session {
+    fn recording(&self) -> MutexGuard<'_, Option<ActiveRecording>> {
+        self.recording
+            .lock()
+            .unwrap_or_else(PoisonError::into_inner)
+    }
+
+    /// Wie lange die laufende Bildschirmaufnahme schon dauert.
+    pub fn recording_elapsed(&self) -> Option<Duration> {
+        self.recording()
+            .as_ref()
+            .map(|active| active.started.elapsed())
+    }
+
     fn overlay(&self) -> MutexGuard<'_, Option<Overlay>> {
         self.overlay.lock().unwrap_or_else(PoisonError::into_inner)
     }
@@ -149,6 +175,7 @@ pub fn run(app: &AppHandle, action: Action) {
         Action::Area => with_screen_access(app, |app| start_overlay(app, OverlayMode::Area)),
         Action::AnyWindow => with_screen_access(app, |app| start_overlay(app, OverlayMode::Window)),
         Action::Ocr => with_screen_access(app, |app| start_overlay(app, OverlayMode::Ocr)),
+        Action::Record => toggle_recording(app),
         Action::RepeatArea => with_screen_access(app, repeat_area),
         Action::ActiveWindow => with_screen_access(app, capture_active_window),
         Action::LoadClipboard => in_background(app, load_clipboard),
@@ -405,11 +432,74 @@ fn select_area(
         .image(display.shot_id)
         .ok_or("Eingefrorenes Bild fehlt")?;
     let image = imaging::crop(&frozen, pixel_rect(rect, scale))?;
-    if mode == OverlayMode::Ocr {
-        return recognize_into_clipboard(app, &image);
+    match mode {
+        OverlayMode::Ocr => return recognize_into_clipboard(app, &image),
+        OverlayMode::Record => return start_recording(app, display, rect),
+        OverlayMode::Area | OverlayMode::Window => {}
     }
     *app.state::<Session>().last_area() = Some((display.display_id, rect));
     deliver(app, &image, scale, Kind::Area, display.frame)
+}
+
+/// Startet die Bereichsauswahl für ein Video oder beendet die laufende Aufnahme.
+fn toggle_recording(app: &AppHandle) {
+    if cfg!(windows) {
+        output::notify(
+            app,
+            "Bildschirmaufnahme",
+            "Videoaufnahmen gibt es bisher nur unter macOS.",
+        );
+    } else if app.state::<Session>().recording_elapsed().is_some() {
+        in_background(app, stop_recording);
+    } else {
+        with_screen_access(app, |app| start_overlay(app, OverlayMode::Record));
+    }
+}
+
+fn start_recording(app: &AppHandle, display: &OverlayDisplay, rect: Rect) -> ActionResult {
+    let folder = app.state::<Store>().get().save_folder();
+    let path = files::new_recording_path(&folder)?;
+    let recording = capture::start_recording(display.display_id, rect, &path)?;
+    *app.state::<Session>().recording() = Some(ActiveRecording {
+        recording,
+        path,
+        started: Instant::now(),
+    });
+    let area = Rect {
+        x: display.frame.x + rect.x,
+        y: display.frame.y + rect.y,
+        ..rect
+    };
+    windows::show_recording(app, area, display.frame)?;
+    tray::refresh(app, &app.state::<Store>().get().hotkeys)?;
+    // Laufzeit in der Menüleiste, solange die Aufnahme läuft.
+    let app = app.clone();
+    std::thread::spawn(move || {
+        while let Some(elapsed) = app.state::<Session>().recording_elapsed() {
+            tray::show_recording_time(&app, Some(elapsed));
+            std::thread::sleep(Duration::from_millis(500));
+        }
+        tray::show_recording_time(&app, None);
+    });
+    Ok(())
+}
+
+fn stop_recording(app: &AppHandle) -> ActionResult {
+    let Some(active) = app.state::<Session>().recording().take() else {
+        return Ok(());
+    };
+    windows::close_recording(app);
+    tray::refresh(app, &app.state::<Store>().get().hotkeys)?;
+    active.recording.stop()?;
+    files::mark_as_screen_capture(&active.path)?;
+    let name = active
+        .path
+        .file_name()
+        .map(|name| name.to_string_lossy().into_owned())
+        .unwrap_or_default();
+    output::notify(app, "Bildschirmaufnahme gesichert", &name);
+    files::reveal(&active.path);
+    Ok(())
 }
 
 fn select_window(app: &AppHandle, id: u32) -> ActionResult {

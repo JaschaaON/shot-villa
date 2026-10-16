@@ -9,6 +9,7 @@ import { Editor } from "./views/editor";
 import { Overlay } from "./views/overlay";
 import { Permission } from "./views/permission";
 import { Pin } from "./views/pin";
+import { RecordingBar, RecordingFrame } from "./views/recording";
 import { Settings } from "./views/settings";
 import { Thumbnail } from "./views/thumbnail";
 import { Welcome } from "./views/welcome";
@@ -23,6 +24,12 @@ const View = ({ label }: { label: string }) => {
   switch (label) {
     case "permission": {
       return <Permission />;
+    }
+    case "recording-bar": {
+      return <RecordingBar />;
+    }
+    case "recording-frame": {
+      return <RecordingFrame />;
     }
     case "settings": {
       return <Settings />;

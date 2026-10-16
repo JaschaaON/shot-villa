@@ -10,7 +10,7 @@ use windows::Win32::Foundation::POINT;
 use windows::Win32::UI::WindowsAndMessaging::GetCursorPos;
 use xcap::{Monitor, Window};
 
-use super::{CaptureError, DisplayShot, Rect, WindowInfo, WindowShot};
+use super::{CaptureError, DisplayShot, Recording, Rect, WindowInfo, WindowShot};
 
 const MIN_WINDOW_SIZE: u32 = 40;
 
@@ -161,6 +161,17 @@ fn physical_cursor() -> Result<(i32, i32), CaptureError> {
     // SAFETY: `point` ist ein gültiger, beschreibbarer POINT.
     unsafe { GetCursorPos(&raw mut point) }.map_err(system)?;
     Ok((point.x, point.y))
+}
+
+/// Videoaufnahmen gibt es unter Windows noch nicht.
+pub const fn start_recording(
+    _display_id: u32,
+    _area: Rect,
+    _path: &std::path::Path,
+) -> Result<Recording, CaptureError> {
+    Err(CaptureError::Unsupported(
+        "Bildschirmaufnahmen gibt es bisher nur unter macOS",
+    ))
 }
 
 /// Mausposition in logischen Punkten.

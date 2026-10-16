@@ -134,6 +134,12 @@ export const RedoIcon = () => (
   </Icon>
 );
 
+export const StopIcon = () => (
+  <Icon>
+    <rect height="10" rx="2" width="10" x="5" y="5" />
+  </Icon>
+);
+
 export const CloseIcon = () => (
   <Icon>
     <path d="M5 5l10 10M15 5L5 15" />

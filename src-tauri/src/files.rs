@@ -48,6 +48,32 @@ pub fn save_in_folder(folder: &Path, bytes: &[u8], extension: &str) -> io::Resul
     Ok(path)
 }
 
+/// Freier Pfad für eine neue Bildschirmaufnahme (Video) im Ordner.
+pub fn new_recording_path(folder: &Path) -> io::Result<PathBuf> {
+    std::fs::create_dir_all(folder)?;
+    Ok(unique_path(folder, &file_name(Local::now(), "mp4")))
+}
+
+/// Zeigt die Datei im Finder bzw. Explorer.
+#[cfg(target_os = "macos")]
+pub fn reveal(path: &Path) {
+    use objc2_app_kit::NSWorkspace;
+    use objc2_foundation::{NSArray, NSString, NSURL};
+    let url = NSURL::fileURLWithPath(&NSString::from_str(&path.to_string_lossy()));
+    NSWorkspace::sharedWorkspace()
+        .activateFileViewerSelectingURLs(&NSArray::from_retained_slice(&[url]));
+}
+
+/// Zeigt die Datei im Finder bzw. Explorer.
+#[cfg(windows)]
+pub fn reveal(path: &Path) {
+    let mut argument = std::ffi::OsString::from("/select,");
+    argument.push(path);
+    if let Err(error) = std::process::Command::new("explorer").arg(argument).spawn() {
+        log::warn!("Explorer nicht gestartet: {error}");
+    }
+}
+
 pub fn write_screenshot(path: &Path, bytes: &[u8]) -> io::Result<()> {
     std::fs::write(path, bytes)?;
     mark_as_screen_capture(path)
@@ -56,7 +82,7 @@ pub fn write_screenshot(path: &Path, bytes: &[u8]) -> io::Result<()> {
 /// Setzt `kMDItemIsScreenCapture`, damit Spotlight und Finder die Datei als
 /// Bildschirmfoto erkennen.
 #[cfg(target_os = "macos")]
-fn mark_as_screen_capture(path: &Path) -> io::Result<()> {
+pub fn mark_as_screen_capture(path: &Path) -> io::Result<()> {
     use std::ffi::CString;
     use std::os::unix::ffi::OsStrExt;
 
@@ -83,7 +109,7 @@ fn mark_as_screen_capture(path: &Path) -> io::Result<()> {
 /// Windows kennt keine solche Markierung.
 #[cfg(windows)]
 #[expect(clippy::unnecessary_wraps, reason = "gleiche Signatur wie unter macOS")]
-const fn mark_as_screen_capture(_path: &Path) -> io::Result<()> {
+pub const fn mark_as_screen_capture(_path: &Path) -> io::Result<()> {
     Ok(())
 }
 

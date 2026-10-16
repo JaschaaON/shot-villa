@@ -37,6 +37,7 @@ Legende: ☐ offen · ◐ implementiert, Tests grün, Praxistest offen · ☑ fe
 | C13 | Datei öffnen / Drag & Drop / „Öffnen mit“ | ◐ | Dialog, Ziehen ins Editorfenster, Dateizuordnung des Systems; Absturz beim Kaltstart per „Öffnen mit“ behoben (Datei wird bis Ende des Starts zurückgestellt), Kaltstart geprüft |
 | C14 | Instant-OCR/QR | ☑ | Bereich wählen → Text bzw. QR-Inhalt in die Zwischenablage + Mitteilung; Auswahl übersteht jetzt auch sehr schnelles Ziehen; Mitteilung laut Systemprotokoll zugestellt |
 | C15 | Retina / 1×-Export | ◐ | Einstellung „Beim Speichern auf 1× verkleinern“; Kopien und Dateien tragen die Pixeldichte (144 dpi bei Retina), wie macOS-Bildschirmfotos |
+| C16 | Bildschirmaufnahme (Video) | ☑ | macOS 15+: `SCStream` mit `SCRecordingOutput` (H.264/MP4, 30 fps, Retina, mit Mauszeiger, ohne Ton); Start über Menü oder ⌃⌥⌘R, Bereich wie beim Bereichsfoto; roter Rahmen und Leiste mit Laufzeit/Stopp (gehören zur App, daher nicht im Video), Laufzeit in der Menüleiste; Stopp per Knopf, Kürzel oder Menü; Datei im Bildordner, als Bildschirmaufnahme gekennzeichnet, Finder zeigt sie. In der App geprüft (Menü und Kürzel, 11-s-Video 1512×756, Einzelbild ohne Rahmen/Leiste). Windows: noch nicht |
 | A1 | Nach der Aufnahme | ◐ | Zeigen / Kopieren / Speichern kombinierbar |
 | A2 | Mini-Vorschau | ☑ | Unten rechts; Kopieren, Speichern, Bearbeiten, Schließen; Schließen manuell oder bei Klick daneben |
 | A4 | Esc-Verhalten | ☑ | Kopieren-Knopf schließt den Editor bzw. die Vorschau ebenfalls (Wunsch 2026-10-14). |

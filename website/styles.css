@@ -339,6 +339,22 @@ h3 {
   gap: 18px;
 }
 
+.features .feature-wide {
+  grid-column: 1 / -1;
+}
+
+.badge {
+  display: inline-block;
+  margin-left: 6px;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: var(--primary-fill);
+  color: var(--primary-text);
+  font-size: 12px;
+  font-weight: 700;
+  vertical-align: middle;
+}
+
 .features article {
   padding: 26px;
   border: 1px solid var(--border);

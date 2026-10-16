@@ -4,6 +4,9 @@
 //! Alle Funktionen blockieren, bis das System geantwortet hat. Sie dürfen
 //! deshalb nicht auf dem Main-Thread laufen.
 
+use std::sync::mpsc;
+use std::time::Duration;
+
 use serde::Serialize;
 
 use crate::imaging::Image;
@@ -13,24 +16,25 @@ mod mac;
 #[cfg(target_os = "macos")]
 pub use mac::{
     all_displays, can_list_content, cursor_location, display_by_id, display_under_cursor,
-    frontmost_window, window, windows,
+    frontmost_window, start_recording, window, windows,
 };
 
 #[cfg(windows)]
 mod win;
 #[cfg(windows)]
 pub use win::{
-    all_displays, cursor_location, display_by_id, display_under_cursor, frontmost_window, window,
-    windows,
+    all_displays, cursor_location, display_by_id, display_under_cursor, frontmost_window,
+    start_recording, window, windows,
 };
 
 #[derive(Debug, thiserror::Error)]
 pub enum CaptureError {
     #[error("Bildschirmaufnahme: {0}")]
     System(String),
-    #[cfg(target_os = "macos")]
     #[error("Die Bildschirmaufnahme hat nicht rechtzeitig geantwortet")]
     Timeout,
+    #[error("{0}")]
+    Unsupported(&'static str),
     #[error("Kein Bildschirm gefunden")]
     NoDisplay,
     #[error("Kein passendes Fenster gefunden")]
@@ -91,6 +95,34 @@ impl WindowInfo {
             },
             ..self.clone()
         }
+    }
+}
+
+/// Eine laufende Videoaufnahme. Ein eigener Thread hält die Systemobjekte;
+/// `stop` beendet die Aufnahme und wartet, bis die Datei fertig geschrieben ist.
+pub struct Recording {
+    stop: mpsc::Sender<()>,
+    finished: mpsc::Receiver<Result<(), CaptureError>>,
+}
+
+impl Recording {
+    /// Längste Wartezeit, bis das Video nach dem Stopp fertig geschrieben ist.
+    const FINISH_TIMEOUT: Duration = Duration::from_secs(30);
+
+    #[cfg_attr(
+        windows,
+        expect(dead_code, reason = "Videoaufnahme gibt es nur unter macOS")
+    )]
+    fn new(stop: mpsc::Sender<()>, finished: mpsc::Receiver<Result<(), CaptureError>>) -> Self {
+        Self { stop, finished }
+    }
+
+    pub fn stop(self) -> Result<(), CaptureError> {
+        // Ist der Aufnahme-Thread schon beendet, liegt sein Ergebnis bereit.
+        let _ = self.stop.send(());
+        self.finished
+            .recv_timeout(Self::FINISH_TIMEOUT)
+            .map_err(|_| CaptureError::Timeout)?
     }
 }
 
