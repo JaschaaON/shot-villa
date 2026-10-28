@@ -10,7 +10,22 @@ use objc2_vision::{
 use super::{OcrError, Recognition};
 use crate::imaging::Image;
 
+/// Vision scheitert gelegentlich beim Laden des Erkennungsmodells (`CRImageReaderError`),
+/// besonders in lange laufenden Prozessen. Ein zweiter Versuch genügt oft; bleibt der
+/// Fehler, hilft ein Neustart der App.
 pub fn recognize(image: &Image) -> Result<Recognition, OcrError> {
+    detect(image)
+        .or_else(|_| detect(image))
+        .map_err(with_restart_hint)
+}
+
+fn with_restart_hint(OcrError(message): OcrError) -> OcrError {
+    OcrError(format!(
+        "{message} Bitte Shot-VILLA beenden und neu starten."
+    ))
+}
+
+fn detect(image: &Image) -> Result<Recognition, OcrError> {
     let text = VNRecognizeTextRequest::new();
     text.setRecognitionLevel(VNRequestTextRecognitionLevel::Accurate);
     text.setUsesLanguageCorrection(true);
@@ -63,4 +78,18 @@ pub fn recognize(image: &Image) -> Result<Recognition, OcrError> {
         lines: observed.into_iter().map(|(_, _, line)| line).collect(),
         codes,
     })
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn failure_message_suggests_restart() {
+        let error = with_restart_hint(OcrError("Modell fehlt.".into()));
+        assert_eq!(
+            error.to_string(),
+            "Texterkennung fehlgeschlagen: Modell fehlt. Bitte Shot-VILLA beenden und neu starten."
+        );
+    }
 }
