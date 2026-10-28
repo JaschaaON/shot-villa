@@ -16,6 +16,7 @@ pub fn bindings(hotkeys: &Hotkeys) -> Vec<(Action, &str)> {
         (Action::ActiveWindow, &hotkeys.active_window),
         (Action::Ocr, &hotkeys.ocr),
         (Action::Record, &hotkeys.record),
+        (Action::RecordFullscreen, &hotkeys.record_fullscreen),
         (Action::ShowApp, &hotkeys.show_app),
     ]
     .into_iter()
@@ -66,6 +67,7 @@ mod tests {
             active_window: None,
             ocr: None,
             record: Some("Control+Alt+CmdOrCtrl+R".into()),
+            record_fullscreen: Some("Control+Alt+CmdOrCtrl+F".into()),
             show_app: None,
         };
         assert_eq!(
@@ -73,7 +75,8 @@ mod tests {
             vec![
                 (Action::Fullscreen, "CmdOrCtrl+Shift+1"),
                 (Action::AnyWindow, "CmdOrCtrl+Shift+5"),
-                (Action::Record, "Control+Alt+CmdOrCtrl+R")
+                (Action::Record, "Control+Alt+CmdOrCtrl+R"),
+                (Action::RecordFullscreen, "Control+Alt+CmdOrCtrl+F")
             ]
         );
     }

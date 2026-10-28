@@ -15,8 +15,8 @@ use crate::imaging::Image;
 mod mac;
 #[cfg(target_os = "macos")]
 pub use mac::{
-    all_displays, can_list_content, cursor_location, display_by_id, display_under_cursor,
-    frontmost_window, start_recording, window, windows,
+    all_displays, can_list_content, cursor_location, display_by_id, display_info_under_cursor,
+    display_under_cursor, frontmost_window, start_recording, window, windows,
 };
 
 #[cfg(windows)]
@@ -25,8 +25,8 @@ mod mp4;
 mod win;
 #[cfg(windows)]
 pub use win::{
-    all_displays, cursor_location, display_by_id, display_under_cursor, frontmost_window,
-    start_recording, window, windows,
+    all_displays, cursor_location, display_by_id, display_info_under_cursor, display_under_cursor,
+    frontmost_window, start_recording, window, windows,
 };
 
 #[derive(Debug, thiserror::Error)]

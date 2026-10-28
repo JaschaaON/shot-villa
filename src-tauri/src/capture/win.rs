@@ -76,6 +76,15 @@ pub fn display_under_cursor(_shows_cursor: bool) -> Result<DisplayShot, CaptureE
     capture_monitor(&monitor)
 }
 
+/// Kennung und Rahmen des Bildschirms unter dem Mauszeiger, ohne ihn aufzunehmen.
+pub fn display_info_under_cursor() -> Result<(u32, Rect), CaptureError> {
+    let (x, y) = physical_cursor()?;
+    let monitor = Monitor::from_point(x, y)
+        .or_else(|_| primary_monitor())
+        .map_err(|_| CaptureError::NoDisplay)?;
+    Ok((monitor.id().map_err(system)?, monitor_frame(&monitor)?))
+}
+
 /// Nimmt einen bestimmten Bildschirm auf; fehlt er, den unter dem Mauszeiger.
 pub fn display_by_id(id: u32, shows_cursor: bool) -> Result<DisplayShot, CaptureError> {
     let monitors = Monitor::all().map_err(system)?;

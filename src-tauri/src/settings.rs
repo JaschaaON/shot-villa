@@ -15,6 +15,7 @@ pub struct Hotkeys {
     pub active_window: Option<String>,
     pub ocr: Option<String>,
     pub record: Option<String>,
+    pub record_fullscreen: Option<String>,
     pub show_app: Option<String>,
 }
 
@@ -28,6 +29,7 @@ impl Default for Hotkeys {
             active_window: None,
             ocr: Some("Control+Alt+CmdOrCtrl+O".into()),
             record: Some("Control+Alt+CmdOrCtrl+R".into()),
+            record_fullscreen: Some("Control+Alt+CmdOrCtrl+F".into()),
             show_app: None,
         }
     }

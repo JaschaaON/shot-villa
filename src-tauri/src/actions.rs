@@ -25,6 +25,7 @@ pub enum Action {
     ActiveWindow,
     Ocr,
     Record,
+    RecordFullscreen,
     RecordCancel,
     ShowApp,
     LoadClipboard,
@@ -33,7 +34,7 @@ pub enum Action {
 }
 
 impl Action {
-    pub const ALL: [Self; 12] = [
+    pub const ALL: [Self; 13] = [
         Self::Fullscreen,
         Self::Area,
         Self::RepeatArea,
@@ -41,6 +42,7 @@ impl Action {
         Self::ActiveWindow,
         Self::Ocr,
         Self::Record,
+        Self::RecordFullscreen,
         Self::RecordCancel,
         Self::ShowApp,
         Self::LoadClipboard,
@@ -57,6 +59,7 @@ impl Action {
             Self::ActiveWindow => "capture-active-window",
             Self::Ocr => "recognize-text",
             Self::Record => "record-area",
+            Self::RecordFullscreen => "record-fullscreen",
             Self::RecordCancel => "record-cancel",
             Self::ShowApp => "show-app",
             Self::LoadClipboard => "load-clipboard",
@@ -140,6 +143,15 @@ pub enum RecordingPhase {
     Running,
 }
 
+/// Was aufgenommen werden soll, wenn noch nichts bereitsteht.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+enum RecordingTarget {
+    /// Bereich im Overlay wählen.
+    Area,
+    /// Ganzer Bildschirm unter dem Mauszeiger.
+    Fullscreen,
+}
+
 /// Ereignis an Rahmen und Leiste: Die Aufnahme läuft jetzt.
 const RECORDING_STARTED: &str = "recording-started";
 
@@ -208,7 +220,8 @@ pub fn run(app: &AppHandle, action: Action) {
         Action::Area => with_screen_access(app, |app| start_overlay(app, OverlayMode::Area)),
         Action::AnyWindow => with_screen_access(app, |app| start_overlay(app, OverlayMode::Window)),
         Action::Ocr => with_screen_access(app, |app| start_overlay(app, OverlayMode::Ocr)),
-        Action::Record => toggle_recording(app),
+        Action::Record => toggle_recording(app, RecordingTarget::Area),
+        Action::RecordFullscreen => toggle_recording(app, RecordingTarget::Fullscreen),
         Action::RecordCancel => in_background(app, cancel_recording),
         Action::RepeatArea => with_screen_access(app, repeat_area),
         Action::ActiveWindow => with_screen_access(app, capture_active_window),
@@ -468,37 +481,49 @@ fn select_area(
     let image = imaging::crop(&frozen, pixel_rect(rect, scale))?;
     match mode {
         OverlayMode::Ocr => return recognize_into_clipboard(app, &image),
-        OverlayMode::Record => return prepare_recording(app, display, rect),
+        OverlayMode::Record => {
+            return prepare_recording(app, display.display_id, display.frame, rect);
+        }
         OverlayMode::Area | OverlayMode::Window => {}
     }
     *app.state::<Session>().last_area() = Some((display.display_id, rect));
     deliver(app, &image, scale, Kind::Area, display.frame)
 }
 
-/// Je nach Stand: Bereich wählen, die bereite Aufnahme starten oder die
-/// laufende beenden. Menü, Kürzel und die Leiste unter dem Bereich nutzen das.
-fn toggle_recording(app: &AppHandle) {
+/// Je nach Stand: Bereich bzw. Bildschirm wählen, die bereite Aufnahme starten
+/// oder die laufende beenden. Menü, Kürzel und die Leiste nutzen das.
+fn toggle_recording(app: &AppHandle, target: RecordingTarget) {
     match app.state::<Session>().recording_phase() {
-        RecordingPhase::Idle => {
-            with_screen_access(app, |app| start_overlay(app, OverlayMode::Record));
-        }
+        RecordingPhase::Idle => with_screen_access(app, move |app| match target {
+            RecordingTarget::Area => start_overlay(app, OverlayMode::Record),
+            RecordingTarget::Fullscreen => prepare_fullscreen_recording(app),
+        }),
         RecordingPhase::Ready => in_background(app, begin_recording),
         RecordingPhase::Running => in_background(app, stop_recording),
     }
 }
 
+/// Bereitet die Aufnahme des ganzen Bildschirms unter dem Mauszeiger vor.
+fn prepare_fullscreen_recording(app: &AppHandle) -> ActionResult {
+    let (display_id, screen) = capture::display_info_under_cursor()?;
+    let whole = Rect {
+        x: 0.0,
+        y: 0.0,
+        ..screen
+    };
+    prepare_recording(app, display_id, screen, whole)
+}
+
 /// Zeigt Rahmen und Leiste mit „Start“; aufgenommen wird erst danach.
-fn prepare_recording(app: &AppHandle, display: &OverlayDisplay, rect: Rect) -> ActionResult {
-    *app.state::<Session>().recording() = Some(RecordingState::Ready {
-        display_id: display.display_id,
-        rect,
-    });
+/// `rect` liegt in Punkten relativ zum Bildschirm `screen`.
+fn prepare_recording(app: &AppHandle, display_id: u32, screen: Rect, rect: Rect) -> ActionResult {
+    *app.state::<Session>().recording() = Some(RecordingState::Ready { display_id, rect });
     let area = Rect {
-        x: display.frame.x + rect.x,
-        y: display.frame.y + rect.y,
+        x: screen.x + rect.x,
+        y: screen.y + rect.y,
         ..rect
     };
-    windows::show_recording(app, area, display.frame)?;
+    windows::show_recording(app, area, screen)?;
     tray::refresh(app, &app.state::<Store>().get().hotkeys)?;
     Ok(())
 }

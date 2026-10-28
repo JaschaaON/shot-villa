@@ -146,10 +146,10 @@ pub fn open_pin(app: &AppHandle, shot_id: u32, frame: Rect) -> tauri::Result<()>
 /// Start/Abbrechen bzw. Laufzeit und Stopp. Beide gehören zur App und
 /// erscheinen deshalb nicht im Video.
 pub fn show_recording(app: &AppHandle, area: Rect, screen: Rect) -> tauri::Result<()> {
-    let gap = RECORDING_FRAME_GAP;
+    let outline = recording_frame_rect(area, screen);
     let frame = floating(app, RECORDING_FRAME, "Aufnahmebereich")
-        .inner_size(area.width + gap * 2.0, area.height + gap * 2.0)
-        .position(area.x - gap, area.y - gap)
+        .inner_size(outline.width, outline.height)
+        .position(outline.x, outline.y)
         .focused(false)
         .build()?;
     frame.set_ignore_cursor_events(true)?;
@@ -213,6 +213,22 @@ fn floating<'a>(
         .always_on_top(true)
         .skip_taskbar(true)
         .visible_on_all_workspaces(true)
+}
+
+/// Rahmen mit Abstand um den Bereich, höchstens so groß wie der Bildschirm.
+/// Bei ganzen Bildschirmen liegt er innen am Rand; die Fenster der App sind
+/// nicht im Video.
+fn recording_frame_rect(area: Rect, screen: Rect) -> Rect {
+    let left = (area.x - RECORDING_FRAME_GAP).max(screen.x);
+    let top = (area.y - RECORDING_FRAME_GAP).max(screen.y);
+    let right = (area.x + area.width + RECORDING_FRAME_GAP).min(screen.x + screen.width);
+    let bottom = (area.y + area.height + RECORDING_FRAME_GAP).min(screen.y + screen.height);
+    Rect {
+        x: left,
+        y: top,
+        width: right - left,
+        height: bottom - top,
+    }
 }
 
 /// Mittig unter dem Bereich; ist dort kein Platz, darüber, sonst innen am unteren Rand.
@@ -391,6 +407,16 @@ mod tests {
             width,
             height,
         }
+    }
+
+    #[test]
+    fn recording_frame_stays_on_the_screen() {
+        let screen = rect(0.0, 0.0, 1000.0, 800.0);
+        assert_eq!(
+            recording_frame_rect(rect(100.0, 100.0, 300.0, 200.0), screen),
+            rect(96.0, 96.0, 308.0, 208.0)
+        );
+        assert_eq!(recording_frame_rect(screen, screen), screen);
     }
 
     #[test]

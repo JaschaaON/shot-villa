@@ -28,7 +28,8 @@ const HOTKEY_LABELS: { key: keyof Hotkeys; label: string }[] = [
   { key: "anyWindow", label: "Fenster wählen" },
   { key: "activeWindow", label: "Aktives Fenster" },
   { key: "ocr", label: "Text / QR-Code erkennen" },
-  { key: "record", label: "Bildschirmaufnahme" },
+  { key: "record", label: "Bildschirmaufnahme (Bereich)" },
+  { key: "recordFullscreen", label: "Bildschirmaufnahme (Vollbild)" },
   { key: "showApp", label: "Editor zeigen" },
 ];
 
