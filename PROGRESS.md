@@ -95,6 +95,12 @@ Noch nicht in der App geprüft: Sichern unter, Drag & Drop ins Editorfenster, �
 - Explorer markierte die Datei nicht, wenn der Pfad Leerzeichen enthielt (`/select,` mit falschen Anführungszeichen).
 - Schlägt der Start fehl, bleibt keine leere MP4-Datei mehr liegen.
 
+## 0.4.0 – Vollbild-Bildschirmaufnahme, Logo „Sucher“, neue Website (2026-10-28)
+
+- Bildschirmaufnahme (Vollbild): eigene Aktion `record-fullscreen` mit Kürzel ⌃⌥⌘F (Windows: Strg+Alt+F) und Menüeintrag „Bildschirmaufnahme (Vollbild)“. Nimmt den Bildschirm unter dem Mauszeiger auf; danach wie beim Bereich erst Start, dann Stopp. Der Rahmen liegt bei ganzen Bildschirmen innen am Rand (die App-Fenster sind nicht im Video), die Leiste sitzt innen am unteren Rand. Neue Kürzel-Zeile in den Einstellungen; bestehende Einstellungen bekommen den Standardwert. Test für die Rahmenbegrenzung; `pnpm check` grün (inkl. Windows-clippy). **Noch nicht in der App geprüft** (macOS und Windows).
+- Logo „Sucher“ (silberne Sucherecken, roter Punkt) passend zu Gipfelspur von OverlandVibe: `website/logo/`, `website/favicon.svg`, `favicon.png`, `apple-touch-icon.png`. App-Icon (`src-tauri/icons`) ist noch das alte „Grafit“ – Umstellung offen.
+- Website im Stil „Instrument“ (Geist, Silber auf Fast-Schwarz, Rot nur im Logo; Hell/Dunkel nach Systemeinstellung), Schriften selbst gehostet. Inhalt unverändert; Vollbild-Aufnahme und ⌃⌥⌘F stehen erst nach dem App-Release (0.4.0) auf der Seite. Beschreibung und Screenshots folgen.
+
 ## Entscheidungen / Hinweise
 
 - 2026-10-14: `clippy::needless_pass_by_value` wird an Tauri-Commands per `#[expect(..., reason)]` gezielt ausgenommen (vom Nutzer freigegeben).

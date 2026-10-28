@@ -44,6 +44,22 @@ pub fn display_under_cursor(shows_cursor: bool) -> Result<DisplayShot, CaptureEr
     display_where(shows_cursor, |frame, _| frame.contains(x, y))
 }
 
+/// Kennung und Rahmen des Bildschirms unter dem Mauszeiger, ohne ihn aufzunehmen.
+pub fn display_info_under_cursor() -> Result<(u32, Rect), CaptureError> {
+    let (x, y) = cursor_location();
+    let content = shareable_content()?;
+    let displays = unsafe { content.displays() };
+    let display = displays
+        .iter()
+        .find(|d| Rect::from(unsafe { d.frame() }).contains(x, y))
+        .or_else(|| displays.firstObject())
+        .ok_or(CaptureError::NoDisplay)?;
+    Ok((
+        unsafe { display.displayID() },
+        unsafe { display.frame() }.into(),
+    ))
+}
+
 /// Nimmt einen bestimmten Bildschirm auf; fehlt er, den unter dem Mauszeiger.
 pub fn display_by_id(id: u32, shows_cursor: bool) -> Result<DisplayShot, CaptureError> {
     let content = shareable_content()?;

@@ -62,17 +62,26 @@ fn menu(app: &AppHandle, hotkeys: &Hotkeys) -> tauri::Result<Menu<Wry>> {
     let item = |action: Action, title: &str, shortcut: Option<&String>| {
         MenuItem::with_id(app, action.id(), title, true, shortcut.map(String::as_str))
     };
-    let record_title = match app.state::<Session>().recording_phase() {
+    let phase = app.state::<Session>().recording_phase();
+    let record_title = match phase {
         RecordingPhase::Idle => "Bildschirmaufnahme (Bereich) …",
         RecordingPhase::Ready => "Bildschirmaufnahme starten",
         RecordingPhase::Running => "Bildschirmaufnahme beenden",
     };
-    MenuBuilder::new(app)
-        .item(&item(
-            Action::Record,
-            record_title,
-            hotkeys.record.as_ref(),
-        )?)
+    let mut builder = MenuBuilder::new(app).item(&item(
+        Action::Record,
+        record_title,
+        hotkeys.record.as_ref(),
+    )?);
+    // Läuft oder wartet eine Aufnahme, startet bzw. beendet der Eintrag oben sie.
+    if phase == RecordingPhase::Idle {
+        builder = builder.item(&item(
+            Action::RecordFullscreen,
+            "Bildschirmaufnahme (Vollbild)",
+            hotkeys.record_fullscreen.as_ref(),
+        )?);
+    }
+    builder
         .separator()
         .item(&item(
             Action::Fullscreen,

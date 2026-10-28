@@ -22,6 +22,7 @@ export interface Hotkeys {
   activeWindow: string | null;
   ocr: string | null;
   record: string | null;
+  recordFullscreen: string | null;
   showApp: string | null;
 }
 
@@ -81,6 +82,7 @@ export type ActionId =
   | "capture-active-window"
   | "recognize-text"
   | "record-area"
+  | "record-fullscreen"
   | "record-cancel"
   | "show-app"
   | "load-clipboard"

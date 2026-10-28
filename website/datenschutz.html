@@ -3,19 +3,29 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="dark light" />
     <title>Datenschutz – Shot-VILLA</title>
     <meta name="robots" content="noindex" />
+    <meta name="theme-color" content="#101113" />
+    <link rel="icon" type="image/svg+xml" href="favicon.svg" />
     <link rel="icon" type="image/png" href="favicon.png" />
+    <link rel="apple-touch-icon" href="apple-touch-icon.png" />
     <link rel="stylesheet" href="styles.css" />
   </head>
-  <body>
-    <header class="topbar">
-      <a class="brand" href="./">
-        <img src="favicon.png" alt="" width="28" height="28" />
-        <span>Shot-VILLA</span>
+  <body class="ds">
+    <header class="ds-top">
+      <a class="ds-brand" href="./">
+        <svg viewBox="0 12 64 44" role="img" aria-label="Shot-VILLA Sucher">
+          <path
+            class="ds-mark-mountain"
+            d="M6 14 H20 V19 H11 V28 H6 Z M58 14 H44 V19 H53 V28 H58 Z M6 54 H20 V49 H11 V40 H6 Z M58 54 H44 V49 H53 V40 H58 Z"
+          />
+          <circle class="ds-mark-piste" cx="32" cy="34" r="7" />
+        </svg>
+        Shot-VILLA
       </a>
     </header>
-    <main class="legal">
+    <main class="ds-legal">
       <h1>Datenschutzerklärung</h1>
 
       <h2>Kurz gesagt</h2>
@@ -102,9 +112,9 @@
         den Datenschutz Niedersachsen, Prinzenstraße 5, 30159 Hannover.
       </p>
 
-      <p class="meta">Stand: Oktober 2026</p>
+      <p class="ds-note">Stand: Oktober 2026</p>
     </main>
-    <footer class="footer">
+    <footer class="ds-wrap ds-foot">
       <span>© 2026 Jascha Coenen</span>
       <span
         ><a href="./">Startseite</a> ·
