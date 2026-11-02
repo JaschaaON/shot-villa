@@ -395,7 +395,47 @@ fn present(app: &AppHandle, window: &WebviewWindow) -> tauri::Result<()> {
     let _ = app;
     window.unminimize()?;
     window.show()?;
-    window.set_focus()
+    window.set_focus()?;
+    #[cfg(target_os = "macos")]
+    bring_app_to_front(app);
+    Ok(())
+}
+
+/// Holt die App nach vorn. Aus dem Hintergrund (etwa nach einem Kürzel, während
+/// ein anderes Programm aktiv ist) holt `set_focus` allein das Fenster auf
+/// neueren macOS-Versionen oft nicht über die anderen. Dann hilft `LaunchServices`.
+#[cfg(target_os = "macos")]
+fn bring_app_to_front(app: &AppHandle) {
+    let identifier = app.config().identifier.clone();
+    // Im Hintergrund, damit weder der Main-Thread noch ein Menübefehl wartet.
+    std::thread::spawn(move || {
+        use std::time::{Duration, Instant};
+
+        use objc2_app_kit::{NSApplicationActivationOptions, NSRunningApplication, NSWorkspace};
+
+        let me = NSRunningApplication::currentApplication();
+        me.activateWithOptions(NSApplicationActivationOptions::ActivateAllWindows);
+        let pid = me.processIdentifier();
+        let is_frontmost = || {
+            NSWorkspace::sharedWorkspace()
+                .frontmostApplication()
+                .is_some_and(|front| front.processIdentifier() == pid)
+        };
+        let start = Instant::now();
+        while start.elapsed() < Duration::from_millis(300) {
+            if is_frontmost() {
+                return;
+            }
+            std::thread::sleep(Duration::from_millis(25));
+        }
+        if let Err(error) = std::process::Command::new("open")
+            .arg("-b")
+            .arg(&identifier)
+            .status()
+        {
+            log::warn!("App nicht nach vorn geholt: {error}");
+        }
+    });
 }
 
 #[cfg(target_os = "macos")]
