@@ -12,6 +12,7 @@ use crate::imaging::{self, Format};
 use crate::permission::{self, ScreenAccess};
 use crate::settings::{Settings, Store};
 use crate::shots::{ShotInfo, Shots};
+use crate::updater::{self, UpdateInfo, Updates};
 use crate::{autostart, hotkeys, output, tray, windows};
 
 type CommandResult<T = ()> = Result<T, String>;
@@ -396,6 +397,32 @@ pub fn open_screen_access_settings() -> CommandResult {
 )]
 pub fn restart_app(app: AppHandle) {
     app.restart();
+}
+
+// Updates
+
+/// Sucht jetzt nach einer neueren Version; `None`, wenn die App aktuell ist.
+#[tauri::command]
+pub async fn check_for_update(app: AppHandle) -> CommandResult<Option<UpdateInfo>> {
+    updater::check(&app).await
+}
+
+/// Die zuletzt gefundene Version, ohne neu zu fragen.
+#[tauri::command]
+#[expect(
+    clippy::needless_pass_by_value,
+    reason = "Tauri-Commands erhalten Extraktoren per Wert"
+)]
+pub fn available_update(updates: State<'_, Updates>) -> Option<UpdateInfo> {
+    updates
+        .found_version()
+        .map(|version| UpdateInfo { version })
+}
+
+/// Lädt und installiert die gefundene Version und startet die App neu.
+#[tauri::command]
+pub async fn install_update(app: AppHandle) -> CommandResult {
+    updater::install(&app).await
 }
 
 #[cfg(test)]

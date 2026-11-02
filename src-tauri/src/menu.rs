@@ -31,6 +31,7 @@ pub fn build(app: &AppHandle) -> tauri::Result<tauri::menu::Menu<tauri::Wry>> {
             "Einstellungen …",
             Some("CmdOrCtrl+,"),
         )?)
+        .item(&action(Action::Updates, "Nach Updates suchen …", None)?)
         .separator()
         .item(&PredefinedMenuItem::hide(
             app,

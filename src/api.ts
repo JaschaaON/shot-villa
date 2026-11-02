@@ -45,6 +45,7 @@ export interface Settings {
   launchAtLogin: boolean;
   /** Teil des App- oder Fensternamens, an dem das T3-Code-Fenster erkannt wird. */
   t3Window: string;
+  autoUpdateCheck: boolean;
 }
 
 export interface Rect {
@@ -91,7 +92,8 @@ export type ActionId =
   | "show-app"
   | "load-clipboard"
   | "open-file"
-  | "settings";
+  | "settings"
+  | "updates";
 
 /** Parameter der Bild-Befehle, die Bytes als Body übertragen. */
 interface ImageParams {
@@ -217,3 +219,42 @@ export const openScreenAccessSettings = async () => {
 export const restartApp = async () => {
   await invoke("restart_app");
 };
+
+/** Eine neuere Version, die zum Installieren bereitsteht. */
+export interface UpdateInfo {
+  version: string;
+}
+
+export interface UpdateProgress {
+  downloaded: number;
+  /** Gesamtgröße in Bytes, falls der Server sie nennt. */
+  total: number | null;
+}
+
+/** Fragt den Update-Server; `null`, wenn die App aktuell ist. */
+export const checkForUpdate = async () =>
+  await invoke<UpdateInfo | null>("check_for_update");
+
+/** Die zuletzt gefundene Version, ohne neu zu fragen. */
+export const availableUpdate = async () =>
+  await invoke<UpdateInfo | null>("available_update");
+
+/** Lädt und installiert die gefundene Version und startet die App neu. */
+export const installUpdate = async () => {
+  await invoke("install_update");
+};
+
+export const onUpdateProgress = async (
+  handler: (progress: UpdateProgress) => void
+): Promise<UnlistenFn> =>
+  await listen<UpdateProgress>("update-progress", (event) => {
+    handler(event.payload);
+  });
+
+/** Ein offenes Einstellungsfenster soll einen bestimmten Tab zeigen. */
+export const onSettingsTab = async (
+  handler: (tab: string) => void
+): Promise<UnlistenFn> =>
+  await listen<string>("settings-tab", (event) => {
+    handler(event.payload);
+  });

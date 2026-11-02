@@ -16,6 +16,7 @@ mod settings;
 mod shots;
 mod t3code;
 mod tray;
+mod updater;
 mod windows;
 
 use std::path::PathBuf;
@@ -48,9 +49,11 @@ pub fn run() {
         )
         .plugin(tauri_plugin_global_shortcut::Builder::new().build())
         .plugin(tauri_plugin_dialog::init())
+        .plugin(tauri_plugin_updater::Builder::new().build())
         .manage(shots::Shots::default())
         .manage(actions::Session::default())
         .manage(PendingFiles::default())
+        .manage(updater::Updates::default())
         .on_menu_event(|app, event| menu::handle(app, &event))
         .setup(setup)
         .on_window_event(on_window_event)
@@ -79,6 +82,9 @@ pub fn run() {
             commands::screen_access,
             commands::open_screen_access_settings,
             commands::restart_app,
+            commands::check_for_update,
+            commands::available_update,
+            commands::install_update,
         ])
         .build(tauri::generate_context!());
 
@@ -156,6 +162,7 @@ fn setup(app: &mut App) -> Result<(), Box<dyn std::error::Error>> {
         windows::show_welcome(app.handle())?;
     }
     tray::create(app.handle(), &hotkeys)?;
+    updater::watch(app.handle());
     for problem in hotkeys::apply(app.handle(), &hotkeys) {
         log::warn!("Kürzel nicht verfügbar: {problem}");
     }

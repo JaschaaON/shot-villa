@@ -32,10 +32,11 @@ pub enum Action {
     LoadClipboard,
     OpenFile,
     Settings,
+    Updates,
 }
 
 impl Action {
-    pub const ALL: [Self; 14] = [
+    pub const ALL: [Self; 15] = [
         Self::Fullscreen,
         Self::Area,
         Self::AreaToT3,
@@ -50,6 +51,7 @@ impl Action {
         Self::LoadClipboard,
         Self::OpenFile,
         Self::Settings,
+        Self::Updates,
     ];
 
     pub const fn id(self) -> &'static str {
@@ -68,6 +70,7 @@ impl Action {
             Self::LoadClipboard => "load-clipboard",
             Self::OpenFile => "open-file",
             Self::Settings => "settings",
+            Self::Updates => "updates",
         }
     }
 
@@ -121,7 +124,11 @@ struct Overlay {
     mode: OverlayMode,
     displays: Vec<OverlayDisplay>,
     windows: Vec<WindowInfo>,
+    started: Instant,
 }
+
+/// Wie lange ein Overlay unsichtbar bleiben darf, bevor es als hängengeblieben gilt.
+const OVERLAY_SHOW_TIMEOUT: Duration = Duration::from_secs(5);
 
 /// Eine laufende Bildschirmaufnahme (Video).
 struct ActiveRecording {
@@ -220,7 +227,8 @@ pub enum Selection {
 pub fn run(app: &AppHandle, action: Action) {
     match action {
         Action::ShowApp => report(show_app(app)),
-        Action::Settings => report(windows::show_settings(app)),
+        Action::Settings => report(windows::show_settings(app, None)),
+        Action::Updates => report(windows::show_settings(app, Some("updates"))),
         Action::Fullscreen => with_screen_access(app, capture_fullscreen),
         Action::Area => with_screen_access(app, |app| start_overlay(app, OverlayMode::Area)),
         Action::AreaToT3 => with_screen_access(app, |app| start_overlay(app, OverlayMode::T3)),
@@ -370,9 +378,52 @@ fn show_app(app: &AppHandle) -> ActionResult {
 
 /// Friert alle Bildschirme ein und zeigt darüber die Auswahl.
 fn start_overlay(app: &AppHandle, mode: OverlayMode) -> ActionResult {
-    if app.state::<Session>().overlay().is_some() {
-        return Ok(());
+    // Den Platz sofort belegen: Zwei schnell hintereinander ausgelöste Aktionen
+    // dürfen nicht beide Fenster mit demselben Namen anlegen.
+    {
+        let session = app.state::<Session>();
+        let mut overlay = session.overlay();
+        if let Some(open) = overlay.as_ref() {
+            if !is_stuck(app, open.started) {
+                return Ok(());
+            }
+            log::warn!("Hängengebliebene Auswahl wird verworfen");
+            abort_overlay(app, overlay.take());
+        }
+        *overlay = Some(Overlay {
+            mode,
+            displays: Vec::new(),
+            windows: Vec::new(),
+            started: Instant::now(),
+        });
     }
+    let result = open_overlays(app, mode);
+    if result.is_err() {
+        let overlay = app.state::<Session>().overlay().take();
+        abort_overlay(app, overlay);
+    }
+    result
+}
+
+/// Hat das Overlay seit `started` lange genug versucht, sich zu zeigen, ohne dass
+/// ein Fenster sichtbar ist? Dann ist es hängengeblieben und blockiert sonst
+/// jede weitere Aufnahme.
+fn is_stuck(app: &AppHandle, started: Instant) -> bool {
+    started.elapsed() > OVERLAY_SHOW_TIMEOUT && !windows::overlay_visible(app)
+}
+
+/// Räumt ein abgebrochenes Overlay auf: Fenster schließen, eingefrorene Bilder freigeben.
+fn abort_overlay(app: &AppHandle, overlay: Option<Overlay>) {
+    windows::close_overlays(app);
+    if let Some(overlay) = overlay {
+        let shots = app.state::<Shots>();
+        for display in overlay.displays {
+            shots.remove(display.shot_id);
+        }
+    }
+}
+
+fn open_overlays(app: &AppHandle, mode: OverlayMode) -> ActionResult {
     windows::hide_for_capture(app);
     let shots = capture::all_displays(false)?;
     let all_windows = if mode == OverlayMode::Window {
@@ -381,27 +432,52 @@ fn start_overlay(app: &AppHandle, mode: OverlayMode) -> ActionResult {
         Vec::new()
     };
 
-    let mut displays = Vec::with_capacity(shots.len());
     for shot in shots {
         let png = imaging::encode(&shot.image, Format::Png, shot.scale)?;
         let info = app
             .state::<Shots>()
             .insert(shot.image, shot.scale, png, Format::Png.mime());
-        let window = windows::open_overlay(app, shot.display_id, shot.frame, shot.scale)?;
-        displays.push(OverlayDisplay {
-            label: window.label().to_owned(),
+        // Schon eintragen, bevor das Fenster existiert: Die Seite fragt ihre
+        // Daten ab, sobald sie geladen ist, und fände sonst nichts.
+        let display = OverlayDisplay {
+            label: windows::overlay_label(shot.display_id),
             display_id: shot.display_id,
             shot_id: info.id,
             frame: shot.frame,
             scale: shot.scale,
-        });
+        };
+        if let Some(overlay) = app.state::<Session>().overlay().as_mut() {
+            overlay.displays.push(display.clone());
+            overlay.windows.clone_from(&all_windows);
+        }
+        windows::open_overlay(app, display.display_id, display.frame, display.scale)?;
     }
-    *app.state::<Session>().overlay() = Some(Overlay {
-        mode,
-        displays,
-        windows: all_windows,
-    });
+    watch_overlay(app);
     Ok(())
+}
+
+/// Räumt nach kurzer Zeit auf, falls kein Overlay sichtbar geworden ist (etwa
+/// weil die Seite nicht geladen wurde), damit nicht alle Aufnahmen blockiert bleiben.
+fn watch_overlay(app: &AppHandle) {
+    let app = app.clone();
+    std::thread::spawn(move || {
+        std::thread::sleep(OVERLAY_SHOW_TIMEOUT + Duration::from_millis(500));
+        let session = app.state::<Session>();
+        let mut overlay = session.overlay();
+        let stuck = overlay
+            .as_ref()
+            .is_some_and(|open| is_stuck(&app, open.started));
+        if stuck {
+            log::warn!("Auswahl wurde nicht sichtbar und wird verworfen");
+            abort_overlay(&app, overlay.take());
+            drop(overlay);
+            output::notify(
+                &app,
+                "Auswahl nicht angezeigt",
+                "Die Aufnahme konnte nicht gestartet werden. Bitte noch einmal versuchen.",
+            );
+        }
+    });
 }
 
 /// Daten für das Overlay-Fenster `label`.
@@ -450,6 +526,8 @@ pub fn overlay_ready(app: &AppHandle, label: &str) -> tauri::Result<()> {
 /// Beendet die Auswahl und verarbeitet das Ergebnis.
 pub fn finish_overlay(app: &AppHandle, label: &str, selection: Selection) {
     let Some(overlay) = app.state::<Session>().overlay().take() else {
+        // Kein Auswahlzustand mehr, aber ein Fenster steht noch: schließen.
+        windows::close_overlays(app);
         return;
     };
     windows::close_overlays(app);

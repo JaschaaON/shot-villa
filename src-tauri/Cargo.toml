@@ -1,6 +1,6 @@
 [package]
 name = "shot-villa"
-version = "0.3.3"
+version = "0.3.4"
 description = "Screenshot- und Annotationswerkzeug für macOS und Windows"
 edition = "2024"
 rust-version = "1.90"
@@ -21,6 +21,8 @@ tauri-plugin-global-shortcut = "2.4"
 tauri-plugin-log = "2"
 dirs = "6"
 tauri-plugin-dialog = "2"
+# System-TLS (Schannel, Security.framework) statt rustls: kein C-Code für ring nötig, nutzt den Zertifikatsspeicher des Systems.
+tauri-plugin-updater = { version = "2", default-features = false, features = ["native-tls", "system-proxy"] }
 chrono = { version = "0.4", default-features = false, features = ["clock", "std"] }
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"

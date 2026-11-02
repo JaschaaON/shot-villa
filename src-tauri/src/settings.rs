@@ -129,6 +129,8 @@ pub struct Settings {
     pub t3_window: String,
     /// Begrüßung nach der Installation schon gezeigt?
     pub welcome_shown: bool,
+    /// Beim Start und danach täglich nach einer neuen Version suchen?
+    pub auto_update_check: bool,
 }
 
 impl Default for Settings {
@@ -151,6 +153,7 @@ impl Default for Settings {
             launch_at_login: false,
             t3_window: DEFAULT_T3_WINDOW.into(),
             welcome_shown: false,
+            auto_update_check: true,
         }
     }
 }

@@ -4,7 +4,7 @@ Shot-VILLA nimmt Bildschirmfotos auf, markiert sie und gibt sie weiter – per T
 
 - **Plattformen:** macOS 14 oder neuer (Apple-Chip und Intel), Windows 10 und 11
 - **Technik:** Tauri 2 mit Rust-Backend (Aufnahme, Kürzel, Menüleiste/Infobereich, Dateien, Texterkennung) und React/TypeScript-Frontend (Editor, Einstellungen, Overlay)
-- **Grundsätze:** alles bleibt auf dem Gerät; keine Telemetrie, keine Cloud-Dienste, keine Lizenzprüfung, keine In-App-Käufe
+- **Grundsätze:** alles bleibt auf dem Gerät; keine Telemetrie, keine Cloud-Dienste, keine Lizenzprüfung, keine In-App-Käufe. Einzige Netzwerkverbindung ist die Update-Suche (M6), die sich abschalten lässt.
 
 Prioritäten: **Muss** (Version 1), **Später**, **Nicht**.
 
@@ -133,6 +133,7 @@ Prioritäten: **Muss** (Version 1), **Später**, **Nicht**.
 | M3 | Autostart | Start bei der Anmeldung | Muss |
 | M4 | Begrüßung | nach der Installation: Ort des Symbols und wichtigste Kürzel | Muss |
 | M5 | Erneut öffnen | Editor bei erneutem Start zeigen | Später |
+| M6 | Updates | App sucht beim Start und danach täglich (abschaltbar) nach einer neueren Version und installiert sie auf Knopfdruck (Einstellungen → Updates, Menüeintrag „Nach Updates suchen …“). Die App ruft nur die statische Datei `latest.json` am neuesten GitHub-Release ab (kein API-Aufruf, kein Abruflimit). Pakete sind mit minisign signiert; der öffentliche Schlüssel steckt in der App, ohne passende Signatur wird nichts installiert. | Muss |
 | H1 | Globale Kürzel | sieben frei belegbare Kürzel mit Aufnahmefeld | Muss |
 | H2 | Konflikte | belegte Kürzel melden | Muss |
 | H3 | Systemkürzel | Hinweis, wie die Systemkürzel freigegeben werden | Muss |
@@ -195,4 +196,5 @@ Im Editor: Werkzeuge V A T R O L D H B S C · Esc kopieren und schließen · ⇧
 - Keine Sandbox, um Aufnahme und globale Kürzel ohne Einschränkungen nutzen zu können.
 - Bilddaten zwischen Frontend und Rust laufen als Binärdaten, nicht als JSON.
 - Die Plattformteile stecken hinter gemeinsamen Schnittstellen (`src-tauri/src/{capture,imaging,ocr}/{mac,win}.rs`); die Abläufe in `actions.rs` sind plattformneutral.
+- Updates: Tauri-Updater mit statischer `latest.json` (Adresse in `tauri.conf.json`), signierte Pakete, `requireSignedVersion` gegen Rückstufung. Der private Schlüssel liegt nur im GitHub-Secret `TAURI_SIGNING_PRIVATE_KEY` und im Passwortmanager, nie im Repo. Die Adresse lässt sich später auf einen eigenen Server umstellen, ohne die App-Logik zu ändern.
 - Unter Windows gibt es kein App-Menü (es hinge an jedem Fenster); Editor-Kürzel verarbeitet dort das Frontend.

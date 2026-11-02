@@ -16,10 +16,26 @@ Alles baut GitHub Actions ([`release.yml`](../.github/workflows/release.yml)); e
    ```bash
    git tag v0.3.3 && git push origin v0.3.3
    ```
-3. Der Workflow legt das Release an, baut das universelle macOS-DMG und den Windows-Installer, hängt beides an und stößt den Website-Build an. Das Image `ghcr.io/jaschaaon/shot-villa-web:latest` enthält danach die neuen Downloads.
+3. Der Workflow legt das Release an, baut das universelle macOS-DMG und den Windows-Installer, hängt beides samt signierten Update-Paketen (`*.app.tar.gz`, `*-setup.exe` mit `.sig`) an, erzeugt `latest.json` und stößt den Website-Build an. Das Image `ghcr.io/jaschaaon/shot-villa-web:latest` enthält danach die neuen Downloads.
 4. Auf dem Server das neue Image ziehen und den Container neu starten (z. B. „Update“ in der Container-Verwaltung).
 
-**Signatur:** Auf dem Runner gibt es das lokale Zertifikat „Shot-VILLA Dev“ nicht, das DMG ist deshalb ad hoc signiert. macOS fragt nach jedem Update erneut nach den Freigaben (Bildschirmaufnahme, Bedienungshilfen). Wer das vermeiden will, hinterlegt ein Zertifikat als GitHub-Secret und trägt es in den Workflow ein. Ein lokaler Build mit `pnpm tauri build --target universal-apple-darwin --bundles app,dmg` und dem Zertifikat bleibt möglich.
+## Updates in der App
+
+Installierte Apps holen neue Versionen selbst. Sie rufen dazu `https://github.com/JaschaaON/shot-villa/releases/latest/download/latest.json` ab, eine statische Datei am neuesten Release. Das ist kein API-Aufruf und unterliegt nicht dem Abruflimit der GitHub-API (60 Abrufe pro Stunde ohne Anmeldung). Pakete prüft die App mit dem öffentlichen Schlüssel aus `tauri.conf.json` (`plugins.updater.pubkey`); `requireSignedVersion` verhindert, dass ein älteres, gültig signiertes Paket als neues ausgegeben wird.
+
+**Einmalige Einrichtung (Signaturschlüssel):**
+
+1. Schlüsselpaar erzeugen: `pnpm tauri signer generate -w ~/.tauri/shot-villa-updater.key`. Der öffentliche Teil (`.key.pub`) steht bereits in `tauri.conf.json`.
+2. Den privaten Schlüssel als GitHub-Secret `TAURI_SIGNING_PRIVATE_KEY` hinterlegen (Inhalt der Datei), bei gesetztem Passwort zusätzlich `TAURI_SIGNING_PRIVATE_KEY_PASSWORD`: `gh secret set TAURI_SIGNING_PRIVATE_KEY < ~/.tauri/shot-villa-updater.key`.
+3. Den privaten Schlüssel zusätzlich im Passwortmanager sichern. **Geht er verloren, kann keine installierte App mehr aktualisiert werden**; dann hilft nur eine manuelle Neuinstallation mit neuem Schlüssel. Er gehört nie ins Repository.
+
+**Ersteinführung:** Nur Versionen ab der ersten mit Updater gebauten Version suchen selbst nach Updates. Ältere Installationen (bis 0.3.3) werden einmal von Hand ersetzt.
+
+**Lokaler Build:** Wer das DMG selbst baut, setzt `TAURI_SIGNING_PRIVATE_KEY` (Pfad zur Schlüsseldatei) und `TAURI_SIGNING_PRIVATE_KEY_PASSWORD`, sonst bricht `pnpm tauri build` ab, weil Update-Pakete signiert werden müssen.
+
+**Anderer Update-Server:** Die Adresse steht in `tauri.conf.json` unter `plugins.updater.endpoints` (mehrere sind möglich, sie werden der Reihe nach versucht). `latest.json` und die Pakete müssen dort öffentlich per HTTPS erreichbar sein.
+
+**Signatur:** Auf dem Runner gibt es das lokale Zertifikat „Shot-VILLA Dev“ nicht, das DMG ist deshalb ad hoc signiert. macOS fragt nach jedem Update erneut nach den Freigaben (Bildschirmaufnahme, Bedienungshilfen). Das gilt auch für Updates in der App, die dasselbe Paket installieren. Wer das vermeiden will, hinterlegt ein Zertifikat als GitHub-Secret und trägt es in den Workflow ein. Ein lokaler Build mit `pnpm tauri build --target universal-apple-darwin --bundles app,dmg` und dem Zertifikat bleibt möglich.
 
 ## Einmalige Einrichtung
 

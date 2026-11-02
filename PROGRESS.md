@@ -63,6 +63,7 @@ Legende: ☐ offen · ◐ implementiert, Tests grün, Praxistest offen · ☑ fe
 | M2 | Dock-Icon nur bei offenem Fenster | ◐ | |
 | M3 | Autostart | ◐ | `SMAppService` bzw. Registry (Windows) |
 | M4 | Begrüßung beim ersten Start | ☑ | „Installation erfolgreich“ mit Ort des Symbols und den eingestellten Kürzeln (0.1.1) |
+| M6 | Updates | ◐ | Tauri-Updater (`updater.rs`): Suche beim Start (nach 20 s) und täglich, abschaltbar; Tab *Updates* in den Einstellungen und Menüeintrag („Nach Updates suchen …“, nach einem Fund „Update auf Version … installieren …“); Mitteilung bei neuer Version; Download mit Fortschritt, Signaturprüfung, Installation und Neustart. `release.yml` veröffentlicht signierte Pakete und `latest.json`. Rust/TS-Tests und clippy grün, Suche gegen lokalen Server geprüft; Installation und Neustart auf Mac und Windows offen |
 | H1 | Globale Hotkeys | ☑ | 7 belegbare Kürzel mit Recorder; Vorgaben ⇧⌘1, ⇧⌘2, ⌃⌥⌘O; Kürzel während der Aufnahme pausiert; Recorder und globales Auslösen geprüft |
 
 ## Praxistest 2026-10-14 (macOS 27, installierte App)
@@ -102,8 +103,17 @@ Noch nicht in der App geprüft: Sichern unter, Drag & Drop ins Editorfenster, �
 - Logo „Sucher“ (silberne Sucherecken, roter Punkt) passend zu Gipfelspur von OverlandVibe: `website/logo/`, `website/favicon.svg`, `favicon.png`, `apple-touch-icon.png`. App-Icon (`src-tauri/icons`) ist noch das alte „Grafit“ – Umstellung offen.
 - Website im Stil „Instrument“ (Geist, Silber auf Fast-Schwarz, Rot nur im Logo; Hell/Dunkel nach Systemeinstellung), Schriften selbst gehostet. Inhalt unverändert; Vollbild-Aufnahme und ⌃⌥⌘F stehen erst nach dem App-Release (0.4.0) auf der Seite. Beschreibung und Screenshots folgen.
 
+## 0.3.4 – Updates in der App (2026-11-02)
+
+- Shot-VILLA sucht nach Updates und installiert sie auf Knopfdruck (Einstellungen → Updates, Menüeintrag); Pakete sind signiert, `latest.json` am GitHub-Release (siehe M6).
+- Fix: Nach einem Fehlstart der Auswahl gingen keine Aufnahmen mehr (Sitzung wurde zu spät angelegt, siehe Entscheidungen).
+- „Bereich in T3 Code einfügen“: bessere Prüfung der Freigabe „Bedienungshilfen“; auf dem Mac in der Praxis geprüft (Bild landet im T3-Code-Chat).
+- Erste Version mit Updater: wird einmal von Hand installiert; Updates prüft erst das folgende Release.
+
 ## Entscheidungen / Hinweise
 
+- 2026-11-02: Aufnahmen gingen nach einem Fehlstart gar nicht mehr (still ohne Meldung). Ursache: `start_overlay` trug die Auswahl erst nach dem Anlegen der Overlay-Fenster ein; eine schnell ladende Seite bekam von `overlay_info` nichts, blieb unsichtbar, und die Sitzung blockierte danach jede weitere Aufnahme (zwei schnelle Auslöser erzeugten außerdem „a webview with label `overlay-1` already exists“). Jetzt wird die Sitzung vor den Fenstern angelegt (der Platz ist sofort belegt), ein Fehlstart räumt auf, und ein Wächter verwirft ein nach 5 s noch unsichtbares Overlay samt Meldung.
+- 2026-11-02: „Bereich in T3 Code einfügen“: Die Freigabeprüfung fragt zusätzlich `AXIsProcessTrusted` ab (der Wert von `CGPreflightPostEventAccess` bleibt bis zum Neustart veraltet); der Hinweis nennt den Weg und den nötigen Neustart.
 - 2026-10-14: `clippy::needless_pass_by_value` wird an Tauri-Commands per `#[expect(..., reason)]` gezielt ausgenommen (vom Nutzer freigegeben).
 - Markdown-Dateien sind von `oxfmt` ausgenommen, damit `CLAUDE.md` unverändert bleibt.
 - Anti-Slop verbietet „shape“ in Bezeichnern: das Editor-Modell heißt deshalb „Mark“ (Markierung).
