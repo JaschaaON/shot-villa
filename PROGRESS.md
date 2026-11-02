@@ -63,7 +63,7 @@ Legende: ☐ offen · ◐ implementiert, Tests grün, Praxistest offen · ☑ fe
 | M2 | Dock-Icon nur bei offenem Fenster | ◐ | |
 | M3 | Autostart | ◐ | `SMAppService` bzw. Registry (Windows) |
 | M4 | Begrüßung beim ersten Start | ☑ | „Installation erfolgreich“ mit Ort des Symbols und den eingestellten Kürzeln (0.1.1) |
-| M6 | Updates | ◐ | Tauri-Updater (`updater.rs`): Suche beim Start (nach 20 s) und täglich, abschaltbar; Tab *Updates* in den Einstellungen und Menüeintrag („Nach Updates suchen …“, nach einem Fund „Update auf Version … installieren …“); Mitteilung bei neuer Version; Download mit Fortschritt, Signaturprüfung, Installation und Neustart. `release.yml` veröffentlicht signierte Pakete und `latest.json`. Rust/TS-Tests und clippy grün, Suche gegen lokalen Server geprüft; Installation und Neustart auf Mac und Windows offen |
+| M6 | Updates | ◐ | Tauri-Updater (`updater.rs`): Suche beim Start (nach 20 s) und täglich, abschaltbar; Tab *Updates* in den Einstellungen und Menüeintrag („Nach Updates suchen …“, nach einem Fund „Update auf Version … installieren …“); Mitteilung bei neuer Version; Download mit Fortschritt, Signaturprüfung, Installation und Neustart. `release.yml` veröffentlicht signierte Pakete und `latest.json`. Rust/TS-Tests und clippy grün. Auf dem Mac mit lokalem Server geprüft: Suche, Download, Signaturprüfung, Austausch der App und Neustart (0.3.5 → 0.3.6, gesteuert über den Menüeintrag); Windows und ein Update über GitHub offen |
 | H1 | Globale Hotkeys | ☑ | 7 belegbare Kürzel mit Recorder; Vorgaben ⇧⌘1, ⇧⌘2, ⌃⌥⌘O; Kürzel während der Aufnahme pausiert; Recorder und globales Auslösen geprüft |
 
 ## Praxistest 2026-10-14 (macOS 27, installierte App)
@@ -109,6 +109,11 @@ Noch nicht in der App geprüft: Sichern unter, Drag & Drop ins Editorfenster, �
 - Fix: Nach einem Fehlstart der Auswahl gingen keine Aufnahmen mehr (Sitzung wurde zu spät angelegt, siehe Entscheidungen).
 - „Bereich in T3 Code einfügen“: bessere Prüfung der Freigabe „Bedienungshilfen“; auf dem Mac in der Praxis geprüft (Bild landet im T3-Code-Chat).
 - Erste Version mit Updater: wird einmal von Hand installiert; Updates prüft erst das folgende Release.
+
+## 0.3.5 – Updates installieren sich selbst (2026-11-02)
+
+- Ein Klick auf *Nach Updates suchen* (oder der Menüeintrag „Update auf Version … installieren …“) lädt, prüft und installiert eine gefundene Version ohne weitere Rückfrage und startet die App neu. Die Suche im Hintergrund meldet nur und installiert nie von selbst.
+- Hinweis: Von GitHub gebaute Versionen sind nur ad hoc signiert; nach einem Update fragt macOS erneut nach Bildschirmaufnahme und Bedienungshilfen.
 
 ## Entscheidungen / Hinweise
 

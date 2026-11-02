@@ -14,9 +14,10 @@ import { fire } from "../ui/fire";
 type State =
   | { kind: "checking" }
   | { kind: "current" }
-  | { kind: "available"; version: string }
-  | { kind: "installing"; progress: UpdateProgress | null }
+  | { kind: "installing"; version: string; progress: UpdateProgress | null }
   | { kind: "failed"; message: string };
+
+type SetState = (state: State) => void;
 
 const statusText = (state: State): string => {
   switch (state.kind) {
@@ -26,11 +27,11 @@ const statusText = (state: State): string => {
     case "current": {
       return "Shot-VILLA ist auf dem neuesten Stand.";
     }
-    case "available": {
-      return `Version ${state.version} ist verfügbar.`;
-    }
     case "installing": {
-      return state.progress ? progressLabel(state.progress) : "Starte …";
+      const detail = state.progress
+        ? progressLabel(state.progress)
+        : "Starte …";
+      return `Version ${state.version}: ${detail}`;
     }
     case "failed": {
       return state.message;
@@ -41,15 +42,28 @@ const statusText = (state: State): string => {
   }
 };
 
-/** Fragt den Update-Server und übersetzt die Antwort in einen Zustand. */
-const lookUp = async (): Promise<State> => {
+/** Lädt die Version, installiert sie und startet die App neu. */
+const install = async (version: string, setState: SetState) => {
+  setState({ kind: "installing", progress: null, version });
+  try {
+    await installUpdate();
+  } catch (error) {
+    setState({ kind: "failed", message: String(error) });
+  }
+};
+
+/** Sucht nach einer neueren Version und installiert sie gleich, wenn es eine gibt. */
+const searchAndInstall = async (setState: SetState) => {
+  setState({ kind: "checking" });
   try {
     const found = await checkForUpdate();
-    return found
-      ? { kind: "available", version: found.version }
-      : { kind: "current" };
+    if (found) {
+      await install(found.version, setState);
+    } else {
+      setState({ kind: "current" });
+    }
   } catch (error) {
-    return { kind: "failed", message: String(error) };
+    setState({ kind: "failed", message: String(error) });
   }
 };
 
@@ -58,43 +72,32 @@ interface Props {
   onAutoCheckChange: (autoCheck: boolean) => void;
 }
 
-/** Tab „Updates“: sucht beim Öffnen, installiert auf Knopfdruck. */
+/**
+ * Tab „Updates“: Beim Öffnen und auf Knopfdruck wird gesucht; eine gefundene
+ * Version wird ohne weitere Rückfrage installiert, danach startet die App neu.
+ */
 export const Updates = ({ autoCheck, onAutoCheckChange }: Props) => {
   const [version, setVersion] = useState("");
   const [state, setState] = useState<State>({ kind: "checking" });
-
-  const search = async () => {
-    setState({ kind: "checking" });
-    setState(await lookUp());
-  };
-
-  const install = async () => {
-    setState({ kind: "installing", progress: null });
-    try {
-      await installUpdate();
-    } catch (error) {
-      setState({ kind: "failed", message: String(error) });
-    }
-  };
 
   useEffect(() => {
     let active = true;
     const start = async () => {
       setVersion(await getVersion());
+      // Hat die Suche im Hintergrund schon etwas gefunden, gleich installieren.
       const known = await availableUpdate();
       if (!active) {
         return;
       }
-      const next: State = known
-        ? { kind: "available", version: known.version }
-        : await lookUp();
-      if (active) {
-        setState(next);
-      }
+      await (known
+        ? install(known.version, setState)
+        : searchAndInstall(setState));
     };
     fire(start)();
     const listening = onUpdateProgress((progress) => {
-      setState({ kind: "installing", progress });
+      setState((current) =>
+        current.kind === "installing" ? { ...current, progress } : current
+      );
     });
     return () => {
       active = false;
@@ -119,13 +122,14 @@ export const Updates = ({ autoCheck, onAutoCheckChange }: Props) => {
       <div className="row">
         <span className="row-label" />
         <div className="row-control">
-          {state.kind === "available" ? (
-            <button className="primary" onClick={fire(install)} type="button">
-              Installieren und neu starten
-            </button>
-          ) : null}
-          <button disabled={busy} onClick={fire(search)} type="button">
-            Erneut suchen
+          <button
+            disabled={busy}
+            onClick={fire(async () => {
+              await searchAndInstall(setState);
+            })}
+            type="button"
+          >
+            Nach Updates suchen
           </button>
         </div>
       </div>
@@ -146,10 +150,12 @@ export const Updates = ({ autoCheck, onAutoCheckChange }: Props) => {
         </div>
       </div>
       <p className="note">
-        Bei der Suche lädt Shot-VILLA nur eine kleine Versionsdatei von
-        github.com. Aufnahmen und persönliche Daten werden nicht übertragen;
-        GitHub sieht wie bei jedem Abruf deine IP-Adresse. Das Update wird vor
-        der Installation anhand einer Signatur geprüft.
+        Eine neue Version wird heruntergeladen, geprüft und installiert; danach
+        startet Shot-VILLA von selbst neu. Bei der Suche lädt die App nur eine
+        kleine Versionsdatei von github.com. Aufnahmen und persönliche Daten
+        werden nicht übertragen; GitHub sieht wie bei jedem Abruf deine
+        IP-Adresse. Das Update wird vor der Installation anhand einer Signatur
+        geprüft.
       </p>
     </>
   );

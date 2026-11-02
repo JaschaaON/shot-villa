@@ -175,7 +175,7 @@ Willst du **⇧⌘3 / ⇧⌘4** nutzen, schalte zuerst die Bildschirmfoto-Kürze
 
 ### Updates
 
-Shot-VILLA sucht beim Start und danach einmal täglich nach einer neueren Version und meldet sie per Mitteilung. Unter *Einstellungen → Updates* (oder im Menü über *Nach Updates suchen …*) siehst du die installierte Version, kannst sofort suchen und mit **Installieren und neu starten** aktualisieren. Das Paket wird vor der Installation anhand einer Signatur geprüft; passt sie nicht, bleibt alles, wie es ist. Die automatische Suche lässt sich dort abschalten.
+Shot-VILLA sucht beim Start und danach einmal täglich nach einer neueren Version und meldet sie per Mitteilung. Unter *Einstellungen → Updates* (oder im Menü über *Nach Updates suchen …*) siehst du die installierte Version und kannst mit **Nach Updates suchen** sofort suchen. Findet Shot-VILLA eine neue Version, lädt es sie herunter, prüft sie, installiert sie und startet sich selbst neu – ohne weitere Rückfrage. Das Paket wird vor der Installation anhand einer Signatur geprüft; passt sie nicht, bleibt alles, wie es ist. Die automatische Suche lässt sich dort abschalten.
 
 Bei der Suche lädt Shot-VILLA nur eine kleine Versionsdatei von github.com – keine Aufnahmen, keine persönlichen Daten. GitHub sieht dabei wie bei jedem Abruf deine IP-Adresse.
 
