@@ -131,6 +131,8 @@ pub struct Settings {
     pub welcome_shown: bool,
     /// Beim Start und danach täglich nach einer neuen Version suchen?
     pub auto_update_check: bool,
+    /// Zu welchem Stand der Signaturidentität die Freigaben zuletzt zurückgesetzt wurden (macOS).
+    pub permission_epoch: u32,
 }
 
 impl Default for Settings {
@@ -154,6 +156,7 @@ impl Default for Settings {
             t3_window: DEFAULT_T3_WINDOW.into(),
             welcome_shown: false,
             auto_update_check: true,
+            permission_epoch: 0,
         }
     }
 }
@@ -282,6 +285,13 @@ mod tests {
         let settings: Settings = serde_json::from_str(r#"{"escSaves": true}"#)?;
         assert!(settings.esc_saves);
         assert_eq!(settings.hotkeys, Hotkeys::default());
+        Ok(())
+    }
+
+    #[test]
+    fn settings_from_older_versions_start_at_epoch_zero() -> serde_json::Result<()> {
+        let settings: Settings = serde_json::from_str(r#"{"welcomeShown": true}"#)?;
+        assert_eq!(settings.permission_epoch, 0);
         Ok(())
     }
 

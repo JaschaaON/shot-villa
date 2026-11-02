@@ -115,6 +115,11 @@ Noch nicht in der App geprüft: Sichern unter, Drag & Drop ins Editorfenster, �
 - Ein Klick auf *Nach Updates suchen* (oder der Menüeintrag „Update auf Version … installieren …“) lädt, prüft und installiert eine gefundene Version ohne weitere Rückfrage und startet die App neu. Die Suche im Hintergrund meldet nur und installiert nie von selbst.
 - Hinweis: Von GitHub gebaute Versionen sind nur ad hoc signiert; nach einem Update fragt macOS erneut nach Bildschirmaufnahme und Bedienungshilfen.
 
+## 0.3.6 – Feste Signatur, Freigaben bleiben (2026-11-02)
+
+- Ursache der wiederkehrenden Freigabe-Abfrage nach Updates: Die Builds von GitHub Actions waren nur ad hoc signiert (Freigabe hängt am Code-Hash, der sich bei jedem Build ändert). Jetzt signiert `release.yml` mit dem selbstsignierten Zertifikat „Shot-VILLA Signing“ (Secrets `APPLE_CERTIFICATE`, `APPLE_CERTIFICATE_PASSWORD`, `APPLE_SIGNING_IDENTITY`); die Freigabe-Bedingung ist `identifier … and certificate leaf = H"…"` und bleibt gleich. Lokale Builds nutzen dasselbe Zertifikat.
+- Beim Wechsel von ad hoc auf das Zertifikat bleiben alte Freigaben wirkungslos (Haken gesetzt, macOS fragt trotzdem). Die App setzt ihre Freigaben deshalb beim ersten Start nach dem Update einmal selbst zurück (`tccutil reset`, `permission_epoch` in den Einstellungen); danach einmal „Erlauben“ genügt für alle weiteren Updates.
+
 ## Entscheidungen / Hinweise
 
 - 2026-11-02: Aufnahmen gingen nach einem Fehlstart gar nicht mehr (still ohne Meldung). Ursache: `start_overlay` trug die Auswahl erst nach dem Anlegen der Overlay-Fenster ein; eine schnell ladende Seite bekam von `overlay_info` nichts, blieb unsichtbar, und die Sitzung blockierte danach jede weitere Aufnahme (zwei schnelle Auslöser erzeugten außerdem „a webview with label `overlay-1` already exists“). Jetzt wird die Sitzung vor den Fenstern angelegt (der Platz ist sofort belegt), ein Fehlstart räumt auf, und ein Wächter verwirft ein nach 5 s noch unsichtbares Overlay samt Meldung.

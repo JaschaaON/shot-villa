@@ -13,7 +13,10 @@ pub enum ScreenAccess {
 }
 
 #[cfg(target_os = "macos")]
-pub use mac::{open_screen_access_settings, request_screen_access, screen_access};
+pub use mac::{
+    PERMISSION_EPOCH, open_screen_access_settings, request_screen_access, reset_grants,
+    screen_access,
+};
 
 #[cfg(target_os = "macos")]
 mod mac {
@@ -23,6 +26,35 @@ mod mac {
 
     const SETTINGS_URL: &str =
         "x-apple.systempreferences:com.apple.preference.security?Privacy_ScreenCapture";
+
+    /// Stand der Signaturidentität. macOS knüpft Freigaben an die Signatur der App.
+    /// Wechselt sie (etwa von ad hoc auf ein festes Zertifikat), steht der Haken
+    /// in den Systemeinstellungen noch, gilt aber für die alte Identität und
+    /// greift nicht. Wird die Zahl erhöht, setzt die App ihre Freigaben beim
+    /// nächsten Start einmal zurück, damit macOS neu fragt und die Freigabe
+    /// danach für alle weiteren Updates reicht.
+    pub const PERMISSION_EPOCH: u32 = 1;
+
+    /// Freigaben, die Shot-VILLA nutzt: Bildschirmaufnahme, Bedienungshilfen und
+    /// das Senden von Tastendrücken (Einfügen in T3 Code).
+    const SERVICES: [&str; 3] = ["ScreenCapture", "Accessibility", "PostEvent"];
+
+    /// Setzt die Freigaben der App mit `identifier` zurück (`tccutil reset`).
+    pub fn reset_grants(identifier: &str) {
+        for service in SERVICES {
+            match std::process::Command::new("/usr/bin/tccutil")
+                .args(["reset", service, identifier])
+                .output()
+            {
+                Ok(output) if output.status.success() => {}
+                Ok(output) => log::warn!(
+                    "Freigabe {service} nicht zurückgesetzt: {}",
+                    String::from_utf8_lossy(&output.stderr).trim()
+                ),
+                Err(error) => log::warn!("tccutil nicht ausführbar: {error}"),
+            }
+        }
+    }
 
     /// Prüft, ob die App den Bildschirm aufnehmen darf. Der Preflight-Wert ist
     /// nach einer Freigabe bis zum Neustart veraltet; deshalb zählt zusätzlich, ob
