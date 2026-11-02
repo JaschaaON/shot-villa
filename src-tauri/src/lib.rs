@@ -150,11 +150,12 @@ fn setup(app: &mut App) -> Result<(), Box<dyn std::error::Error>> {
     }
     let hotkeys = settings.hotkeys.clone();
     let first_start = !settings.welcome_shown;
-    if first_start {
-        settings.welcome_shown = true;
-        if let Err(error) = store.set(settings) {
-            log::warn!("Einstellungen nicht gespeichert: {error}");
-        }
+    settings.welcome_shown = true;
+    let reset = reset_stale_grants(app, &mut settings);
+    if (first_start || reset)
+        && let Err(error) = store.set(settings)
+    {
+        log::warn!("Einstellungen nicht gespeichert: {error}");
     }
     app.manage(store);
     notify::init();
@@ -183,6 +184,24 @@ fn setup(app: &mut App) -> Result<(), Box<dyn std::error::Error>> {
         open_file(app.handle(), &path);
     }
     Ok(())
+}
+
+/// Nach einem Wechsel der Signatur gelten die Freigaben in macOS für die alte
+/// Identität. Einmal zurücksetzen, damit macOS neu fragt; `true`, wenn sich
+/// die Einstellungen geändert haben.
+#[cfg(target_os = "macos")]
+fn reset_stale_grants(app: &App, settings: &mut settings::Settings) -> bool {
+    if settings.permission_epoch >= permission::PERMISSION_EPOCH {
+        return false;
+    }
+    permission::reset_grants(&app.config().identifier);
+    settings.permission_epoch = permission::PERMISSION_EPOCH;
+    true
+}
+
+#[cfg(not(target_os = "macos"))]
+const fn reset_stale_grants(_app: &App, _settings: &mut settings::Settings) -> bool {
+    false
 }
 
 fn open_file(app: &AppHandle, path: &std::path::Path) {

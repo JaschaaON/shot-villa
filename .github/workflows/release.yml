@@ -50,17 +50,43 @@ jobs:
       - name: Abhängigkeiten
         run: pnpm install --frozen-lockfile
 
-      # Das lokale Zertifikat „Shot-VILLA Dev“ gibt es auf dem Runner nicht;
-      # die App wird ad hoc signiert ("-").
+      # Jede Version trägt dieselbe Signatur (selbstsigniertes Zertifikat
+      # „Shot-VILLA Signing“). macOS knüpft die Freigaben (Bildschirmaufnahme,
+      # Bedienungshilfen) an diese Identität; bei ad-hoc-Signatur würde es nach
+      # jedem Update neu fragen. Das Zertifikat liegt als p12 in den Secrets.
+      - name: Signaturzertifikat einrichten
+        env:
+          APPLE_CERTIFICATE: ${{ secrets.APPLE_CERTIFICATE }}
+          APPLE_CERTIFICATE_PASSWORD: ${{ secrets.APPLE_CERTIFICATE_PASSWORD }}
+        run: |
+          [ -n "$APPLE_CERTIFICATE" ] || { echo "Secret APPLE_CERTIFICATE fehlt"; exit 1; }
+          keychain="$RUNNER_TEMP/signing.keychain-db"
+          password="$(openssl rand -hex 16)"
+          security create-keychain -p "$password" "$keychain"
+          security set-keychain-settings -lut 21600 "$keychain"
+          security unlock-keychain -p "$password" "$keychain"
+          echo "$APPLE_CERTIFICATE" | base64 --decode > "$RUNNER_TEMP/signing.p12"
+          security import "$RUNNER_TEMP/signing.p12" -k "$keychain" -P "$APPLE_CERTIFICATE_PASSWORD" -T /usr/bin/codesign
+          rm "$RUNNER_TEMP/signing.p12"
+          security set-key-partition-list -S apple-tool:,apple: -s -k "$password" "$keychain"
+          security list-keychains -d user -s "$keychain" $(security list-keychains -d user | tr -d '"')
+          security find-identity -p codesigning "$keychain"
+
       # Die Update-Pakete (.app.tar.gz) signiert Tauri mit dem Schlüssel aus
       # dem Secret; ohne ihn schlägt der Build fehl.
       - name: DMG bauen
         env:
-          APPLE_SIGNING_IDENTITY: "-"
+          APPLE_SIGNING_IDENTITY: ${{ secrets.APPLE_SIGNING_IDENTITY }}
           TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
           TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
-        run: >
-          pnpm tauri build --target universal-apple-darwin --bundles app,dmg --config '{"bundle":{"macOS":{"signingIdentity":"-"}}}'
+        run: pnpm tauri build --target universal-apple-darwin --bundles app,dmg
+
+      - name: Signatur prüfen
+        run: |
+          app=src-tauri/target/universal-apple-darwin/release/bundle/macos/Shot-VILLA.app
+          codesign --verify --deep --strict "$app"
+          codesign -dvv "$app" 2>&1 | grep Authority
+          codesign -d -r- "$app" 2>&1 | grep designated
 
       - name: An das Release hängen
         env:

@@ -35,7 +35,12 @@ Installierte Apps holen neue Versionen selbst. Sie rufen dazu `https://github.co
 
 **Anderer Update-Server:** Die Adresse steht in `tauri.conf.json` unter `plugins.updater.endpoints` (mehrere sind möglich, sie werden der Reihe nach versucht). `latest.json` und die Pakete müssen dort öffentlich per HTTPS erreichbar sein.
 
-**Signatur:** Auf dem Runner gibt es das lokale Zertifikat „Shot-VILLA Dev“ nicht, das DMG ist deshalb ad hoc signiert. macOS fragt nach jedem Update erneut nach den Freigaben (Bildschirmaufnahme, Bedienungshilfen). Das gilt auch für Updates in der App, die dasselbe Paket installieren. Wer das vermeiden will, hinterlegt ein Zertifikat als GitHub-Secret und trägt es in den Workflow ein. Ein lokaler Build mit `pnpm tauri build --target universal-apple-darwin --bundles app,dmg` und dem Zertifikat bleibt möglich.
+**Signatur (macOS):** Alle Builds, auch die von GitHub Actions, tragen dieselbe Signatur: das selbstsignierte Zertifikat „Shot-VILLA Signing“. macOS knüpft die Freigaben (Bildschirmaufnahme, Bedienungshilfen) an diese Identität, sie bleiben deshalb über alle Updates erhalten. Bei ad-hoc-Signatur (jeder Build ein neuer Code-Hash) würde macOS nach jedem Update erneut fragen.
+
+- **Secrets im Repo:** `APPLE_CERTIFICATE` (p12 als Base64), `APPLE_CERTIFICATE_PASSWORD`, `APPLE_SIGNING_IDENTITY` (`Shot-VILLA Signing`). `release.yml` richtet damit ein temporäres Schlüsselbund ein und prüft die Signatur im Lauf.
+- **Sicherung:** `~/.tauri/shot-villa-signing.p12` und `signing.password` im Passwortmanager ablegen. Das Zertifikat gilt bis 2046. **Geht es verloren, ändert sich die Identität, und macOS fragt einmal neu nach den Freigaben.** Dafür setzt die App ihre Freigaben beim ersten Start einmal selbst zurück (`PERMISSION_EPOCH` in `permission.rs`); bei jedem künftigen Identitätswechsel die Zahl erhöhen.
+- **Lokaler Build:** Das Zertifikat einmal importieren: `security import ~/.tauri/shot-villa-signing.p12 -k ~/Library/Keychains/login.keychain-db -P "$(cat ~/.tauri/signing.password)" -T /usr/bin/codesign`. `tauri.conf.json` verweist auf „Shot-VILLA Signing“.
+- **Neues Zertifikat erzeugen:** `openssl req -x509 -newkey rsa:2048 -nodes -days 7300 -subj "/CN=Shot-VILLA Signing" -addext "keyUsage=critical,digitalSignature" -addext "extendedKeyUsage=critical,codeSigning" -addext "basicConstraints=critical,CA:false" -keyout key.pem -out cert.pem`, dann `openssl pkcs12 -export -legacy -inkey key.pem -in cert.pem -name "Shot-VILLA Signing" -out shot-villa-signing.p12` (ohne `-legacy` kann `security import` die Datei nicht lesen).
 
 ## Einmalige Einrichtung
 
