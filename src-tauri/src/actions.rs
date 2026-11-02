@@ -14,12 +14,13 @@ use crate::capture::{self, Rect, WindowInfo};
 use crate::imaging::{self, Format, Image, PixelRect};
 use crate::settings::{AreaOpens, CursorCapture, Store};
 use crate::shots::Shots;
-use crate::{clipboard, files, ocr, output, permission, tray, windows};
+use crate::{clipboard, files, ocr, output, permission, t3code, tray, windows};
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum Action {
     Fullscreen,
     Area,
+    AreaToT3,
     RepeatArea,
     AnyWindow,
     ActiveWindow,
@@ -34,9 +35,10 @@ pub enum Action {
 }
 
 impl Action {
-    pub const ALL: [Self; 13] = [
+    pub const ALL: [Self; 14] = [
         Self::Fullscreen,
         Self::Area,
+        Self::AreaToT3,
         Self::RepeatArea,
         Self::AnyWindow,
         Self::ActiveWindow,
@@ -54,6 +56,7 @@ impl Action {
         match self {
             Self::Fullscreen => "capture-fullscreen",
             Self::Area => "capture-area",
+            Self::AreaToT3 => "capture-area-t3",
             Self::RepeatArea => "capture-repeat-area",
             Self::AnyWindow => "capture-any-window",
             Self::ActiveWindow => "capture-active-window",
@@ -89,6 +92,8 @@ pub enum OverlayMode {
     Window,
     Ocr,
     Record,
+    /// Bereich, der direkt ins T3-Code-Fenster eingefügt wird.
+    T3,
 }
 
 /// Ein Overlay-Fenster über einem Bildschirm mit dessen eingefrorenem Bild.
@@ -218,6 +223,7 @@ pub fn run(app: &AppHandle, action: Action) {
         Action::Settings => report(windows::show_settings(app)),
         Action::Fullscreen => with_screen_access(app, capture_fullscreen),
         Action::Area => with_screen_access(app, |app| start_overlay(app, OverlayMode::Area)),
+        Action::AreaToT3 => with_screen_access(app, |app| start_overlay(app, OverlayMode::T3)),
         Action::AnyWindow => with_screen_access(app, |app| start_overlay(app, OverlayMode::Window)),
         Action::Ocr => with_screen_access(app, |app| start_overlay(app, OverlayMode::Ocr)),
         Action::Record => toggle_recording(app, RecordingTarget::Area),
@@ -230,7 +236,7 @@ pub fn run(app: &AppHandle, action: Action) {
     }
 }
 
-type ActionResult = Result<(), Box<dyn std::error::Error>>;
+pub type ActionResult = Result<(), Box<dyn std::error::Error>>;
 
 /// Führt eine Aufnahme im Hintergrund aus, sofern die Bildschirmaufnahme erlaubt
 /// ist; sonst erscheint der Hinweis zur Freigabe.
@@ -484,6 +490,7 @@ fn select_area(
         OverlayMode::Record => {
             return prepare_recording(app, display.display_id, display.frame, rect);
         }
+        OverlayMode::T3 => return t3code::paste_image(app, &image, scale),
         OverlayMode::Area | OverlayMode::Window => {}
     }
     *app.state::<Session>().last_area() = Some((display.display_id, rect));

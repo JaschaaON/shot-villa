@@ -13,11 +13,12 @@ import { isMac } from "../platform";
 import { formatShortcut, shortcutFromEvent } from "../settings/shortcut";
 import { fire } from "../ui/fire";
 
-type Tab = "general" | "hotkeys" | "advanced";
+type Tab = "general" | "hotkeys" | "t3" | "advanced";
 
 const TABS: { id: Tab; label: string }[] = [
   { id: "general", label: "Allgemein" },
   { id: "hotkeys", label: "Tastenkürzel" },
+  { id: "t3", label: "T3 Code" },
   { id: "advanced", label: "Erweitert" },
 ];
 
@@ -361,6 +362,45 @@ export const Settings = () => {
                 Tastatur „Bildschirmausschnitt mit der Druck-Taste öffnen“ aus.
               </p>
             )}
+          </>
+        ) : null}
+        {tab === "t3" ? (
+          <>
+            <Row label="Bereich einfügen">
+              <ShortcutRecorder
+                onChange={setHotkey("t3Area")}
+                value={settings.hotkeys.t3Area}
+              />
+            </Row>
+            <Row label="Fenster erkennen an">
+              <input
+                aria-label="Name des T3-Code-Fensters"
+                onChange={(event) => {
+                  update({ t3Window: event.target.value });
+                }}
+                placeholder="T3 Code"
+                type="text"
+                value={settings.t3Window}
+              />
+            </Row>
+            <p className="note">
+              Mit dem Kürzel wählst du einen Bildschirmbereich. Shot-VILLA legt
+              ihn in die Zwischenablage, holt das offene T3-Code-Fenster nach
+              vorn und fügt das Bild dort ein ({isMac ? "⌘V" : "Strg+V"}). Es
+              erscheint als Anhang im Eingabefeld; abgeschickt wird nichts.
+            </p>
+            <p className="note">
+              Das Fenster wird am Namen der App oder des Fensters erkannt. „T3
+              Code“ passt auf die Desktop-App und auf einen Browser-Tab, dessen
+              Seitentitel so beginnt. Gibt es mehrere Treffer, gilt das
+              vorderste Fenster. Findet Shot-VILLA keines, bleibt das Bild in
+              der Zwischenablage.
+            </p>
+            <p className="note">
+              {isMac
+                ? "Beim ersten Mal fragt macOS nach der Freigabe unter Systemeinstellungen → Datenschutz & Sicherheit → Bedienungshilfen. Ohne sie kann Shot-VILLA das Einfügen nicht auslösen."
+                : "Läuft T3 Code mit Administratorrechten, kann Shot-VILLA dort nichts einfügen."}
+            </p>
           </>
         ) : null}
         {tab === "advanced" ? (

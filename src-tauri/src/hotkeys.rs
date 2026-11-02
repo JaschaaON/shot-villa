@@ -11,6 +11,7 @@ pub fn bindings(hotkeys: &Hotkeys) -> Vec<(Action, &str)> {
     [
         (Action::Fullscreen, &hotkeys.fullscreen),
         (Action::Area, &hotkeys.area),
+        (Action::AreaToT3, &hotkeys.t3_area),
         (Action::RepeatArea, &hotkeys.repeat_area),
         (Action::AnyWindow, &hotkeys.any_window),
         (Action::ActiveWindow, &hotkeys.active_window),
@@ -62,6 +63,7 @@ mod tests {
         let hotkeys = Hotkeys {
             fullscreen: Some("CmdOrCtrl+Shift+1".into()),
             area: None,
+            t3_area: None,
             repeat_area: None,
             any_window: Some("CmdOrCtrl+Shift+5".into()),
             active_window: None,

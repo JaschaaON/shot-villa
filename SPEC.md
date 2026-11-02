@@ -30,6 +30,7 @@ Prioritäten: **Muss** (Version 1), **Später**, **Nicht**.
 | C14 | Text/QR sofort erkennen | Bereich wählen, Text bzw. QR-Inhalt landet in der Zwischenablage. | Muss |
 | C15 | Retina | Native Auflösung; beim Speichern optional auf 1× verkleinern. | Muss |
 | C16 | Bildschirmaufnahme (Video) | Bereich wählen, Video (MP4/H.264, 30 fps, mit Mauszeiger, ohne Ton) läuft bis Stopp per Knopf, Kürzel oder Menü; Rahmen und Steuerleiste sind nicht im Video. macOS 15+ (ScreenCaptureKit), Windows 10 2004+/11 (Windows Graphics Capture, Media Foundation). | Muss |
+| C17 | Bereich in T3 Code einfügen | Eigenes Kürzel (Vorgabe ⌃⌥⌘T): Bereich wählen, Bild in die Zwischenablage legen, das T3-Code-Fenster (Erkennung per App-/Fenstername, einstellbar) nach vorn holen und ⌘V/Strg+V auslösen. Das Bild erscheint als Anhang im T3-Chat; es wird nichts abgesendet. macOS braucht die Freigabe „Bedienungshilfen“. | Soll |
 
 ### 1.2 Nach der Aufnahme
 
@@ -174,7 +175,7 @@ Der Editorzustand (Dokument, Historie, Werkzeug, Stil, Auswahl) liegt in einem r
 
 ## 4. Tastenkürzel
 
-Global (frei belegbar, Vorgaben): **⇧⌘1** Vollbild · **⇧⌘2** Bereich · **⌃⌥⌘O** Text/QR erkennen. Unter Windows entsprechend mit Strg.
+Global (frei belegbar, Vorgaben): **⇧⌘1** Vollbild · **⇧⌘2** Bereich · **⌃⌥⌘O** Text/QR erkennen · **⌃⌥⌘T** Bereich in T3 Code einfügen. Unter Windows entsprechend mit Strg.
 
 Im Editor: Werkzeuge V A T R O L D H B S C · Esc kopieren und schließen · ⇧⌘C kopieren · ⌘S sichern · ⇧⌘S sichern unter · ⌘P anpinnen · ⇧⌘T Text erkennen · ⌘Z/⇧⌘Z widerrufen/wiederholen · ↩ zuschneiden · ⌘D duplizieren · ⌫ löschen · Pfeiltasten verschieben · ⌘+ ⌘− ⌘0 ⌘1 Zoom · Tab Farbe kopieren. Unter Windows Strg statt ⌘.
 

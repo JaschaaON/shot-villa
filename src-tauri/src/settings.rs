@@ -5,11 +5,16 @@ use std::sync::Mutex;
 
 use serde::{Deserialize, Serialize};
 
+/// Name, an dem das T3-Code-Fenster erkannt wird, solange nichts anderes gilt.
+pub const DEFAULT_T3_WINDOW: &str = "T3 Code";
+
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase", default)]
 pub struct Hotkeys {
     pub fullscreen: Option<String>,
     pub area: Option<String>,
+    /// Bereich aufnehmen und ins T3-Code-Fenster einfügen.
+    pub t3_area: Option<String>,
     pub repeat_area: Option<String>,
     pub any_window: Option<String>,
     pub active_window: Option<String>,
@@ -24,6 +29,7 @@ impl Default for Hotkeys {
         Self {
             fullscreen: Some("CmdOrCtrl+Shift+1".into()),
             area: Some("CmdOrCtrl+Shift+2".into()),
+            t3_area: Some("Control+Alt+CmdOrCtrl+T".into()),
             repeat_area: None,
             any_window: None,
             active_window: None,
@@ -119,6 +125,8 @@ pub struct Settings {
     pub prefer_actual_size: bool,
     pub color_format: ColorFormat,
     pub launch_at_login: bool,
+    /// Teil des App- oder Fensternamens, an dem das T3-Code-Fenster erkannt wird.
+    pub t3_window: String,
     /// Begrüßung nach der Installation schon gezeigt?
     pub welcome_shown: bool,
 }
@@ -141,6 +149,7 @@ impl Default for Settings {
             prefer_actual_size: true,
             color_format: ColorFormat::default(),
             launch_at_login: false,
+            t3_window: DEFAULT_T3_WINDOW.into(),
             welcome_shown: false,
         }
     }

@@ -94,6 +94,11 @@ fn menu(app: &AppHandle, hotkeys: &Hotkeys) -> tauri::Result<Menu<Wry>> {
             hotkeys.area.as_ref(),
         )?)
         .item(&item(
+            Action::AreaToT3,
+            "Bereich in T3 Code einfügen",
+            hotkeys.t3_area.as_ref(),
+        )?)
+        .item(&item(
             Action::RepeatArea,
             "Bereich wiederholen",
             hotkeys.repeat_area.as_ref(),

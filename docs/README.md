@@ -12,10 +12,11 @@ Shot-VILLA nimmt Bildschirmfotos auf, markiert sie und gibt sie weiter – schne
 4. [Bearbeiten im Editor](#bearbeiten-im-editor)
 5. [Ausgeben: Kopieren, Sichern, Anpinnen](#ausgeben-kopieren-sichern-anpinnen)
 6. [Text und QR-Codes erkennen](#text-und-qr-codes-erkennen)
-7. [Bildschirmaufnahme (Video)](#bildschirmaufnahme-video)
-8. [Einstellungen](#einstellungen)
-9. [Tastenkürzel im Überblick](#tastenkürzel-im-überblick)
-10. [Fragen und Probleme](#fragen-und-probleme)
+7. [Bereich in T3 Code einfügen](#bereich-in-t3-code-einfügen)
+8. [Bildschirmaufnahme (Video)](#bildschirmaufnahme-video)
+9. [Einstellungen](#einstellungen)
+10. [Tastenkürzel im Überblick](#tastenkürzel-im-überblick)
+11. [Fragen und Probleme](#fragen-und-probleme)
 
 ## Installation
 
@@ -68,6 +69,7 @@ Alle Aufnahmen gibt es im Menüleisten-Symbol und als Tastenkürzel:
 | **Fenster wählen** | – | Fahr mit der Maus über ein Fenster – es wird hervorgehoben – und klick es an. Fenster werden samt Schatten mit transparentem Hintergrund aufgenommen. |
 | **Aktives Fenster** | – | Nimmt sofort das vorderste Fenster der aktiven App auf. |
 | **Text / QR-Code erkennen** | ⌃⌥⌘O | Bereich wählen – der erkannte Text landet direkt in der Zwischenablage. |
+| **Bereich in T3 Code einfügen** | ⌃⌥⌘T | Bereich wählen – das Bild erscheint als Anhang im offenen T3-Code-Fenster. |
 | **Bild aus Zwischenablage** | ⇧⌘V | Öffnet ein kopiertes Bild im Editor. |
 | **Bild öffnen** | ⌘O | Öffnet PNG, JPEG, GIF, HEIC, TIFF oder WebP. Bilder lassen sich auch einfach ins Editorfenster ziehen. |
 
@@ -124,6 +126,21 @@ Gespeicherte Bilder sind als Bildschirmfoto markiert, Finder und Spotlight erken
 
 Der Text wird in Lesereihenfolge in die Zwischenablage gelegt; eine Mitteilung zeigt den Anfang. Enthält der Bereich einen QR- oder Barcode, wird dessen Inhalt kopiert. Die Erkennung läuft vollständig auf deinem Mac (Apple Vision), es verlässt nichts den Rechner. Unter *Erweitert → Texterkennung* lassen sich Zeilenumbrüche entfernen – getrennte Wörter am Zeilenende werden dabei wieder zusammengefügt.
 
+## Bereich in T3 Code einfügen
+
+Mit einem eigenen Kürzel (Vorgabe **⌃⌥⌘T**, unter Windows **Strg+Alt+T**) nimmst du einen Bildschirmbereich auf und fügst ihn direkt in den offenen T3-Code-Chat ein. Das ist dasselbe, als hättest du einen Screenshot kopiert und im Chat mit ⌘V eingefügt – nur in einem Schritt.
+
+1. Das Kürzel drücken oder im Menüleisten-Symbol **Bereich in T3 Code einfügen** wählen.
+2. Den Bereich aufziehen wie beim Bereichsfoto. **Esc** bricht ab.
+3. Shot-VILLA legt das Bild in die Zwischenablage, holt das T3-Code-Fenster nach vorn und löst dort ⌘V (Strg+V) aus. Das Bild erscheint als Anhang im Eingabefeld. Abgeschickt wird nichts, du schreibst deine Frage dazu und sendest selbst.
+
+Das Fenster wird am Namen der App oder des Fensters erkannt (Vorgabe „T3 Code“). Das passt auf die Desktop-App und auf einen Browser-Tab, dessen Seitentitel „T3 Code …“ lautet. Gibt es mehrere Treffer, gilt das vorderste. Den Namen änderst du in den Einstellungen unter *T3 Code*.
+
+- **macOS:** Beim ersten Mal fragt macOS nach der Freigabe unter Systemeinstellungen → Datenschutz & Sicherheit → *Bedienungshilfen*. Ohne sie kann Shot-VILLA den Tastendruck nicht auslösen. Das Bild bleibt dann in der Zwischenablage, ⌘V im Chat genügt.
+- **Windows:** Läuft T3 Code mit Administratorrechten, darf Shot-VILLA dort nichts einfügen.
+- Findet Shot-VILLA kein T3-Code-Fenster (nicht geöffnet, minimiert, auf einem anderen Space), erscheint eine Mitteilung. Das Bild bleibt in der Zwischenablage.
+- In T3 Code muss die Chat-Ansicht offen sein. Hat dort gerade das Terminal den Fokus, geht das Einfügen ins Terminal.
+
 ## Bildschirmaufnahme (Video)
 
 Nimmt einen Bereich des Bildschirms als Video auf (macOS 15 oder neuer; Windows 10 ab Version 2004 oder Windows 11).
@@ -170,7 +187,7 @@ Die Einstellungen liegen in `~/Library/Application Support/de.villalife.shot-vil
 
 ## Tastenkürzel im Überblick
 
-**Global** (überall, frei belegbar): ⇧⌘1 Vollbild · ⇧⌘2 Bereich · ⌃⌥⌘O Text erkennen · ⌃⌥⌘R Bildschirmaufnahme starten/beenden · weitere in den Einstellungen.
+**Global** (überall, frei belegbar): ⇧⌘1 Vollbild · ⇧⌘2 Bereich · ⌃⌥⌘O Text erkennen · ⌃⌥⌘T Bereich in T3 Code einfügen · ⌃⌥⌘R Bildschirmaufnahme starten/beenden · weitere in den Einstellungen.
 
 **Im Editor**
 

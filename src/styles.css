@@ -806,7 +806,8 @@ button.primary {
   color: #e5383b;
 }
 
-select {
+select,
+input[type="text"] {
   font: inherit;
   padding: 3px 6px;
   border-radius: 7px;
@@ -814,6 +815,13 @@ select {
   background: var(--button-fill);
   box-shadow: var(--highlight), var(--raised);
   color: var(--text);
+}
+
+/* Die App sperrt die Textauswahl; Eingabefelder brauchen sie, sonst nimmt WebKit keine Eingabe an. */
+input[type="text"] {
+  width: 220px;
+  -webkit-user-select: text;
+  user-select: text;
 }
 
 .visually-hidden {

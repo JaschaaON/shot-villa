@@ -17,6 +17,7 @@ export type ScreenAccess = "granted" | "denied";
 export interface Hotkeys {
   fullscreen: string | null;
   area: string | null;
+  t3Area: string | null;
   repeatArea: string | null;
   anyWindow: string | null;
   activeWindow: string | null;
@@ -42,6 +43,8 @@ export interface Settings {
   preferActualSize: boolean;
   colorFormat: ColorFormat;
   launchAtLogin: boolean;
+  /** Teil des App- oder Fensternamens, an dem das T3-Code-Fenster erkannt wird. */
+  t3Window: string;
 }
 
 export interface Rect {
@@ -59,7 +62,7 @@ export interface WindowInfo {
 }
 
 export interface OverlayInfo {
-  mode: "area" | "window" | "ocr" | "record";
+  mode: "area" | "window" | "ocr" | "record" | "t3";
   display: { displayId: number; shotId: number; frame: Rect; scale: number };
   windows: WindowInfo[];
 }
@@ -77,6 +80,7 @@ export type ExportTarget =
 export type ActionId =
   | "capture-fullscreen"
   | "capture-area"
+  | "capture-area-t3"
   | "capture-repeat-area"
   | "capture-any-window"
   | "capture-active-window"

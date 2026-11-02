@@ -14,6 +14,7 @@ mod output;
 mod permission;
 mod settings;
 mod shots;
+mod t3code;
 mod tray;
 mod windows;
 
