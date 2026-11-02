@@ -9,16 +9,17 @@ Push auf website/ ├─► GitHub Actions ─► ghcr.io/jaschaaon/shot-villa-w
 
 ## Neue Version veröffentlichen
 
-1. Version in `src-tauri/tauri.conf.json`, `src-tauri/Cargo.toml` und `package.json` erhöhen, Versionsangabe in `website/index.html` anpassen. Nach Änderungen an Abhängigkeiten `pnpm notices` ausführen.
-2. Universal-Build (Apple-Chip und Intel) erzeugen:
+Alles baut GitHub Actions ([`release.yml`](../.github/workflows/release.yml)); ein Mac ist dafür nicht nötig.
+
+1. Version in `src-tauri/tauri.conf.json`, `src-tauri/Cargo.toml` (samt `Cargo.lock`) und `package.json` erhöhen und nach `main` pushen. Nach Änderungen an Abhängigkeiten vorher `pnpm notices` ausführen.
+2. Tag setzen und pushen:
    ```bash
-   pnpm tauri build --target universal-apple-darwin --bundles app,dmg
+   git tag v0.3.3 && git push origin v0.3.3
    ```
-3. Release mit der DMG anlegen – das stößt den Website-Build an:
-   ```bash
-   gh release create v0.2.0 "src-tauri/target/universal-apple-darwin/release/bundle/dmg/Shot-VILLA_0.2.0_universal.dmg" --title "Shot-VILLA 0.2.0" --notes "…"
-   ```
+3. Der Workflow legt das Release an, baut das universelle macOS-DMG und den Windows-Installer, hängt beides an und stößt den Website-Build an. Das Image `ghcr.io/jaschaaon/shot-villa-web:latest` enthält danach die neuen Downloads.
 4. Auf dem Server das neue Image ziehen und den Container neu starten (z. B. „Update“ in der Container-Verwaltung).
+
+**Signatur:** Auf dem Runner gibt es das lokale Zertifikat „Shot-VILLA Dev“ nicht, das DMG ist deshalb ad hoc signiert. macOS fragt nach jedem Update erneut nach den Freigaben (Bildschirmaufnahme, Bedienungshilfen). Wer das vermeiden will, hinterlegt ein Zertifikat als GitHub-Secret und trägt es in den Workflow ein. Ein lokaler Build mit `pnpm tauri build --target universal-apple-darwin --bundles app,dmg` und dem Zertifikat bleibt möglich.
 
 ## Einmalige Einrichtung
 

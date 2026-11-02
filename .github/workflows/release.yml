@@ -1,0 +1,106 @@
+name: Release
+
+# Ein Tag wie v0.3.3 baut macOS-DMG und Windows-Installer, legt das Release an
+# und stößt danach den Website-Build an. Release-Ereignisse, die das
+# GITHUB_TOKEN selbst auslöst, starten keine weiteren Workflows; deshalb
+# erledigt dieser Workflow alles in einem Lauf.
+on:
+  push:
+    tags: ["v*"]
+
+permissions:
+  contents: write
+  actions: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Release anlegen
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create "$GITHUB_REF_NAME" --repo "$GITHUB_REPOSITORY" \
+            --title "Shot-VILLA ${GITHUB_REF_NAME#v}" --generate-notes
+
+  macos:
+    needs: release
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 12
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: aarch64-apple-darwin,x86_64-apple-darwin
+
+      - uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: src-tauri
+
+      - name: Abhängigkeiten
+        run: pnpm install --frozen-lockfile
+
+      # Das lokale Zertifikat „Shot-VILLA Dev“ gibt es auf dem Runner nicht;
+      # die App wird ad hoc signiert ("-").
+      - name: DMG bauen
+        env:
+          APPLE_SIGNING_IDENTITY: "-"
+        run: >
+          pnpm tauri build --target universal-apple-darwin --bundles app,dmg
+          --config '{"bundle":{"macOS":{"signingIdentity":"-"}}}'
+
+      - name: An das Release hängen
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release upload "$GITHUB_REF_NAME" src-tauri/target/universal-apple-darwin/release/bundle/dmg/*.dmg --clobber
+
+  windows:
+    needs: release
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 12
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - uses: dtolnay/rust-toolchain@stable
+
+      - uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: src-tauri
+
+      - name: Abhängigkeiten
+        run: pnpm install --frozen-lockfile
+
+      - name: Installer bauen
+        run: pnpm tauri build --bundles nsis
+
+      - name: An das Release hängen
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release upload "$GITHUB_REF_NAME" src-tauri/target/release/bundle/nsis/*.exe --clobber
+
+  website:
+    needs: [macos, windows]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Website neu bauen
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh workflow run website.yml --repo "$GITHUB_REPOSITORY" --ref main
