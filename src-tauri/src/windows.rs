@@ -2,7 +2,9 @@
 //! werden beim Schließen nur versteckt. Das Dock-Icon erscheint nur, solange
 //! ein normales Fenster sichtbar ist.
 
-use tauri::{AppHandle, Manager, Runtime, WebviewUrl, WebviewWindow, WebviewWindowBuilder};
+use tauri::{
+    AppHandle, Emitter, Manager, Runtime, WebviewUrl, WebviewWindow, WebviewWindowBuilder,
+};
 
 use crate::capture::Rect;
 
@@ -10,6 +12,8 @@ pub const EDITOR: &str = "editor";
 pub const PERMISSION: &str = "permission";
 pub const WELCOME: &str = "welcome";
 pub const SETTINGS: &str = "settings";
+/// Ereignis, das einem offenen Einstellungsfenster den Tab nennt.
+const SETTINGS_TAB_EVENT: &str = "settings-tab";
 pub const THUMBNAIL: &str = "thumbnail";
 pub const OVERLAY_PREFIX: &str = "overlay-";
 pub const PIN_PREFIX: &str = "pin-";
@@ -56,9 +60,19 @@ pub fn show_editor(app: &AppHandle, always_on_top: bool) -> tauri::Result<Webvie
     Ok(window)
 }
 
-pub fn show_settings(app: &AppHandle) -> tauri::Result<()> {
+/// Zeigt die Einstellungen, auf Wunsch mit einem bestimmten Tab. Ein neues
+/// Fenster bekommt ihn über die Adresse, ein vorhandenes per Ereignis.
+pub fn show_settings(app: &AppHandle, tab: Option<&str>) -> tauri::Result<()> {
+    if let Some(tab) = tab
+        && app.get_webview_window(SETTINGS).is_some()
+    {
+        app.emit_to(SETTINGS, SETTINGS_TAB_EVENT, tab)?;
+    }
     let window = existing_or(app, SETTINGS, |app| {
-        WebviewWindowBuilder::new(app, SETTINGS, WebviewUrl::default())
+        let url = tab.map_or_else(WebviewUrl::default, |tab| {
+            WebviewUrl::App(format!("index.html?tab={tab}").into())
+        });
+        WebviewWindowBuilder::new(app, SETTINGS, url)
             .title("Einstellungen")
             .inner_size(600.0, 560.0)
             .resizable(false)
@@ -247,6 +261,18 @@ fn recording_bar_position(area: Rect, screen: Rect) -> (f64, f64) {
     (x, y)
 }
 
+/// Fenstername des Overlays für einen Bildschirm.
+pub fn overlay_label(display_id: u32) -> String {
+    format!("{OVERLAY_PREFIX}{display_id}")
+}
+
+/// Zeigt gerade ein Overlay-Fenster?
+pub fn overlay_visible(app: &AppHandle) -> bool {
+    app.webview_windows().iter().any(|(label, window)| {
+        label.starts_with(OVERLAY_PREFIX) && window.is_visible().unwrap_or(false)
+    })
+}
+
 /// Vollflächiges Fenster über einem Bildschirm, auch über Menü- bzw. Taskleiste.
 pub fn open_overlay(
     app: &AppHandle,
@@ -254,24 +280,20 @@ pub fn open_overlay(
     frame: Rect,
     scale: f64,
 ) -> tauri::Result<WebviewWindow> {
-    let window = WebviewWindowBuilder::new(
-        app,
-        format!("{OVERLAY_PREFIX}{display_id}"),
-        WebviewUrl::default(),
-    )
-    .title("Auswahl")
-    .decorations(false)
-    .transparent(true)
-    .shadow(false)
-    .resizable(false)
-    .skip_taskbar(true)
-    .visible_on_all_workspaces(true)
-    .accept_first_mouse(true)
-    .inner_size(frame.width, frame.height)
-    .position(frame.x, frame.y)
-    .visible(false)
-    .always_on_top(cfg!(windows))
-    .build()?;
+    let window = WebviewWindowBuilder::new(app, overlay_label(display_id), WebviewUrl::default())
+        .title("Auswahl")
+        .decorations(false)
+        .transparent(true)
+        .shadow(false)
+        .resizable(false)
+        .skip_taskbar(true)
+        .visible_on_all_workspaces(true)
+        .accept_first_mouse(true)
+        .inner_size(frame.width, frame.height)
+        .position(frame.x, frame.y)
+        .visible(false)
+        .always_on_top(cfg!(windows))
+        .build()?;
     #[cfg(target_os = "macos")]
     raise_above_menu_bar(&window)?;
     // Unter Windows exakt in physischen Pixeln platzieren: Bei gemischten

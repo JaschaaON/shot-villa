@@ -1,6 +1,7 @@
 name: Release
 
-# Ein Tag wie v0.3.3 baut macOS-DMG und Windows-Installer, legt das Release an
+# Ein Tag wie v0.3.3 baut macOS-DMG und Windows-Installer, legt das Release an,
+# veröffentlicht die Update-Pakete samt latest.json (die App holt sie dort ab)
 # und stößt danach den Website-Build an. Release-Ereignisse, die das
 # GITHUB_TOKEN selbst auslöst, starten keine weiteren Workflows; deshalb
 # erledigt dieser Workflow alles in einem Lauf.
@@ -51,17 +52,22 @@ jobs:
 
       # Das lokale Zertifikat „Shot-VILLA Dev“ gibt es auf dem Runner nicht;
       # die App wird ad hoc signiert ("-").
+      # Die Update-Pakete (.app.tar.gz) signiert Tauri mit dem Schlüssel aus
+      # dem Secret; ohne ihn schlägt der Build fehl.
       - name: DMG bauen
         env:
           APPLE_SIGNING_IDENTITY: "-"
+          TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
+          TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
         run: >
-          pnpm tauri build --target universal-apple-darwin --bundles app,dmg
-          --config '{"bundle":{"macOS":{"signingIdentity":"-"}}}'
+          pnpm tauri build --target universal-apple-darwin --bundles app,dmg --config '{"bundle":{"macOS":{"signingIdentity":"-"}}}'
 
       - name: An das Release hängen
         env:
           GH_TOKEN: ${{ github.token }}
-        run: gh release upload "$GITHUB_REF_NAME" src-tauri/target/universal-apple-darwin/release/bundle/dmg/*.dmg --clobber
+        run: |
+          bundle=src-tauri/target/universal-apple-darwin/release/bundle
+          gh release upload "$GITHUB_REF_NAME" "$bundle"/dmg/*.dmg "$bundle"/macos/*.app.tar.gz "$bundle"/macos/*.app.tar.gz.sig --clobber
 
   windows:
     needs: release
@@ -88,16 +94,40 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Installer bauen
+        env:
+          TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
+          TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
         run: pnpm tauri build --bundles nsis
 
       - name: An das Release hängen
         shell: bash
         env:
           GH_TOKEN: ${{ github.token }}
-        run: gh release upload "$GITHUB_REF_NAME" src-tauri/target/release/bundle/nsis/*.exe --clobber
+        run: gh release upload "$GITHUB_REF_NAME" src-tauri/target/release/bundle/nsis/*.exe src-tauri/target/release/bundle/nsis/*.exe.sig --clobber
+
+  # Die App fragt latest.json ab: eine statische Datei am neuesten Release,
+  # kein API-Aufruf und damit kein Abruflimit.
+  manifest:
+    needs: [macos, windows]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      - name: latest.json erzeugen und anhängen
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release download "$GITHUB_REF_NAME" --repo "$GITHUB_REPOSITORY" --pattern '*.sig' --dir signatures
+          node --experimental-strip-types scripts/write-updater-manifest.ts "$GITHUB_REPOSITORY" "$GITHUB_REF_NAME" signatures > latest.json
+          cat latest.json
+          gh release upload "$GITHUB_REF_NAME" latest.json --repo "$GITHUB_REPOSITORY" --clobber
 
   website:
-    needs: [macos, windows]
+    needs: manifest
     runs-on: ubuntu-latest
     steps:
       - name: Website neu bauen

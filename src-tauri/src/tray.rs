@@ -12,6 +12,7 @@ use tauri::Manager;
 
 use crate::actions::{Action, RecordingPhase, Session};
 use crate::settings::Hotkeys;
+use crate::updater::Updates;
 
 const TRAY_ID: &str = "main";
 
@@ -132,14 +133,36 @@ fn menu(app: &AppHandle, hotkeys: &Hotkeys) -> tauri::Result<Menu<Wry>> {
             hotkeys.show_app.as_ref(),
         )?)
         .item(&item(Action::Settings, "Einstellungen …", None)?)
+        .item(&item(
+            Action::Updates,
+            &updates_title(app.state::<Updates>().found_version().as_deref()),
+            None,
+        )?)
         .separator()
         .item(&PredefinedMenuItem::quit(app, Some("Shot-VILLA beenden"))?)
         .build()
 }
 
+/// Beschriftung des Update-Eintrags: mit der Version, sobald eine gefunden wurde.
+fn updates_title(found: Option<&str>) -> String {
+    found.map_or_else(
+        || "Nach Updates suchen …".to_owned(),
+        |version| format!("Update auf Version {version} installieren …"),
+    )
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn update_entry_names_the_found_version() {
+        assert_eq!(updates_title(None), "Nach Updates suchen …");
+        assert_eq!(
+            updates_title(Some("0.4.0")),
+            "Update auf Version 0.4.0 installieren …"
+        );
+    }
 
     #[test]
     fn elapsed_shows_minutes_and_seconds() {

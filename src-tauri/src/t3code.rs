@@ -23,7 +23,9 @@ const SETTLE: Duration = Duration::from_millis(150);
 enum PasteError {
     /// macOS lässt Tastendrücke nur mit Freigabe unter „Bedienungshilfen“ zu.
     #[cfg(target_os = "macos")]
-    #[error("Shot-VILLA braucht die Freigabe unter Bedienungshilfen")]
+    #[error(
+        "Shot-VILLA braucht die Freigabe unter Datenschutz & Sicherheit → Bedienungshilfen. Danach Shot-VILLA beenden und neu öffnen"
+    )]
     NoPermission,
     #[error("Das Fenster ließ sich nicht nach vorn holen")]
     Activation,
@@ -95,7 +97,9 @@ mod platform {
     const POLL: Duration = Duration::from_millis(25);
 
     pub fn paste_into(window: &WindowInfo) -> Result<(), PasteError> {
-        if !CGPreflightPostEventAccess() {
+        // Der Wert von `CGPreflightPostEventAccess` bleibt nach einer Freigabe bis zum
+        // Neustart veraltet; die Abfrage der Bedienungshilfen ist sofort aktuell.
+        if !(CGPreflightPostEventAccess() || accessibility_trusted()) {
             // Löst den Systemdialog aus und trägt die App in die Liste ein.
             CGRequestPostEventAccess();
             return Err(PasteError::NoPermission);
@@ -105,6 +109,17 @@ mod platform {
         std::thread::sleep(SETTLE);
         post_paste();
         Ok(())
+    }
+
+    #[link(name = "ApplicationServices", kind = "framework")]
+    unsafe extern "C" {
+        /// `Boolean` (0 oder 1): Ist die App für die Bedienungshilfen freigegeben?
+        fn AXIsProcessTrusted() -> u8;
+    }
+
+    fn accessibility_trusted() -> bool {
+        // SAFETY: Die Funktion hat keine Parameter und keine Nebenwirkungen.
+        unsafe { AXIsProcessTrusted() != 0 }
     }
 
     /// Holt die App nach vorn; klappt das nicht direkt, über `LaunchServices`.

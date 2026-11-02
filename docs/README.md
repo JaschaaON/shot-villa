@@ -173,6 +173,12 @@ Klick in ein Feld und drück die gewünschte Kombination; **×** entfernt ein K�
 
 Willst du **⇧⌘3 / ⇧⌘4** nutzen, schalte zuerst die Bildschirmfoto-Kürzel von macOS aus: *Systemeinstellungen → Tastatur → Tastaturkurzbefehle → Bildschirmfotos*.
 
+### Updates
+
+Shot-VILLA sucht beim Start und danach einmal täglich nach einer neueren Version und meldet sie per Mitteilung. Unter *Einstellungen → Updates* (oder im Menü über *Nach Updates suchen …*) siehst du die installierte Version, kannst sofort suchen und mit **Installieren und neu starten** aktualisieren. Das Paket wird vor der Installation anhand einer Signatur geprüft; passt sie nicht, bleibt alles, wie es ist. Die automatische Suche lässt sich dort abschalten.
+
+Bei der Suche lädt Shot-VILLA nur eine kleine Versionsdatei von github.com – keine Aufnahmen, keine persönlichen Daten. GitHub sieht dabei wie bei jedem Abruf deine IP-Adresse.
+
 ### Erweitert
 
 ![Einstellungen – Erweitert](images/settings-advanced.jpg)
@@ -218,4 +224,7 @@ Eine andere App nutzt dieselbe Kombination. Shot-VILLA zeigt das in den Einstell
 Bei vielen Symbolen blendet macOS manche hinter der Kamera-Aussparung aus. Die Aufnahmen funktionieren trotzdem per Kürzel; die Einstellungen öffnest du dann mit **⌘,**, sobald ein Shot-VILLA-Fenster vorne ist.
 
 **Wird etwas ins Internet geschickt?**
-Nein. Aufnahmen, Texterkennung und Einstellungen bleiben auf deinem Mac.
+Aufnahmen, Texterkennung und Einstellungen bleiben auf deinem Mac. Die einzige Verbindung ist die Update-Suche (siehe *Updates* oben): Sie ruft eine Versionsdatei von github.com ab und lässt sich in den Einstellungen abschalten.
+
+**Nach einem Update fragt macOS wieder nach der Bildschirmaufnahme.**
+Die von GitHub gebauten Versionen sind nur ad hoc signiert; macOS erkennt die App nach einem Update deshalb nicht wieder. Erlaube sie einmal neu (siehe oben). Mit dem eigenen Zertifikat gebaute Versionen behalten die Freigabe.

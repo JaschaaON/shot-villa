@@ -4,6 +4,7 @@ import type { ReactNode } from "react";
 import {
   chooseSaveFolder,
   getSettings,
+  onSettingsTab,
   resumeHotkeys,
   setSettings as saveSettings,
   suspendHotkeys,
@@ -12,13 +13,15 @@ import type { Hotkeys, Settings as SettingsData } from "../api";
 import { isMac } from "../platform";
 import { formatShortcut, shortcutFromEvent } from "../settings/shortcut";
 import { fire } from "../ui/fire";
+import { Updates } from "./updates";
 
-type Tab = "general" | "hotkeys" | "t3" | "advanced";
+type Tab = "general" | "hotkeys" | "t3" | "updates" | "advanced";
 
 const TABS: { id: Tab; label: string }[] = [
   { id: "general", label: "Allgemein" },
   { id: "hotkeys", label: "Tastenkürzel" },
   { id: "t3", label: "T3 Code" },
+  { id: "updates", label: "Updates" },
   { id: "advanced", label: "Erweitert" },
 ];
 
@@ -169,8 +172,13 @@ const ShortcutRecorder = ({ value, onChange }: RecorderProps) => {
   );
 };
 
+const asTab = (value: string | null): Tab | null =>
+  TABS.find(({ id }) => id === value)?.id ?? null;
+
 export const Settings = () => {
-  const [tab, setTab] = useState<Tab>("general");
+  const [tab, setTab] = useState<Tab>(
+    asTab(new URLSearchParams(window.location.search).get("tab")) ?? "general"
+  );
   const [settings, setSettings] = useState<SettingsData | null>(null);
   const [problems, setProblems] = useState<string[]>([]);
 
@@ -179,6 +187,15 @@ export const Settings = () => {
       setSettings(await getSettings());
     };
     fire(load)();
+    // Ist das Fenster schon offen, nennt ein Ereignis den gewünschten Tab.
+    const listening = onSettingsTab((requested) => {
+      setTab(asTab(requested) ?? "general");
+    });
+    return () => {
+      fire(async () => {
+        (await listening)();
+      })();
+    };
   }, []);
 
   if (!settings) {
@@ -402,6 +419,14 @@ export const Settings = () => {
                 : "Läuft T3 Code mit Administratorrechten, kann Shot-VILLA dort nichts einfügen."}
             </p>
           </>
+        ) : null}
+        {tab === "updates" ? (
+          <Updates
+            autoCheck={settings.autoUpdateCheck}
+            onAutoCheckChange={(autoUpdateCheck) => {
+              update({ autoUpdateCheck });
+            }}
+          />
         ) : null}
         {tab === "advanced" ? (
           <>
