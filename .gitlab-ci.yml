@@ -1,0 +1,66 @@
+# Baut das Website-Image (nginx mit Produktseite und Downloads) in die GitLab
+# Container Registry. Dockhand zieht das fertige Image; der Server baut nichts selbst.
+# Ersetzt .github/workflows/website.yml (ghcr.io).
+#
+# Die App selbst (macOS-DMG, Windows-Installer, Updater-Paket) baut weiterhin
+# GitHub Actions (.github/workflows/release.yml), weil der GitLab-Runner auf
+# srv-prod Linux ist und weder macOS noch Windows kann. Die Downloads auf der
+# Seite holt dieses Skript aus dem neuesten GitHub-Release (öffentlich).
+#
+# Auslöser:
+#   - Push auf main, wenn website/, deploy/ oder diese Datei geändert wurden
+#   - Zeitplan (täglich): holt dabei auch ein neues Release auf die Seite
+#   - manuell: GitLab → Build → Pipelines → Pipeline erstellen
+
+stages:
+  - bauen
+
+workflow:
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "schedule"
+    - if: $CI_PIPELINE_SOURCE == "web"
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+
+# Braucht einen Runner mit Docker-Executor im Privileged-Modus (Docker-in-Docker).
+# Dessen Voraussetzungen (Volume /certs/client, extra_hosts für git.villalife.de,
+# daemon.json mit DNS) stehen im Wiki auf der GitLab-Seite und sind bei Carservice erprobt.
+website-image:
+  stage: bauen
+  image: docker:27
+  services:
+    - docker:27-dind
+  variables:
+    DOCKER_TLS_CERTDIR: /certs
+    DOCKER_BUILDKIT: "1"
+    GITHUB_REPO: JaschaaON/shot-villa
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "schedule" || $CI_PIPELINE_SOURCE == "web"
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+      changes:
+        - website/**/*
+        - deploy/**/*
+        - .gitlab-ci.yml
+  before_script:
+    - apk add --no-cache curl jq
+    - echo "$CI_REGISTRY_PASSWORD" | docker login -u "$CI_REGISTRY_USER" --password-stdin "$CI_REGISTRY"
+  script:
+    # DMG und Windows-Installer aus dem neuesten GitHub-Release holen.
+    # Ohne DMG bricht der Lauf ab (die Seite verlinkt darauf).
+    - mkdir -p website/downloads
+    - curl -fsSL "https://api.github.com/repos/$GITHUB_REPO/releases/latest" -o release.json
+    - echo "Release $(jq -r .tag_name release.json)"
+    - DMG=$(jq -r '[.assets[] | select(.name | endswith(".dmg"))][0].browser_download_url // empty' release.json)
+    - EXE=$(jq -r '[.assets[] | select(.name | endswith("-setup.exe"))][0].browser_download_url // empty' release.json)
+    - test -n "$DMG" || { echo "FEHLER Kein DMG im neuesten Release"; exit 1; }
+    - curl -fsSL "$DMG" -o website/downloads/Shot-VILLA.dmg
+    - if [ -n "$EXE" ]; then curl -fsSL "$EXE" -o website/downloads/Shot-VILLA-Setup.exe; fi
+    - ls -l website/downloads
+    - |
+      docker build \
+        -f deploy/Dockerfile \
+        --label "org.opencontainers.image.revision=$CI_COMMIT_SHA" \
+        --tag "$CI_REGISTRY_IMAGE/web:latest" \
+        --tag "$CI_REGISTRY_IMAGE/web:$CI_COMMIT_SHORT_SHA" \
+        .
+    - docker push "$CI_REGISTRY_IMAGE/web:latest"
+    - docker push "$CI_REGISTRY_IMAGE/web:$CI_COMMIT_SHORT_SHA"

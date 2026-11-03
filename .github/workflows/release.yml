@@ -2,7 +2,8 @@ name: Release
 
 # Ein Tag wie v0.3.3 baut macOS-DMG und Windows-Installer, legt das Release an,
 # veröffentlicht die Update-Pakete samt latest.json (die App holt sie dort ab)
-# und stößt danach den Website-Build an. Release-Ereignisse, die das
+# (die Website baut GitLab, siehe .gitlab-ci.yml, und holt das neue Release über den
+# täglichen Zeitplan oder per Hand). Release-Ereignisse, die das
 # GITHUB_TOKEN selbst auslöst, starten keine weiteren Workflows; deshalb
 # erledigt dieser Workflow alles in einem Lauf.
 on:
@@ -151,12 +152,3 @@ jobs:
           node --experimental-strip-types scripts/write-updater-manifest.ts "$GITHUB_REPOSITORY" "$GITHUB_REF_NAME" signatures > latest.json
           cat latest.json
           gh release upload "$GITHUB_REF_NAME" latest.json --repo "$GITHUB_REPOSITORY" --clobber
-
-  website:
-    needs: manifest
-    runs-on: ubuntu-latest
-    steps:
-      - name: Website neu bauen
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: gh workflow run website.yml --repo "$GITHUB_REPOSITORY" --ref main
