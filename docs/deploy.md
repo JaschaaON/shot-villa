@@ -23,6 +23,10 @@ Alles baut GitHub Actions ([`release.yml`](../.github/workflows/release.yml)); e
 
 Installierte Apps holen neue Versionen selbst. Sie rufen dazu `https://github.com/JaschaaON/shot-villa/releases/latest/download/latest.json` ab, eine statische Datei am neuesten Release. Das ist kein API-Aufruf und unterliegt nicht dem Abruflimit der GitHub-API (60 Abrufe pro Stunde ohne Anmeldung). Pakete prüft die App mit dem öffentlichen Schlüssel aus `tauri.conf.json` (`plugins.updater.pubkey`); `requireSignedVersion` verhindert, dass ein älteres, gültig signiertes Paket als neues ausgegeben wird.
 
+### Umbenennung auf Pivolo
+
+Version 0.3.8 ist als Migrationsupdate für vorhandene Installationen vorgesehen. `productName` wird zu `Pivolo`; Bundle-Kennung `de.villalife.shot-villa`, Signatur und Updater-Adresse bleiben stabil. Damit kann eine vorhandene Installation das signierte Update annehmen und macOS-Freigaben behalten. Unter Windows nutzt `src-tauri/windows/pivolo-migration.nsh` den vorhandenen Shot-VILLA-Installationsordner, ersetzt die dortigen Dateien und entfernt die alten Installations-Metadaten und Verknüpfungen. App-Daten unter der Bundle-Kennung werden nicht gelöscht. Vor der Veröffentlichung muss das Upgrade von einer installierten Shot-VILLA-Version auf macOS und Windows praktisch geprüft werden.
+
 **Einmalige Einrichtung (Signaturschlüssel):**
 
 1. Schlüsselpaar erzeugen: `pnpm tauri signer generate -w ~/.tauri/shot-villa-updater.key`. Der öffentliche Teil (`.key.pub`) steht bereits in `tauri.conf.json`.
