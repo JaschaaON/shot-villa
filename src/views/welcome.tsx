@@ -36,8 +36,7 @@ export const Welcome = () => {
       />
       <h1>Installation erfolgreich</h1>
       <p className="welcome-lead">
-        Shot-VILLA läuft jetzt {place} und wartet auf dein erstes
-        Bildschirmfoto.
+        Pivolo läuft jetzt {place} und wartet auf dein erstes Bildschirmfoto.
       </p>
 
       <dl className="welcome-keys">
@@ -54,8 +53,8 @@ export const Welcome = () => {
 
       <p className="welcome-note">
         {isMac
-          ? "Beim ersten Aufnehmen fragt macOS nach der Berechtigung „Bildschirmaufnahme“. Erlaube sie und starte Shot-VILLA danach einmal neu."
-          : "Alle Kürzel kannst du in den Einstellungen ändern. Shot-VILLA startet auf Wunsch mit Windows."}
+          ? "Beim ersten Aufnehmen fragt macOS nach der Berechtigung „Bildschirmaufnahme“. Erlaube sie und starte Pivolo danach einmal neu."
+          : "Alle Kürzel kannst du in den Einstellungen ändern. Pivolo startet auf Wunsch mit Windows."}
       </p>
 
       <div className="welcome-actions">

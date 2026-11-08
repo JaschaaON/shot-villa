@@ -20,7 +20,7 @@ pub fn create(app: &AppHandle, hotkeys: &Hotkeys) -> tauri::Result<()> {
     TrayIconBuilder::with_id(TRAY_ID)
         .icon(tray_icon())
         .icon_as_template(cfg!(target_os = "macos"))
-        .tooltip("Shot-VILLA")
+        .tooltip("Pivolo")
         .menu(&menu(app, hotkeys)?)
         .build(app)?;
     Ok(())
@@ -139,7 +139,7 @@ fn menu(app: &AppHandle, hotkeys: &Hotkeys) -> tauri::Result<Menu<Wry>> {
             None,
         )?)
         .separator()
-        .item(&PredefinedMenuItem::quit(app, Some("Shot-VILLA beenden"))?)
+        .item(&PredefinedMenuItem::quit(app, Some("Pivolo beenden"))?)
         .build()
 }
 

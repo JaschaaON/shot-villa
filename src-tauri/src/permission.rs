@@ -35,7 +35,7 @@ mod mac {
     /// danach für alle weiteren Updates reicht.
     pub const PERMISSION_EPOCH: u32 = 1;
 
-    /// Freigaben, die Shot-VILLA nutzt: Bildschirmaufnahme, Bedienungshilfen und
+    /// Freigaben, die Pivolo nutzt: Bildschirmaufnahme, Bedienungshilfen und
     /// das Senden von Tastendrücken (Einfügen in T3 Code).
     const SERVICES: [&str; 3] = ["ScreenCapture", "Accessibility", "PostEvent"];
 

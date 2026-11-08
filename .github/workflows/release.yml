@@ -22,7 +22,7 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           gh release create "$GITHUB_REF_NAME" --repo "$GITHUB_REPOSITORY" \
-            --title "Shot-VILLA ${GITHUB_REF_NAME#v}" --generate-notes
+            --title "Pivolo ${GITHUB_REF_NAME#v}" --generate-notes
 
   macos:
     needs: release
@@ -83,7 +83,7 @@ jobs:
 
       - name: Signatur prüfen
         run: |
-          app=src-tauri/target/universal-apple-darwin/release/bundle/macos/Shot-VILLA.app
+          app=src-tauri/target/universal-apple-darwin/release/bundle/macos/Pivolo.app
           codesign --verify --deep --strict "$app"
           codesign -dvv "$app" 2>&1 | grep Authority
           codesign -d -r- "$app" 2>&1 | grep designated

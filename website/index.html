@@ -4,12 +4,12 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="color-scheme" content="dark light" />
-    <title>Shot-VILLA – Bildschirmfotos für macOS und Windows</title>
+    <title>Pivolo – Bildschirmfotos für macOS und Windows</title>
     <meta
       name="description"
-      content="Shot-VILLA nimmt Bildschirmfotos und Bildschirmvideos auf, markiert sie und gibt sie weiter – per Tastenkürzel, ohne Umwege. Für macOS 14 und Windows 10/11."
+      content="Pivolo nimmt Bildschirmfotos und Bildschirmvideos auf, markiert sie und gibt sie weiter – per Tastenkürzel, ohne Umwege. Für macOS 14 und Windows 10/11."
     />
-    <meta name="theme-color" content="#101113" />
+    <meta name="theme-color" content="#000000" />
     <link rel="icon" type="image/svg+xml" href="favicon.svg" />
     <link rel="icon" type="image/png" href="favicon.png" />
     <link rel="apple-touch-icon" href="apple-touch-icon.png" />
@@ -17,23 +17,19 @@
   </head>
   <body class="ds">
     <header class="ds-top">
-      <a
-        class="ds-brand"
-        href="#top"
-        aria-label="Shot-VILLA – zum Seitenanfang"
-      >
-        <svg viewBox="0 12 64 44" role="img" aria-label="Shot-VILLA Sucher">
+      <a class="ds-brand" href="#top" aria-label="Pivolo – zum Seitenanfang">
+        <svg viewBox="0 12 64 44" role="img" aria-label="Pivolo Sucher">
           <path
             class="ds-mark-mountain"
             d="M6 14 H20 V19 H11 V28 H6 Z M58 14 H44 V19 H53 V28 H58 Z M6 54 H20 V49 H11 V40 H6 Z M58 54 H44 V49 H53 V40 H58 Z"
           />
           <circle class="ds-mark-piste" cx="32" cy="34" r="7" />
         </svg>
-        Shot-VILLA
+        Pivolo
       </a>
       <nav class="ds-nav" aria-label="Seitenbereiche">
         <a href="#funktionen">Funktionen</a>
-        <a href="#anleitung">Anleitung</a>
+        <a href="anleitung.html">Anleitung</a>
         <a href="#kuerzel">Kürzel</a>
         <a href="#fragen">Fragen</a>
       </nav>
@@ -42,20 +38,20 @@
 
     <main class="ds-wrap" id="top">
       <section class="ds-hero">
-        <p class="ds-eyebrow">Version 0.3.2 · macOS und Windows</p>
-        <h1>Bildschirmfotos. <em>Markiert und weitergegeben.</em></h1>
+        <p class="ds-eyebrow">Version 0.3.7 · macOS und Windows</p>
+        <h1>Bildschirmfotos. <em>Klar erklärt.</em></h1>
         <p class="ds-lede">
           Kürzel drücken, Bereich ziehen, Pfeil setzen, <kbd>Esc</kbd> – und das
-          Bild liegt in der Zwischenablage. Shot-VILLA lebt in der Menüleiste
-          und ist da, wenn du es brauchst.
+          Bild liegt in der Zwischenablage. Pivolo lebt in der Menüleiste und
+          ist da, wenn du es brauchst.
         </p>
         <div class="ds-actions">
-          <a class="ds-btn" href="downloads/Shot-VILLA.dmg" download
+          <a class="ds-btn" href="downloads/Pivolo.dmg" download
             >Für macOS laden</a
           >
           <a
             class="ds-btn ds-btn--ghost"
-            href="downloads/Shot-VILLA-Setup.exe"
+            href="downloads/Pivolo-Setup.exe"
             download
             >Für Windows laden</a
           >
@@ -69,15 +65,17 @@
             src="images/editor.jpg"
             width="1369"
             height="896"
-            alt="Der Shot-VILLA-Editor mit einem Pfeil, einem roten Rahmen, nummerierten Markierungen und gelbem Textmarker auf einer Projektübersicht"
+            alt="Der Pivolo-Editor mit einem Pfeil, einem roten Rahmen, nummerierten Markierungen und gelbem Textmarker auf einer Projektübersicht"
           />
         </figure>
       </section>
 
       <section class="ds-strip" aria-label="Kurz gesagt">
         <div><b>⇧⌘2</b><span>Bereich aufnehmen</span></div>
-        <div><b>11</b><span>Werkzeuge im Editor</span></div>
-        <div><b>100 %</b><span>lokal – nichts verlässt deinen Mac</span></div>
+        <div><b>12</b><span>Werkzeuge im Editor</span></div>
+        <div>
+          <b>100 %</b><span>lokal – keine Aufnahme verlässt dein Gerät</span>
+        </div>
         <div><b>00</b><span>Konten, Anmeldungen oder Cloud</span></div>
       </section>
 
@@ -171,6 +169,22 @@
           </div>
           <div class="ds-feature">
             <b>10</b>
+            <h3>Bildschirmvideos</h3>
+            <p>
+              Wähle einen Bereich und nimm ein MP4 in Retina-Auflösung auf –
+              ohne Rahmen oder Steuerleiste im Bild.
+            </p>
+          </div>
+          <div class="ds-feature">
+            <b>11</b>
+            <h3>Direkt in T3 Code</h3>
+            <p>
+              Füge einen ausgewählten Bildschirmbereich als Anhang in den
+              offenen T3-Code-Chat ein. Gesendet wird nichts.
+            </p>
+          </div>
+          <div class="ds-feature">
+            <b>12</b>
             <h3>Deine Kürzel</h3>
             <p>
               Alle Aufnahmen auf Tasten, die zu dir passen – auch
@@ -183,127 +197,20 @@
       <section class="ds-section" id="anleitung">
         <div class="ds-section-head">
           <span>02</span>
-          <h2>So geht’s – in fünf Schritten</h2>
+          <h2>In wenigen Schritten startklar</h2>
         </div>
         <p class="ds-section-lead">
-          Vom Download bis zum ersten markierten Bildschirmfoto dauert es keine
-          zwei Minuten.
+          Installation, Freigaben und die ersten Aufnahmen – Schritt für Schritt
+          im Handbuch. macOS und Windows unterscheiden sich bei Berechtigungen
+          und Tastenkürzeln.
         </p>
-        <ol class="ds-steps">
-          <li class="ds-step">
-            <div>
-              <h3>Installieren</h3>
-              <p>
-                Lade
-                <a class="ds-link" href="downloads/Shot-VILLA.dmg" download
-                  >Shot-VILLA.dmg</a
-                >, öffne die Datei und zieh Shot-VILLA in den Ordner
-                <strong>Programme</strong>.
-              </p>
-              <p class="ds-note">
-                Meldet macOS „Shot-VILLA.dmg“ bzw. „Shot-VILLA“
-                <em>nicht geöffnet</em>, klick auf <strong>Fertig</strong>.
-                Öffne dann
-                <em>Systemeinstellungen → Datenschutz &amp; Sicherheit</em>,
-                scroll nach unten und klick bei Shot-VILLA auf
-                <strong>„Dennoch öffnen“</strong>. Das ist einmal für die DMG
-                und einmal beim ersten Start der App nötig. Grund: Shot-VILLA
-                ist nicht bei Apple notarisiert.
-              </p>
-              <p class="ds-note">
-                <strong>Windows:</strong> Lade
-                <a
-                  class="ds-link"
-                  href="downloads/Shot-VILLA-Setup.exe"
-                  download
-                  >Shot-VILLA-Setup.exe</a
-                >
-                und führ die Datei aus. Zeigt Windows „Der Computer wurde durch
-                Windows geschützt“, klick auf
-                <strong>Weitere Informationen → Trotzdem ausführen</strong>.
-                Danach liegt Shot-VILLA im Startmenü und im Infobereich der
-                Taskleiste.
-              </p>
-            </div>
-          </li>
-          <li class="ds-step">
-            <div>
-              <h3>Bildschirmaufnahme erlauben</h3>
-              <p>
-                Drück <kbd>⇧⌘1</kbd>. macOS fragt nach der Berechtigung,
-                Shot-VILLA zeigt dazu einen Hinweis. Schalte Shot-VILLA unter
-                <em
-                  >Datenschutz &amp; Sicherheit → Bildschirm- &amp;
-                  Systemaudioaufnahme</em
-                >
-                ein und klick auf <strong>Neu starten</strong>.
-              </p>
-              <p class="ds-note">
-                Ohne diese Freigabe zeigt macOS Apps nur den
-                Schreibtischhintergrund. Shot-VILLA nimmt dann gar nicht erst
-                auf und erinnert dich stattdessen.
-              </p>
-            </div>
-          </li>
-          <li class="ds-step">
-            <div>
-              <h3>Aufnehmen</h3>
-              <p>
-                Mit <kbd>⇧⌘2</kbd> wird der Bildschirm eingefroren. Zieh einen
-                Rahmen auf – Lupe und Maße helfen beim genauen Ansetzen.
-                <kbd>Esc</kbd> bricht ab.
-              </p>
-              <p>
-                Für ganze Fenster wählst du im Menüleisten-Symbol
-                <strong>„Fenster wählen …“</strong> und klickst das gewünschte
-                Fenster an.
-              </p>
-            </div>
-          </li>
-          <li class="ds-step">
-            <div>
-              <h3>Markieren</h3>
-              <p>
-                Der Editor öffnet sich mit deiner Aufnahme. Wähl ein Werkzeug
-                per Klick oder Taste, setz Pfeile, Rahmen und Zähler. Farbe und
-                Stärke stellst du darunter ein.
-              </p>
-              <ul class="ds-keys">
-                <li><kbd>A</kbd> Pfeil</li>
-                <li><kbd>T</kbd> Text</li>
-                <li><kbd>R</kbd> Rechteck</li>
-                <li><kbd>H</kbd> Textmarker</li>
-                <li><kbd>B</kbd> Verpixeln</li>
-                <li><kbd>C</kbd> Zähler</li>
-                <li><kbd>Enter</kbd> Zuschneiden</li>
-                <li><kbd>⌘Z</kbd> Widerrufen</li>
-              </ul>
-              <img
-                class="ds-shot"
-                src="images/editor.jpg"
-                width="1369"
-                height="896"
-                alt="Editor mit Werkzeugleiste und markierter Projektübersicht"
-                loading="lazy"
-              />
-            </div>
-          </li>
-          <li class="ds-step">
-            <div>
-              <h3>Weitergeben</h3>
-              <p>
-                Drück <kbd>Esc</kbd> – das Bild wird kopiert und der Editor
-                schließt. In Mail, Chat oder Ticket fügst du es mit
-                <kbd>⌘V</kbd> ein.
-              </p>
-              <p>
-                <kbd>⌘S</kbd> speichert auf dem Schreibtisch,
-                <kbd>⌘P</kbd> pinnt das Bild über alle Fenster,
-                <kbd>⇧⌘T</kbd> erkennt den Text darin.
-              </p>
-            </div>
-          </li>
-        </ol>
+        <div class="ds-actions">
+          <a class="ds-btn" href="anleitung.html">Zum vollständigen Handbuch</a>
+        </div>
+        <p class="ds-meta">
+          Alle Werkzeuge, Tastenkürzel, Einstellungen und Lösungen für häufige
+          Probleme.
+        </p>
       </section>
 
       <section class="ds-section">
@@ -425,31 +332,31 @@
           <h2>Fragen</h2>
         </div>
         <details>
-          <summary>Schickt Shot-VILLA Daten ins Internet?</summary>
+          <summary>Schickt Pivolo Daten ins Internet?</summary>
           <p>
-            Aufnahmen, Texterkennung und Einstellungen bleiben auf deinem Mac.
+            Aufnahmen, Texterkennung und Einstellungen bleiben auf deinem Gerät.
             Es gibt keine Konten, keine Statistiken und keine Cloud. Die einzige
-            Verbindung ist die Suche nach Updates: Shot-VILLA ruft dafür eine
-            kleine Versionsdatei von github.com ab. Du kannst sie in den
-            Einstellungen abschalten.
+            Verbindung ist die Suche nach Updates: Pivolo ruft dafür eine kleine
+            Versionsdatei von github.com ab. Du kannst sie in den Einstellungen
+            abschalten.
           </p>
         </details>
         <details>
           <summary>Was ist unter Windows anders?</summary>
           <p>
             Die Kürzel nutzen Strg statt ⌘, also Strg+Umschalt+1 für Vollbild
-            und Strg+Umschalt+2 für einen Bereich. Shot-VILLA sitzt im
-            Infobereich der Taskleiste statt in der Menüleiste. Eine Freigabe
-            für die Bildschirmaufnahme braucht Windows nicht. Die Texterkennung
-            nutzt die Sprachen, die in Windows installiert sind.
+            und Strg+Umschalt+2 für einen Bereich. Pivolo sitzt im Infobereich
+            der Taskleiste statt in der Menüleiste. Eine Freigabe für die
+            Bildschirmaufnahme braucht Windows nicht. Die Texterkennung nutzt
+            die Sprachen, die in Windows installiert sind.
           </p>
         </details>
         <details>
           <summary>Warum fragt macOS nach der Bildschirmaufnahme?</summary>
           <p>
             macOS schützt den Bildschirminhalt vor Apps. Ohne Freigabe sähe
-            Shot-VILLA nur den Schreibtischhintergrund. Die Freigabe gibst du
-            einmal unter
+            Pivolo nur den Schreibtischhintergrund. Die Freigabe gibst du einmal
+            unter
             <em
               >Datenschutz &amp; Sicherheit → Bildschirm- &amp;
               Systemaudioaufnahme</em
@@ -461,17 +368,16 @@
             Der Hinweis zur Bildschirmaufnahme kommt immer wieder.
           </summary>
           <p>
-            Entferne Shot-VILLA in der Liste mit „−“, erlaube es neu und starte
-            Shot-VILLA neu. Alternativ im Terminal:
-            <code>tccutil reset ScreenCapture de.villalife.shot-villa</code>
+            Entferne Pivolo in der Liste mit „−“, erlaube es neu und starte
+            Pivolo neu. Alternativ im Terminal:
+            <code>tccutil reset ScreenCapture de.villalife.pivolo</code>
           </p>
         </details>
         <details>
           <summary>Ein Kürzel reagiert nicht.</summary>
           <p>
-            Eine andere App nutzt dieselbe Kombination. Shot-VILLA meldet das in
-            den Einstellungen unter den Kürzeln – wähl dort eine andere
-            Kombination.
+            Eine andere App nutzt dieselbe Kombination. Pivolo meldet das in den
+            Einstellungen unter den Kürzeln – wähl dort eine andere Kombination.
           </p>
         </details>
         <details>
@@ -491,10 +397,10 @@
           <h2>Bereit für dein nächstes Bildschirmfoto?</h2>
         </div>
         <div class="ds-actions">
-          <a class="ds-btn" href="downloads/Shot-VILLA.dmg" download
+          <a class="ds-btn" href="downloads/Pivolo.dmg" download
             >Für macOS laden</a
           >
-          <a class="ds-btn" href="downloads/Shot-VILLA-Setup.exe" download
+          <a class="ds-btn" href="downloads/Pivolo-Setup.exe" download
             >Für Windows laden</a
           >
         </div>
@@ -511,9 +417,7 @@
     <footer class="ds-wrap ds-foot">
       <span>
         © 2026 Jascha Coenen · <a href="license.txt">MIT-Lizenz</a> ·
-        <a href="https://github.com/JaschaaON/shot-villa"
-          >Quellcode auf GitHub</a
-        >
+        <a href="https://github.com/JaschaaON/pivolo">Quellcode auf GitHub</a>
       </span>
       <span>
         <a href="third-party-notices.txt">Lizenzen der Drittsoftware</a> ·

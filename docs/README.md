@@ -1,6 +1,6 @@
-# Shot-VILLA – Handbuch
+# Pivolo – Handbuch
 
-Shot-VILLA nimmt Bildschirmfotos auf, markiert sie und gibt sie weiter – schnell per Tastenkürzel, ohne Umwege über Ordner. Die App lebt in der Menüleiste; ein Fenster erscheint erst, wenn du eine Aufnahme bearbeitest.
+Pivolo nimmt Bildschirmfotos auf, markiert sie und gibt sie weiter – schnell per Tastenkürzel, ohne Umwege über Ordner. Die App lebt in der Menüleiste; ein Fenster erscheint erst, wenn du eine Aufnahme bearbeitest.
 
 ![Editor mit Pfeil, Rahmen, Zählern und Textmarker](images/editor.jpg)
 
@@ -20,30 +20,30 @@ Shot-VILLA nimmt Bildschirmfotos auf, markiert sie und gibt sie weiter – schne
 
 ## Installation
 
-1. `Shot-VILLA.dmg` laden und öffnen.
-2. **Shot-VILLA** in den Ordner **Programme** ziehen.
-3. Shot-VILLA aus „Programme“ starten.
+1. `Pivolo.dmg` laden und öffnen.
+2. **Pivolo** in den Ordner **Programme** ziehen.
+3. Pivolo aus „Programme“ starten.
 
-Shot-VILLA ist nicht bei Apple notarisiert. macOS meldet deshalb beim Öffnen der DMG und beim ersten Start der App „… nicht geöffnet“. Jeweils so freigeben:
+Pivolo ist nicht bei Apple notarisiert. macOS meldet deshalb beim Öffnen der DMG und beim ersten Start der App „… nicht geöffnet“. Jeweils so freigeben:
 
 1. In der Meldung auf **Fertig** klicken.
 2. *Systemeinstellungen → Datenschutz & Sicherheit* öffnen und ganz nach unten scrollen.
-3. Bei „Shot-VILLA.dmg“ bzw. „Shot-VILLA“ auf **„Dennoch öffnen“** klicken und mit dem Passwort bestätigen.
+3. Bei „Pivolo.dmg“ bzw. „Pivolo“ auf **„Dennoch öffnen“** klicken und mit dem Passwort bestätigen.
 
 Alternativ im Terminal die Download-Sperre der DMG aufheben, dann entfällt beides:
 
 ```bash
-xattr -d com.apple.quarantine ~/Downloads/Shot-VILLA.dmg
+xattr -d com.apple.quarantine ~/Downloads/Pivolo.dmg
 ```
 
-Danach erscheint in der Menüleiste das Shot-VILLA-Symbol (vier Ecken mit einem Punkt). Ein Dock-Symbol gibt es nur, solange ein Shot-VILLA-Fenster offen ist.
+Danach erscheint in der Menüleiste das Pivolo-Symbol (vier Ecken mit einem Punkt). Ein Dock-Symbol gibt es nur, solange ein Pivolo-Fenster offen ist.
 
 Voraussetzung: macOS 14 (Sonoma) oder neuer, Apple-Chip oder Intel.
 
 ### Windows
 
-1. `Shot-VILLA-Setup.exe` laden und ausführen. Zeigt Windows „Der Computer wurde durch Windows geschützt“, auf **Weitere Informationen → Trotzdem ausführen** klicken – der Installer ist nicht mit einem gekauften Zertifikat signiert.
-2. Shot-VILLA startet und erscheint im **Infobereich der Taskleiste** (ggf. hinter dem Pfeil ˄).
+1. `Pivolo-Setup.exe` laden und ausführen. Zeigt Windows „Der Computer wurde durch Windows geschützt“, auf **Weitere Informationen → Trotzdem ausführen** klicken – der Installer ist nicht mit einem gekauften Zertifikat signiert.
+2. Pivolo startet und erscheint im **Infobereich der Taskleiste** (ggf. hinter dem Pfeil ˄).
 
 Unter Windows gilt dieses Handbuch mit drei Unterschieden: Kürzel nutzen **Strg** statt ⌘ (z. B. Strg+Umschalt+2 für einen Bereich, Strg+Z zum Widerrufen), eine Freigabe für die Bildschirmaufnahme ist nicht nötig, und die Texterkennung verwendet die in Windows installierten Sprachen. Fenster werden ohne Schatten aufgenommen. Voraussetzung: Windows 10 oder 11.
 
@@ -51,11 +51,11 @@ Unter Windows gilt dieses Handbuch mit drei Unterschieden: Kürzel nutzen **Strg
 
 macOS lässt Apps den Bildschirm nur aufnehmen, wenn du es erlaubst.
 
-1. Drück **⇧⌘1**. macOS fragt nach der Berechtigung, und Shot-VILLA zeigt ein Hinweisfenster.
-2. Klick auf **Systemeinstellungen öffnen** und schalte **Shot-VILLA** unter *Datenschutz & Sicherheit → Bildschirm- & Systemaudioaufnahme* ein.
-3. Klick im Shot-VILLA-Fenster auf **Neu starten**.
+1. Drück **⇧⌘1**. macOS fragt nach der Berechtigung, und Pivolo zeigt ein Hinweisfenster.
+2. Klick auf **Systemeinstellungen öffnen** und schalte **Pivolo** unter *Datenschutz & Sicherheit → Bildschirm- & Systemaudioaufnahme* ein.
+3. Klick im Pivolo-Fenster auf **Neu starten**.
 
-Ab jetzt funktionieren alle Aufnahmen. Ohne diese Berechtigung würden Bilder nur den Schreibtischhintergrund zeigen – Shot-VILLA nimmt in diesem Fall gar nicht erst auf, sondern zeigt wieder den Hinweis.
+Ab jetzt funktionieren alle Aufnahmen. Ohne diese Berechtigung würden Bilder nur den Schreibtischhintergrund zeigen – Pivolo nimmt in diesem Fall gar nicht erst auf, sondern zeigt wieder den Hinweis.
 
 ## Aufnehmen
 
@@ -111,7 +111,7 @@ Unter der Werkzeugleiste wählst du Farbe (acht Vorgaben plus freie Farbe), Stä
 | Aktion | Kürzel | Ergebnis |
 |---|---|---|
 | Bild kopieren | ⇧⌘C (oder **Esc**) | Das bearbeitete Bild liegt in der Zwischenablage, der Editor schließt sich – einfach in der Ziel-App mit ⌘V einfügen. |
-| Sichern | ⌘S | Speichert im eingestellten Ordner (Vorgabe: Schreibtisch) als „Shot-VILLA JJJJ-MM-TT um HH.MM.SS“. |
+| Sichern | ⌘S | Speichert im eingestellten Ordner (Vorgabe: Schreibtisch) als „Pivolo JJJJ-MM-TT um HH.MM.SS“. |
 | Sichern unter … | ⇧⌘S | Ort und Format (PNG/JPEG) frei wählen. |
 | Anpinnen | ⌘P | Das Bild schwebt rahmenlos über allen Fenstern – praktisch zum Abtippen oder Vergleichen. Verschieben per Ziehen, **Rechtsklick** für 50/100/200 %, halbtransparent, Kopieren und Schließen, **Doppelklick** oder **Esc** schließt. |
 
@@ -132,13 +132,13 @@ Mit einem eigenen Kürzel (Vorgabe **⌃⌥⌘T**, unter Windows **Strg+Alt+T**)
 
 1. Das Kürzel drücken oder im Menüleisten-Symbol **Bereich in T3 Code einfügen** wählen.
 2. Den Bereich aufziehen wie beim Bereichsfoto. **Esc** bricht ab.
-3. Shot-VILLA legt das Bild in die Zwischenablage, holt das T3-Code-Fenster nach vorn und löst dort ⌘V (Strg+V) aus. Das Bild erscheint als Anhang im Eingabefeld. Abgeschickt wird nichts, du schreibst deine Frage dazu und sendest selbst.
+3. Pivolo legt das Bild in die Zwischenablage, holt das T3-Code-Fenster nach vorn und löst dort ⌘V (Strg+V) aus. Das Bild erscheint als Anhang im Eingabefeld. Abgeschickt wird nichts, du schreibst deine Frage dazu und sendest selbst.
 
 Das Fenster wird am Namen der App oder des Fensters erkannt (Vorgabe „T3 Code“). Das passt auf die Desktop-App und auf einen Browser-Tab, dessen Seitentitel „T3 Code …“ lautet. Gibt es mehrere Treffer, gilt das vorderste. Den Namen änderst du in den Einstellungen unter *T3 Code*.
 
-- **macOS:** Beim ersten Mal fragt macOS nach der Freigabe unter Systemeinstellungen → Datenschutz & Sicherheit → *Bedienungshilfen*. Ohne sie kann Shot-VILLA den Tastendruck nicht auslösen. Das Bild bleibt dann in der Zwischenablage, ⌘V im Chat genügt.
-- **Windows:** Läuft T3 Code mit Administratorrechten, darf Shot-VILLA dort nichts einfügen.
-- Findet Shot-VILLA kein T3-Code-Fenster (nicht geöffnet, minimiert, auf einem anderen Space), erscheint eine Mitteilung. Das Bild bleibt in der Zwischenablage.
+- **macOS:** Beim ersten Mal fragt macOS nach der Freigabe unter Systemeinstellungen → Datenschutz & Sicherheit → *Bedienungshilfen*. Ohne sie kann Pivolo den Tastendruck nicht auslösen. Das Bild bleibt dann in der Zwischenablage, ⌘V im Chat genügt.
+- **Windows:** Läuft T3 Code mit Administratorrechten, darf Pivolo dort nichts einfügen.
+- Findet Pivolo kein T3-Code-Fenster (nicht geöffnet, minimiert, auf einem anderen Space), erscheint eine Mitteilung. Das Bild bleibt in der Zwischenablage.
 - In T3 Code muss die Chat-Ansicht offen sein. Hat dort gerade das Terminal den Fokus, geht das Einfügen ins Terminal.
 
 ## Bildschirmaufnahme (Video)
@@ -150,7 +150,7 @@ Nimmt einen Bereich des Bildschirms als Video auf (macOS 15 oder neuer; Windows 
 3. Auf **Start** klicken (oder erneut **⌃⌥⌘R**). Jetzt läuft die Aufnahme: Der Rahmen wird rot, die Leiste zeigt die Laufzeit, ebenso die Menüleiste neben dem Symbol. **×** oder **Esc** verwirft den Bereich vorher wieder.
 4. Zum Beenden auf **Stopp** klicken, erneut **⌃⌥⌘R** drücken oder im Menü **Bildschirmaufnahme beenden** wählen.
 
-Das Video landet als MP4 (H.264, Retina-Auflösung, 30 Bilder pro Sekunde, mit Mauszeiger, ohne Ton) im eingestellten Ordner, z. B. „Shot-VILLA 2026-10-16 um 17.19.46.mp4“; der Finder (unter Windows der Explorer) zeigt es danach an. Rahmen und Leiste erscheinen nicht im Video. Unter Windows lautet das Kürzel **Strg+Alt+R**; die Laufzeit steht dort nur in der Leiste unter dem Bereich, weil der Infobereich keinen Text neben dem Symbol kennt.
+Das Video landet als MP4 (H.264, Retina-Auflösung, 30 Bilder pro Sekunde, mit Mauszeiger, ohne Ton) im eingestellten Ordner, z. B. „Pivolo 2026-10-16 um 17.19.46.mp4“; der Finder (unter Windows der Explorer) zeigt es danach an. Rahmen und Leiste erscheinen nicht im Video. Unter Windows lautet das Kürzel **Strg+Alt+R**; die Laufzeit steht dort nur in der Leiste unter dem Bereich, weil der Infobereich keinen Text neben dem Symbol kennt.
 
 ## Einstellungen
 
@@ -169,15 +169,15 @@ Erreichbar über das Menüleisten-Symbol → *Einstellungen …* oder **⌘,**.
 
 ![Einstellungen – Tastenkürzel](images/settings-shortcuts.jpg)
 
-Klick in ein Feld und drück die gewünschte Kombination; **×** entfernt ein Kürzel, **Esc** bricht ab. Während der Eingabe sind alle Shot-VILLA-Kürzel pausiert. Ist eine Kombination schon vergeben, meldet Shot-VILLA das unter den Feldern.
+Klick in ein Feld und drück die gewünschte Kombination; **×** entfernt ein Kürzel, **Esc** bricht ab. Während der Eingabe sind alle Pivolo-Kürzel pausiert. Ist eine Kombination schon vergeben, meldet Pivolo das unter den Feldern.
 
 Willst du **⇧⌘3 / ⇧⌘4** nutzen, schalte zuerst die Bildschirmfoto-Kürzel von macOS aus: *Systemeinstellungen → Tastatur → Tastaturkurzbefehle → Bildschirmfotos*.
 
 ### Updates
 
-Shot-VILLA sucht beim Start und danach einmal täglich nach einer neueren Version und meldet sie per Mitteilung. Unter *Einstellungen → Updates* (oder im Menü über *Nach Updates suchen …*) siehst du die installierte Version und kannst mit **Nach Updates suchen** sofort suchen. Findet Shot-VILLA eine neue Version, lädt es sie herunter, prüft sie, installiert sie und startet sich selbst neu – ohne weitere Rückfrage. Das Paket wird vor der Installation anhand einer Signatur geprüft; passt sie nicht, bleibt alles, wie es ist. Die automatische Suche lässt sich dort abschalten.
+Pivolo sucht beim Start und danach einmal täglich nach einer neueren Version und meldet sie per Mitteilung. Unter *Einstellungen → Updates* (oder im Menü über *Nach Updates suchen …*) siehst du die installierte Version und kannst mit **Nach Updates suchen** sofort suchen. Findet Pivolo eine neue Version, lädt es sie herunter, prüft sie, installiert sie und startet sich selbst neu – ohne weitere Rückfrage. Das Paket wird vor der Installation anhand einer Signatur geprüft; passt sie nicht, bleibt alles, wie es ist. Die automatische Suche lässt sich dort abschalten.
 
-Bei der Suche lädt Shot-VILLA nur eine kleine Versionsdatei von github.com – keine Aufnahmen, keine persönlichen Daten. GitHub sieht dabei wie bei jedem Abruf deine IP-Adresse.
+Bei der Suche lädt Pivolo nur eine kleine Versionsdatei von github.com – keine Aufnahmen, keine persönlichen Daten. GitHub sieht dabei wie bei jedem Abruf deine IP-Adresse.
 
 ### Erweitert
 
@@ -215,13 +215,13 @@ Die Einstellungen liegen in `~/Library/Application Support/de.villalife.shot-vil
 ## Fragen und Probleme
 
 **Es erscheint immer wieder der Hinweis zur Bildschirmaufnahme.**
-Entferne Shot-VILLA unter *Datenschutz & Sicherheit → Bildschirm- & Systemaudioaufnahme* mit „−“, erlaube es neu und starte Shot-VILLA neu. Im Terminal geht das Zurücksetzen mit `tccutil reset ScreenCapture de.villalife.shot-villa`.
+Entferne Pivolo unter *Datenschutz & Sicherheit → Bildschirm- & Systemaudioaufnahme* mit „−“, erlaube es neu und starte Pivolo neu. Im Terminal geht das Zurücksetzen mit `tccutil reset ScreenCapture de.villalife.shot-villa`.
 
 **Ein Kürzel reagiert nicht.**
-Eine andere App nutzt dieselbe Kombination. Shot-VILLA zeigt das in den Einstellungen unter den Kürzeln an – wähl eine andere Kombination oder schalte das Kürzel in der anderen App ab.
+Eine andere App nutzt dieselbe Kombination. Pivolo zeigt das in den Einstellungen unter den Kürzeln an – wähl eine andere Kombination oder schalte das Kürzel in der anderen App ab.
 
 **Das Menüleisten-Symbol fehlt.**
-Bei vielen Symbolen blendet macOS manche hinter der Kamera-Aussparung aus. Die Aufnahmen funktionieren trotzdem per Kürzel; die Einstellungen öffnest du dann mit **⌘,**, sobald ein Shot-VILLA-Fenster vorne ist.
+Bei vielen Symbolen blendet macOS manche hinter der Kamera-Aussparung aus. Die Aufnahmen funktionieren trotzdem per Kürzel; die Einstellungen öffnest du dann mit **⌘,**, sobald ein Pivolo-Fenster vorne ist.
 
 **Wird etwas ins Internet geschickt?**
 Aufnahmen, Texterkennung und Einstellungen bleiben auf deinem Mac. Die einzige Verbindung ist die Update-Suche (siehe *Updates* oben): Sie ruft eine Versionsdatei von github.com ab und lässt sich in den Einstellungen abschalten.

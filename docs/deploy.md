@@ -54,4 +54,4 @@ Installierte Apps holen neue Versionen selbst. Sie rufen dazu `https://github.co
 python3 -m http.server 4173 --directory website
 ```
 
-Die DMG fürs lokale Ansehen nach `website/downloads/Shot-VILLA.dmg` kopieren (der Ordner ist von Git ausgenommen).
+Die DMG fürs lokale Ansehen nach `website/downloads/Pivolo.dmg` kopieren (der Ordner ist von Git ausgenommen).

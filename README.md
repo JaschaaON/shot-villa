@@ -1,20 +1,20 @@
-# Shot-VILLA
+# Pivolo
 
 Bildschirmfotos für macOS und Windows: aufnehmen, markieren, weitergeben – per Tastenkürzel und ohne Umwege.
 
-![Shot-VILLA-Editor](docs/images/editor.jpg)
+![Pivolo-Editor](docs/images/editor.jpg)
 
 - **Aufnahmen:** Vollbild, Bereich (eingefrorener Bildschirm mit Lupe), Bereich wiederholen, Fenster wählen, aktives Fenster
 - **Editor:** Pfeil, Text, Rechteck, Oval, Linie, Freihand, Textmarker, Verpixeln/Weichzeichnen, Spotlight, Zähler, Zuschneiden, Pipette mit HEX/RGB/CSS/OKLCH
 - **Ausgabe:** Kopieren, Sichern (PNG oder automatisch PNG/JPEG), Anpinnen als schwebendes Fenster, kleine Vorschau nach der Aufnahme
-- **Texterkennung** und QR-Codes lokal per Apple Vision
+- **Texterkennung** und QR-Codes lokal per Apple Vision (macOS) beziehungsweise Windows OCR
 - Frei belegbare globale Kürzel, Menüleisten-App, Start bei der Anmeldung
 
-**Handbuch mit Screenshots:** [docs/README.md](docs/README.md)
+**Handbuch mit Screenshots:** [Website-Anleitung](website/anleitung.html) · [Entwickler-Handbuch](docs/README.md)
 
 ## Installation
 
-`Shot-VILLA.dmg` aus den Releases bzw. von der Website laden, Shot-VILLA in „Programme“ ziehen, beim Öffnen der DMG und beim ersten Start jeweils unter Systemeinstellungen → Datenschutz & Sicherheit „Dennoch öffnen“ wählen (Shot-VILLA ist nicht notarisiert) und die Bildschirmaufnahme erlauben. Details im [Handbuch](docs/README.md#installation). Voraussetzung: macOS 14 oder neuer. Für Windows 10/11 gibt es `Shot-VILLA-Setup.exe` ([Hinweise](docs/README.md#windows)).
+`Pivolo.dmg` aus den Releases bzw. von der Website laden, Pivolo in „Programme“ ziehen, beim Öffnen der DMG und beim ersten Start jeweils unter Systemeinstellungen → Datenschutz & Sicherheit „Dennoch öffnen“ wählen (Pivolo ist nicht notarisiert) und die Bildschirmaufnahme erlauben. Details im [Handbuch](docs/README.md#installation). Voraussetzung: macOS 14 oder neuer. Für Windows 10/11 gibt es `Pivolo-Setup.exe` ([Hinweise](docs/README.md#windows)).
 
 ## Entwicklung
 
@@ -59,4 +59,4 @@ Analyse und Feature-Liste: [SPEC.md](SPEC.md) · Fortschritt: [PROGRESS.md](PROG
 
 ## Lizenz
 
-Shot-VILLA © 2026 Jascha Coenen, veröffentlicht unter der [MIT-Lizenz](LICENSE). Die Lizenzen der enthaltenen Bibliotheken stehen in [THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md) (neu erzeugen mit `pnpm notices`, z. B. nach Abhängigkeits-Updates); beide Dateien liegen auch in jedem App-Paket und auf der Website.
+Pivolo © 2026 Jascha Coenen, veröffentlicht unter der [MIT-Lizenz](LICENSE). Die Lizenzen der enthaltenen Bibliotheken stehen in [THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md) (neu erzeugen mit `pnpm notices`, z. B. nach Abhängigkeits-Updates); beide Dateien liegen auch in jedem App-Paket und auf der Website.

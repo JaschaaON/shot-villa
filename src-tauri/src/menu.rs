@@ -19,10 +19,10 @@ pub fn build(app: &AppHandle) -> tauri::Result<tauri::menu::Menu<tauri::Wry>> {
         MenuItem::with_id(app, action.id(), title, true, accelerator)
     };
 
-    let app_menu = SubmenuBuilder::new(app, "Shot-VILLA")
+    let app_menu = SubmenuBuilder::new(app, "Pivolo")
         .item(&PredefinedMenuItem::about(
             app,
-            Some("Über Shot-VILLA"),
+            Some("Über Pivolo"),
             Some(AboutMetadata::default()),
         )?)
         .separator()
@@ -33,17 +33,14 @@ pub fn build(app: &AppHandle) -> tauri::Result<tauri::menu::Menu<tauri::Wry>> {
         )?)
         .item(&action(Action::Updates, "Nach Updates suchen …", None)?)
         .separator()
-        .item(&PredefinedMenuItem::hide(
-            app,
-            Some("Shot-VILLA ausblenden"),
-        )?)
+        .item(&PredefinedMenuItem::hide(app, Some("Pivolo ausblenden"))?)
         .item(&PredefinedMenuItem::hide_others(
             app,
             Some("Andere ausblenden"),
         )?)
         .item(&PredefinedMenuItem::show_all(app, Some("Alle einblenden"))?)
         .separator()
-        .item(&PredefinedMenuItem::quit(app, Some("Shot-VILLA beenden"))?)
+        .item(&PredefinedMenuItem::quit(app, Some("Pivolo beenden"))?)
         .build()?;
 
     let file = SubmenuBuilder::new(app, "Ablage")

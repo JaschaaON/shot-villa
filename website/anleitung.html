@@ -1,0 +1,572 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="dark" />
+    <title>Anleitung – Pivolo</title>
+    <meta
+      name="description"
+      content="Das vollständige Pivolo-Handbuch für macOS und Windows: installieren, aufnehmen, markieren und teilen."
+    />
+    <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body class="ds">
+    <header class="ds-top">
+      <a class="ds-brand" href="index.html" aria-label="Pivolo – Startseite"
+        ><svg viewBox="0 12 64 44" aria-hidden="true">
+          <path
+            class="ds-mark-mountain"
+            d="M6 14 H20 V19 H11 V28 H6 Z M58 14 H44 V19 H53 V28 H58 Z M6 54 H20 V49 H11 V40 H6 Z M58 54 H44 V49 H53 V40 H58 Z"
+          />
+          <circle class="ds-mark-piste" cx="32" cy="34" r="7" /></svg
+        >Pivolo</a
+      >
+      <nav class="ds-nav">
+        <a href="index.html#funktionen">Funktionen</a
+        ><a aria-current="page" href="anleitung.html">Anleitung</a
+        ><a href="index.html#laden">Laden</a>
+      </nav>
+      <a class="ds-top-download" href="index.html#laden">App laden</a>
+    </header>
+    <main class="ds-wrap guide" id="top">
+      <section class="ds-hero guide-hero">
+        <p class="ds-eyebrow">Handbuch · Version 0.3.7</p>
+        <h1>Pivolo, Schritt für Schritt.</h1>
+        <p class="ds-lede">
+          Installation, Bildschirmfotos, Markierungen und Einstellungen – für
+          macOS und Windows. Die Kürzel lassen sich in den Einstellungen ändern.
+        </p>
+      </section>
+      <nav class="guide-index" aria-label="Inhalt">
+        <b>Inhalt</b><a href="#installation">Installation</a
+        ><a href="#freigabe">Erster Start</a><a href="#aufnehmen">Aufnehmen</a
+        ><a href="#editor">Bearbeiten</a><a href="#ausgabe">Ausgeben</a
+        ><a href="#erkennung">Text & QR</a><a href="#t3">T3 Code</a
+        ><a href="#video">Video</a><a href="#einstellungen">Einstellungen</a
+        ><a href="#kuerzel">Kürzel</a><a href="#probleme">Fragen & Probleme</a>
+      </nav>
+      <section class="ds-section guide-section" id="installation">
+        <h2>Installation</h2>
+        <div class="guide-columns">
+          <article>
+            <h3>macOS 14 oder neuer</h3>
+            <ol>
+              <li>
+                <a class="ds-link" href="downloads/Pivolo.dmg" download
+                  >Pivolo.dmg laden</a
+                >
+                und öffnen.
+              </li>
+              <li>Pivolo in den Ordner <strong>Programme</strong> ziehen.</li>
+              <li>
+                Beim Öffnen der DMG und beim ersten App-Start kann macOS melden,
+                dass Pivolo nicht geöffnet wurde. Klick auf
+                <strong>Fertig</strong>, öffne
+                <em>Systemeinstellungen → Datenschutz &amp; Sicherheit</em> und
+                wähle unten <strong>Dennoch öffnen</strong>.
+              </li>
+            </ol>
+            <p class="ds-note">
+              Pivolo ist nicht bei Apple notarisiert. Die Freigabe ist daher auf
+              macOS erforderlich.
+            </p>
+          </article>
+          <article>
+            <h3>Windows 10 und 11</h3>
+            <ol>
+              <li>
+                <a class="ds-link" href="downloads/Pivolo-Setup.exe" download
+                  >Pivolo-Setup.exe laden</a
+                >
+                und ausführen.
+              </li>
+              <li>
+                Wenn Windows „Der Computer wurde durch Windows geschützt“ zeigt,
+                wähle
+                <strong>Weitere Informationen → Trotzdem ausführen</strong>.
+              </li>
+              <li>
+                Pivolo startet und erscheint im Infobereich der Taskleiste; das
+                Symbol kann hinter dem Pfeil verborgen sein.
+              </li>
+            </ol>
+            <p class="ds-note">
+              Der Installer ist nicht mit einem gekauften Zertifikat signiert.
+              Windows zeigt deshalb eine Sicherheitsabfrage.
+            </p>
+          </article>
+        </div>
+      </section>
+      <section class="ds-section guide-section" id="freigabe">
+        <h2>Erster Start: Bildschirmaufnahme erlauben</h2>
+        <p>
+          macOS benötigt deine Freigabe, bevor Pivolo den Bildschirm aufnehmen
+          darf.
+        </p>
+        <ol>
+          <li>
+            Drücke <kbd>⇧⌘1</kbd>. Pivolo öffnet den Hinweis zur Berechtigung.
+          </li>
+          <li>
+            Öffne
+            <em
+              >Systemeinstellungen → Datenschutz &amp; Sicherheit → Bildschirm-
+              &amp; Systemaudioaufnahme</em
+            >
+            und aktiviere Pivolo.
+          </li>
+          <li>Klicke in Pivolo auf <strong>Neu starten</strong>.</li>
+        </ol>
+        <p class="ds-note">
+          Ohne Freigabe würde macOS nur den Schreibtischhintergrund liefern.
+          Pivolo bricht die Aufnahme stattdessen ab und zeigt den Hinweis
+          erneut. Unter Windows ist keine solche Freigabe nötig.
+        </p>
+      </section>
+      <section class="ds-section guide-section" id="aufnehmen">
+        <h2>Aufnehmen</h2>
+        <p>
+          Du kannst Aufnahmen über das Menüleistensymbol (macOS) beziehungsweise
+          das Taskleistensymbol (Windows) oder per Tastenkürzel starten.
+        </p>
+        <div class="guide-table">
+          <div>
+            <b>Vollbild</b><kbd>⇧⌘1</kbd
+            ><span>Nimmt den Bildschirm unter dem Mauszeiger auf.</span>
+          </div>
+          <div>
+            <b>Bereich</b><kbd>⇧⌘2</kbd
+            ><span
+              >Bildschirm wird eingefroren. Ziehe einen Rahmen; Lupe und Maße
+              helfen beim genauen Ansetzen. <kbd>Esc</kbd> bricht ab.</span
+            >
+          </div>
+          <div>
+            <b>Bereich wiederholen</b><kbd>–</kbd
+            ><span
+              >Nimmt denselben Bereich erneut auf, etwa für
+              Vorher/Nachher.</span
+            >
+          </div>
+          <div>
+            <b>Fenster wählen</b><kbd>–</kbd
+            ><span
+              >Fenster unter dem Mauszeiger werden hervorgehoben. Anklicken
+              nimmt das Fenster samt Schatten und transparentem Hintergrund
+              auf.</span
+            >
+          </div>
+          <div>
+            <b>Aktives Fenster</b><kbd>–</kbd
+            ><span>Nimmt das vorderste Fenster der aktiven App auf.</span>
+          </div>
+          <div>
+            <b>Text oder QR-Code erkennen</b><kbd>⌃⌥⌘O</kbd
+            ><span
+              >Bereich wählen; erkannter Text oder Code landet in der
+              Zwischenablage.</span
+            >
+          </div>
+          <div>
+            <b>Bereich in T3 Code einfügen</b><kbd>⌃⌥⌘T</kbd
+            ><span
+              >Nimmt einen Bereich auf und fügt ihn als Anhang in den offenen
+              T3-Code-Chat ein.</span
+            >
+          </div>
+          <div>
+            <b>Bild aus Zwischenablage</b><kbd>⇧⌘V</kbd
+            ><span>Öffnet ein kopiertes Bild im Editor.</span>
+          </div>
+          <div>
+            <b>Bild öffnen</b><kbd>⌘O</kbd
+            ><span
+              >Öffnet PNG, JPEG, GIF, HEIC, TIFF oder WebP. Bilder lassen sich
+              auch in den Editor ziehen.</span
+            >
+          </div>
+        </div>
+        <p class="ds-note">
+          <strong>Windows:</strong> Verwende Strg statt ⌘, zum Beispiel
+          Strg+Umschalt+2 für einen Bereich. Die vollständigen Kürzel sind
+          anpassbar.
+        </p>
+        <p>
+          Nach der Aufnahme kannst du den Editor öffnen, sofort kopieren oder
+          speichern. Bereichsaufnahmen können stattdessen als kleine Vorschau
+          unten rechts erscheinen; von dort lässt sich das Bild kopieren,
+          speichern oder bearbeiten.
+        </p>
+      </section>
+      <section class="ds-section guide-section" id="editor">
+        <h2>Bearbeiten im Editor</h2>
+        <figure class="ds-figure">
+          <img
+            class="ds-shot"
+            src="images/editor.jpg"
+            width="1369"
+            height="896"
+            alt="Pivolo-Editor mit Werkzeugleiste und markierter Projektübersicht"
+            loading="lazy"
+          />
+          <figcaption>
+            Editor mit Pfeil, Rahmen, nummerierten Markierungen und Textmarker
+          </figcaption>
+        </figure>
+        <div class="guide-table">
+          <div>
+            <b>Auswahl</b><kbd>V</kbd
+            ><span
+              >Markierungen anklicken und verschieben. Auf leerer Fläche ziehen
+              wählt einen Bereich.</span
+            >
+          </div>
+          <div>
+            <b>Pfeil</b><kbd>A</kbd
+            ><span>Mit ⇧ in 45°-Schritten ausrichten.</span>
+          </div>
+          <div>
+            <b>Text</b><kbd>T</kbd
+            ><span>Klicken und tippen; Esc oder ⌘↩ beendet die Eingabe.</span>
+          </div>
+          <div>
+            <b>Rechteck / Oval</b><kbd>R / O</kbd
+            ><span
+              >Rahmen oder gefüllt; mit ⇧ quadratisch beziehungsweise
+              kreisrund.</span
+            >
+          </div>
+          <div>
+            <b>Linie / Freihand</b><kbd>L / D</kbd
+            ><span
+              >Durchgezogene oder gestrichelte Linie und geglättetes
+              Freihandzeichnen.</span
+            >
+          </div>
+          <div>
+            <b>Textmarker</b><kbd>H</kbd
+            ><span>Hebt Inhalt hervor und lässt Text lesbar.</span>
+          </div>
+          <div>
+            <b>Unkenntlich machen</b><kbd>B</kbd
+            ><span>Verpixelt oder weichzeichnet sensible Stellen.</span>
+          </div>
+          <div>
+            <b>Spotlight</b><kbd>S</kbd
+            ><span>Dunkelt alles außerhalb des ausgewählten Bereichs ab.</span>
+          </div>
+          <div>
+            <b>Zähler</b><kbd>C</kbd
+            ><span>Setzt automatisch nummerierte Punkte 1, 2, 3 …</span>
+          </div>
+        </div>
+        <p>
+          Unter der Werkzeugleiste stellst du Farbe, Stärke (S/M/L/XL) und
+          Werkzeugstil ein. Bei ausgewählter Markierung ändern die Knöpfe diese
+          Markierung.
+        </p>
+        <ul>
+          <li>
+            <strong>Zuschneiden:</strong> Mit Auswahl einen Bereich ziehen und
+            Enter drücken. Über
+            <em>Bearbeiten → Zuschnitt zurücksetzen</em> kommt das ganze Bild
+            zurück.
+          </li>
+          <li>
+            <strong>Widerrufen / Wiederholen:</strong> ⌘Z / ⇧⌘Z. Pfeiltasten
+            verschieben; ⇧ bewegt in größeren Schritten. ⌘D dupliziert, ⌫
+            löscht.
+          </li>
+          <li>
+            <strong>Zoom:</strong> ⌘+ / ⌘−; ⌘0 für 100 %, ⌘1 zum Einpassen.
+            Trackpad-Pinch und ⌘-Scrollrad funktionieren ebenfalls.
+          </li>
+          <li>
+            <strong>Farbe aufnehmen:</strong> Die Farbe unter dem Mauszeiger
+            steht oben rechts. Tab kopiert sie; ein Klick wechselt HEX, RGB, CSS
+            rgba() und OKLCH.
+          </li>
+        </ul>
+        <p class="ds-note">
+          <strong>Windows:</strong> Strg ersetzt ⌘. Fenster werden ohne Schatten
+          aufgenommen.
+        </p>
+      </section>
+      <section class="ds-section guide-section" id="ausgabe">
+        <h2>Kopieren, sichern und anpinnen</h2>
+        <ul>
+          <li>
+            <strong>Kopieren:</strong> ⇧⌘C oder Esc kopiert das bearbeitete Bild
+            und schließt den Editor. In der Ziel-App mit ⌘V einfügen.
+          </li>
+          <li>
+            <strong>Sichern:</strong> ⌘S speichert im eingestellten Ordner
+            (Vorgabe: Schreibtisch). Oberflächen werden als PNG, Fotos bei
+            automatischer Auswahl als JPEG gespeichert.
+          </li>
+          <li>
+            <strong>Sichern unter:</strong> ⇧⌘S wählt Speicherort und
+            PNG/JPEG-Format.
+          </li>
+          <li>
+            <strong>Anpinnen:</strong> ⌘P stellt das Bild rahmenlos über andere
+            Fenster. Rechtsklick bietet 50 %, 100 %, 200 %, Transparenz,
+            Kopieren und Schließen. Doppelklick oder Esc schließt das
+            Pin-Fenster.
+          </li>
+        </ul>
+        <p>
+          Die Dateinamen enthalten Datum und Uhrzeit. Retina-Bilder können beim
+          Speichern auf die angezeigte Größe verkleinert werden.
+        </p>
+      </section>
+      <section class="ds-section guide-section" id="erkennung">
+        <h2>Text und QR-Codes erkennen</h2>
+        <ul>
+          <li>
+            <strong>Direkt vom Bildschirm:</strong> ⌃⌥⌘O drücken und den Bereich
+            wählen.
+          </li>
+          <li>
+            <strong>Im Editor:</strong> Einen Bereich mit Auswahl markieren
+            (oder nichts auswählen für das ganze Bild) und ⇧⌘T drücken.
+          </li>
+        </ul>
+        <p>
+          Erkannter Text wird in Lesereihenfolge kopiert; Bar- und QR-Codes
+          ebenfalls. Auf macOS läuft die Erkennung lokal über Apple Vision.
+          Unter Windows nutzt Pivolo die installierten Windows-Sprachen. Unter
+          <em>Einstellungen → Erweitert → Texterkennung</em> kannst du
+          Zeilenumbrüche entfernen.
+        </p>
+      </section>
+      <section class="ds-section guide-section" id="t3">
+        <h2>Bereich in T3 Code einfügen</h2>
+        <p>
+          Mit ⌃⌥⌘T (Windows: Strg+Alt+T) nimmst du einen Bereich auf und fügst
+          das Bild als Anhang in den offenen T3-Code-Chat ein. Pivolo sendet
+          nichts ab.
+        </p>
+        <ol>
+          <li>
+            Kürzel drücken oder im Menü den Eintrag
+            <em>Bereich in T3 Code einfügen</em> wählen.
+          </li>
+          <li>Bereich aufziehen. Esc bricht ab.</li>
+          <li>
+            Pivolo holt das gefundene T3-Code-Fenster nach vorn und fügt das
+            Bild ein.
+          </li>
+        </ol>
+        <p>
+          Das Fenster wird am App- oder Fensternamen erkannt (Vorgabe „T3
+          Code“); der Name lässt sich in den Einstellungen ändern. Wenn mehrere
+          Fenster passen, gilt das vorderste. Im Chat muss die Eingabe aktiv
+          sein.
+        </p>
+        <p class="ds-note">
+          <strong>macOS:</strong> Beim ersten Mal die Freigabe unter
+          <em
+            >Systemeinstellungen → Datenschutz &amp; Sicherheit →
+            Bedienungshilfen</em
+          >
+          erlauben. Ohne Freigabe bleibt das Bild in der Zwischenablage und du
+          kannst es selbst mit ⌘V einfügen. <strong>Windows:</strong> Läuft T3
+          Code mit Administratorrechten, darf Pivolo dort nicht einfügen. Ist
+          das Chatfenster nicht verfügbar, bleibt das Bild ebenfalls in der
+          Zwischenablage.
+        </p>
+      </section>
+      <section class="ds-section guide-section" id="video">
+        <h2>Bildschirmaufnahme als Video</h2>
+        <p>
+          Videoaufnahme ist auf macOS 15 oder neuer sowie Windows 10 (ab Version
+          2004) und Windows 11 verfügbar.
+        </p>
+        <ol>
+          <li>
+            ⌃⌥⌘R drücken oder im Menü
+            <em>Bildschirmaufnahme (Bereich) …</em> wählen.
+          </li>
+          <li>
+            Bereich aufziehen. Der Rahmen und die Leiste mit
+            <strong>Start</strong> zeigen den Ausschnitt; noch läuft keine
+            Aufnahme.
+          </li>
+          <li>
+            Start anklicken oder erneut ⌃⌥⌘R drücken. Der Rahmen wird rot; die
+            Leiste zeigt die Laufzeit.
+          </li>
+          <li>
+            Mit <strong>Stopp</strong>, erneutem Kürzel oder Menüeintrag
+            beenden. Esc verwirft den Bereich vor dem Start.
+          </li>
+        </ol>
+        <p>
+          Das Video wird als MP4 (H.264, Retina-Auflösung, 30 Bilder pro
+          Sekunde, mit Mauszeiger, ohne Ton) im eingestellten Ordner
+          gespeichert. Rahmen und Steuerleiste sind nicht im Video. Windows
+          nutzt Strg+Alt+R.
+        </p>
+      </section>
+      <section class="ds-section guide-section" id="einstellungen">
+        <h2>Einstellungen</h2>
+        <p>
+          Über das Menüleistensymbol beziehungsweise Taskleistensymbol →
+          <em>Einstellungen</em>; auf macOS auch mit ⌘,.
+        </p>
+        <div class="ds-gallery">
+          <figure class="ds-figure">
+            <img
+              class="ds-shot"
+              src="images/settings-general.jpg"
+              width="1142"
+              height="1064"
+              alt="Pivolo-Einstellungen: Allgemein"
+              loading="lazy"
+            />
+            <figcaption>Allgemein</figcaption>
+          </figure>
+          <figure class="ds-figure">
+            <img
+              class="ds-shot"
+              src="images/settings-shortcuts.jpg"
+              width="1142"
+              height="1064"
+              alt="Pivolo-Einstellungen: Tastenkürzel"
+              loading="lazy"
+            />
+            <figcaption>Tastenkürzel</figcaption>
+          </figure>
+          <figure class="ds-figure">
+            <img
+              class="ds-shot"
+              src="images/settings-advanced.jpg"
+              width="1142"
+              height="1064"
+              alt="Pivolo-Einstellungen: Erweitert"
+              loading="lazy"
+            />
+            <figcaption>Erweitert</figcaption>
+          </figure>
+        </div>
+        <ul>
+          <li>
+            <strong>Allgemein:</strong> Speicherordner und Format,
+            Retina-Skalierung, Verhalten nach der Aufnahme, Bereich-Editor oder
+            Vorschau und Autostart.
+          </li>
+          <li>
+            <strong>Tastenkürzel:</strong> In ein Feld klicken und gewünschte
+            Kombination drücken. × entfernt sie; Esc bricht ab. Belegte
+            Kombinationen werden gemeldet. Für ⇧⌘3/⇧⌘4 zuerst die
+            Bildschirmfoto-Kürzel von macOS deaktivieren.
+          </li>
+          <li>
+            <strong>Updates:</strong> Pivolo sucht beim Start und danach täglich
+            nach Updates. Manuelle Suche ist jederzeit möglich; gefundene
+            Updates werden geprüft, installiert und Pivolo startet neu. Die
+            automatische Suche lässt sich abschalten.
+          </li>
+          <li>
+            <strong>Erweitert:</strong> Mauszeiger, Texterkennung, Esc-Verhalten
+            (kopieren/speichern), Editor-Vordergrund, Zoom und Farbformat.
+          </li>
+        </ul>
+        <p class="ds-note">
+          Die Update-Suche ruft eine kleine Versionsdatei von GitHub ab.
+          Aufnahmen, Einstellungen und Texterkennung werden nicht übertragen.
+          GitHub sieht beim Abruf deine IP-Adresse.
+        </p>
+      </section>
+      <section class="ds-section guide-section" id="kuerzel">
+        <h2>Wichtige Kürzel</h2>
+        <div class="guide-columns">
+          <div>
+            <h3>Überall</h3>
+            <p>
+              <kbd>⇧⌘1</kbd> Vollbild · <kbd>⇧⌘2</kbd> Bereich ·
+              <kbd>⌃⌥⌘O</kbd> Text erkennen · <kbd>⌃⌥⌘T</kbd> Bereich in T3 Code
+              · <kbd>⌃⌥⌘R</kbd> Videoaufnahme.
+            </p>
+          </div>
+          <div>
+            <h3>Im Editor</h3>
+            <p>
+              <kbd>V A T R O L D H B S C</kbd> Werkzeuge ·
+              <kbd>⇧⌘C</kbd> kopieren · <kbd>⌘S</kbd> sichern ·
+              <kbd>⌘P</kbd> anpinnen · <kbd>⌘Z</kbd> widerrufen ·
+              <kbd>Enter</kbd> zuschneiden · <kbd>Tab</kbd> Farbe kopieren.
+            </p>
+          </div>
+        </div>
+        <p>
+          Unter Windows ersetzt Strg das ⌘-Symbol. Alle globalen Kürzel sind
+          frei belegbar.
+        </p>
+      </section>
+      <section class="ds-section guide-section" id="probleme">
+        <h2>Fragen und Probleme</h2>
+        <details>
+          <summary>
+            Die Bildschirmaufnahme-Freigabe wird wiederholt verlangt.
+          </summary>
+          <p>
+            Entferne Pivolo in
+            <em
+              >Datenschutz &amp; Sicherheit → Bildschirm- &amp;
+              Systemaudioaufnahme</em
+            >
+            mit −, erlaube es erneut und starte die App neu.
+          </p>
+        </details>
+        <details>
+          <summary>Ein Kürzel reagiert nicht.</summary>
+          <p>
+            Eine andere App verwendet möglicherweise dieselbe Kombination. Wähle
+            in Pivolo unter Tastenkürzel eine andere Kombination.
+          </p>
+        </details>
+        <details>
+          <summary>Das Menüleistensymbol ist nicht zu sehen.</summary>
+          <p>
+            macOS blendet Symbole bei wenig Platz aus, etwa hinter der
+            Kameraaussparung. Die Kürzel funktionieren weiter; Einstellungen
+            öffnest du mit ⌘, sobald ein Pivolo-Fenster aktiv ist.
+          </p>
+        </details>
+        <details>
+          <summary>Sendet Pivolo meine Bildschirmfotos ins Internet?</summary>
+          <p>
+            Nein. Aufnahmen, Texterkennung und Einstellungen bleiben lokal. Die
+            einzige Verbindung ist die abschaltbare Update-Suche nach einer
+            kleinen Versionsdatei auf GitHub.
+          </p>
+        </details>
+        <details>
+          <summary>Windows zeigt eine Sicherheitswarnung.</summary>
+          <p>
+            Wähle im Dialog <em>Weitere Informationen → Trotzdem ausführen</em>.
+            Der Installer ist nicht mit einem gekauften Zertifikat signiert.
+          </p>
+        </details>
+      </section>
+      <section class="ds-section guide-bottom">
+        <h2>Bereit?</h2>
+        <p>Zurück zur Produktseite und den Downloads.</p>
+        <a class="ds-btn" href="index.html#laden">Pivolo laden</a>
+      </section>
+    </main>
+    <footer class="ds-wrap ds-foot">
+      <span
+        >© 2026 Jascha Coenen · <a href="license.txt">MIT-Lizenz</a> ·
+        <a href="https://github.com/JaschaaON/shot-villa">Quellcode</a></span
+      ><span
+        ><a href="impressum.html">Impressum</a> ·
+        <a href="datenschutz.html">Datenschutz</a></span
+      >
+    </footer>
+  </body>
+</html>

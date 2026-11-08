@@ -20,9 +20,7 @@ pub fn recognize(image: &Image) -> Result<Recognition, OcrError> {
 }
 
 fn with_restart_hint(OcrError(message): OcrError) -> OcrError {
-    OcrError(format!(
-        "{message} Bitte Shot-VILLA beenden und neu starten."
-    ))
+    OcrError(format!("{message} Bitte Pivolo beenden und neu starten."))
 }
 
 fn detect(image: &Image) -> Result<Recognition, OcrError> {
@@ -89,7 +87,7 @@ mod tests {
         let error = with_restart_hint(OcrError("Modell fehlt.".into()));
         assert_eq!(
             error.to_string(),
-            "Texterkennung fehlgeschlagen: Modell fehlt. Bitte Shot-VILLA beenden und neu starten."
+            "Texterkennung fehlgeschlagen: Modell fehlt. Bitte Pivolo beenden und neu starten."
         );
     }
 }

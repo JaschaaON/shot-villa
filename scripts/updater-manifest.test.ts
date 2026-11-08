@@ -9,8 +9,8 @@ describe("Update-Manifest", () => {
   });
 
   it("verlinkt Dateien des Releases mit kodiertem Namen", () => {
-    expect(assetUrl("JaschaaON/shot-villa", "v0.3.3", "Shot-VILLA 1.exe")).toBe(
-      "https://github.com/JaschaaON/shot-villa/releases/download/v0.3.3/Shot-VILLA%201.exe"
+    expect(assetUrl("JaschaaON/shot-villa", "v0.3.3", "Pivolo 1.exe")).toBe(
+      "https://github.com/JaschaaON/shot-villa/releases/download/v0.3.3/Pivolo%201.exe"
     );
   });
 

@@ -144,7 +144,7 @@ fn background_check(app: &AppHandle) {
             if first_time {
                 output::notify(
                     app,
-                    "Update für Shot-VILLA",
+                    "Update für Pivolo",
                     &format!(
                         "Version {} ist verfügbar. Öffne das Menü und wähle „Update installieren“.",
                         info.version
@@ -152,7 +152,7 @@ fn background_check(app: &AppHandle) {
                 );
             }
         }
-        Ok(None) => log::info!("Shot-VILLA ist auf dem neuesten Stand"),
+        Ok(None) => log::info!("Pivolo ist auf dem neuesten Stand"),
         Err(error) => log::info!("Update-Suche ohne Ergebnis: {error}"),
     }
 }

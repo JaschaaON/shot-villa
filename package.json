@@ -16,7 +16,7 @@
     "rust:fmt": "cargo fmt --manifest-path src-tauri/Cargo.toml --check",
     "rust:clippy": "cargo clippy --manifest-path src-tauri/Cargo.toml --all-targets -- -D warnings",
     "rust:test": "cargo test --manifest-path src-tauri/Cargo.toml",
-    "check": "pnpm lint && pnpm typecheck && pnpm rust:fmt && pnpm rust:clippy && pnpm rust:clippy:windows && pnpm test && pnpm rust:test",
+    "check": "node --experimental-strip-types scripts/check.ts",
     "prepare": "lefthook install",
     "rust:clippy:windows": "PATH=\"/opt/homebrew/opt/llvm/bin:$PATH\" cargo clippy --manifest-path src-tauri/Cargo.toml --target x86_64-pc-windows-msvc --all-targets -- -D warnings",
     "notices": "node --experimental-strip-types scripts/notices.ts"

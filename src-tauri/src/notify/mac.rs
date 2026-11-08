@@ -1,5 +1,5 @@
 //! Mitteilungen über das UserNotifications-Framework. Ein eigener Delegate
-//! sorgt dafür, dass sie auch erscheinen, während ein Shot-VILLA-Fenster aktiv ist.
+//! sorgt dafür, dass sie auch erscheinen, während ein Pivolo-Fenster aktiv ist.
 
 use std::path::Path;
 

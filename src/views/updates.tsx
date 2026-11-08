@@ -25,7 +25,7 @@ const statusText = (state: State): string => {
       return "Suche nach Updates …";
     }
     case "current": {
-      return "Shot-VILLA ist auf dem neuesten Stand.";
+      return "Pivolo ist auf dem neuesten Stand.";
     }
     case "installing": {
       const detail = state.progress
@@ -151,7 +151,7 @@ export const Updates = ({ autoCheck, onAutoCheckChange }: Props) => {
       </div>
       <p className="note">
         Eine neue Version wird heruntergeladen, geprüft und installiert; danach
-        startet Shot-VILLA von selbst neu. Bei der Suche lädt die App nur eine
+        startet Pivolo von selbst neu. Bei der Suche lädt die App nur eine
         kleine Versionsdatei von github.com. Aufnahmen und persönliche Daten
         werden nicht übertragen; GitHub sieht wie bei jedem Abruf deine
         IP-Adresse. Das Update wird vor der Installation anhand einer Signatur

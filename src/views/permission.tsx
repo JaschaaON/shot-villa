@@ -29,16 +29,13 @@ export const Permission = () => {
     <main className="permission">
       <h1>Bildschirmaufnahme erlauben</h1>
       <p>
-        Shot-VILLA braucht die Berechtigung „Bildschirm- und
-        Systemaudioaufnahme“, sonst enthalten Aufnahmen nur den
-        Schreibtischhintergrund.
+        Pivolo braucht die Berechtigung „Bildschirm- und Systemaudioaufnahme“,
+        sonst enthalten Aufnahmen nur den Schreibtischhintergrund.
       </p>
       <ol>
         <li>Systemeinstellungen öffnen.</li>
-        <li>Shot-VILLA in der Liste einschalten.</li>
-        <li>
-          Shot-VILLA neu starten – macOS übernimmt die Freigabe erst danach.
-        </li>
+        <li>Pivolo in der Liste einschalten.</li>
+        <li>Pivolo neu starten – macOS übernimmt die Freigabe erst danach.</li>
       </ol>
       <div className="actions">
         <button

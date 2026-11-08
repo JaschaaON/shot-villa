@@ -1,6 +1,6 @@
 {
   "$schema": "https://schema.tauri.app/config/2",
-  "productName": "Shot-VILLA",
+  "productName": "Pivolo",
   "version": "0.3.7",
   "identifier": "de.villalife.shot-villa",
   "build": {

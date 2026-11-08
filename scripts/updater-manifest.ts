@@ -36,7 +36,7 @@ export const buildManifest = ({
   macos,
   windows,
 }: ManifestInput): Manifest => ({
-  notes: `Shot-VILLA ${version}`,
+  notes: `Pivolo ${version}`,
   platforms: {
     "darwin-aarch64": macos,
     "darwin-x86_64": macos,

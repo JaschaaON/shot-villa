@@ -374,9 +374,9 @@ export const Settings = () => {
               </p>
             ) : (
               <p className="note">
-                Die Druck-Taste belegt Windows selbst. Soll Shot-VILLA sie
-                nutzen, schalte unter Einstellungen → Barrierefreiheit →
-                Tastatur „Bildschirmausschnitt mit der Druck-Taste öffnen“ aus.
+                Die Druck-Taste belegt Windows selbst. Soll Pivolo sie nutzen,
+                schalte unter Einstellungen → Barrierefreiheit → Tastatur
+                „Bildschirmausschnitt mit der Druck-Taste öffnen“ aus.
               </p>
             )}
           </>
@@ -401,22 +401,22 @@ export const Settings = () => {
               />
             </Row>
             <p className="note">
-              Mit dem Kürzel wählst du einen Bildschirmbereich. Shot-VILLA legt
-              ihn in die Zwischenablage, holt das offene T3-Code-Fenster nach
-              vorn und fügt das Bild dort ein ({isMac ? "⌘V" : "Strg+V"}). Es
+              Mit dem Kürzel wählst du einen Bildschirmbereich. Pivolo legt ihn
+              in die Zwischenablage, holt das offene T3-Code-Fenster nach vorn
+              und fügt das Bild dort ein ({isMac ? "⌘V" : "Strg+V"}). Es
               erscheint als Anhang im Eingabefeld; abgeschickt wird nichts.
             </p>
             <p className="note">
               Das Fenster wird am Namen der App oder des Fensters erkannt. „T3
               Code“ passt auf die Desktop-App und auf einen Browser-Tab, dessen
               Seitentitel so beginnt. Gibt es mehrere Treffer, gilt das
-              vorderste Fenster. Findet Shot-VILLA keines, bleibt das Bild in
-              der Zwischenablage.
+              vorderste Fenster. Findet Pivolo keines, bleibt das Bild in der
+              Zwischenablage.
             </p>
             <p className="note">
               {isMac
-                ? "Beim ersten Mal fragt macOS nach der Freigabe unter Systemeinstellungen → Datenschutz & Sicherheit → Bedienungshilfen. Ohne sie kann Shot-VILLA das Einfügen nicht auslösen."
-                : "Läuft T3 Code mit Administratorrechten, kann Shot-VILLA dort nichts einfügen."}
+                ? "Beim ersten Mal fragt macOS nach der Freigabe unter Systemeinstellungen → Datenschutz & Sicherheit → Bedienungshilfen. Ohne sie kann Pivolo das Einfügen nicht auslösen."
+                : "Läuft T3 Code mit Administratorrechten, kann Pivolo dort nichts einfügen."}
             </p>
           </>
         ) : null}

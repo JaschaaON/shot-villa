@@ -1,7 +1,7 @@
 # Lizenzen der Drittsoftware
 
-Shot-VILLA © 2026 Jascha Coenen steht unter der MIT-Lizenz (siehe LICENSE).
-Shot-VILLA enthält 628 Bibliotheken anderer Autorinnen und Autoren.
+Pivolo © 2026 Jascha Coenen steht unter der MIT-Lizenz (siehe LICENSE).
+Pivolo enthält 628 Bibliotheken anderer Autorinnen und Autoren.
 Ihre Lizenzen folgen hier; Pakete mit gleichem Lizenztext stehen zusammen.
 Diese Datei wird mit `pnpm notices` erzeugt.
 

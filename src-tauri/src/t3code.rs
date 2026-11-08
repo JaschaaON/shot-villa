@@ -1,7 +1,7 @@
 //! Bereich aufnehmen und direkt ins offene T3-Code-Fenster einfügen.
 //!
 //! T3 Code hängt ein Bild an die Nachricht an, sobald es im Fenster aus der
-//! Zwischenablage eingefügt wird (⌘V bzw. Strg+V). Shot-VILLA legt die
+//! Zwischenablage eingefügt wird (⌘V bzw. Strg+V). Pivolo legt die
 //! Aufnahme deshalb in die Zwischenablage, holt das T3-Code-Fenster nach vorn
 //! und löst dort das Einfügen aus. Abgesendet wird nichts.
 
@@ -24,7 +24,7 @@ enum PasteError {
     /// macOS lässt Tastendrücke nur mit Freigabe unter „Bedienungshilfen“ zu.
     #[cfg(target_os = "macos")]
     #[error(
-        "Shot-VILLA braucht die Freigabe unter Datenschutz & Sicherheit → Bedienungshilfen. Danach Shot-VILLA beenden und neu öffnen"
+        "Pivolo braucht die Freigabe unter Datenschutz & Sicherheit → Bedienungshilfen. Danach Pivolo beenden und neu öffnen"
     )]
     NoPermission,
     #[error("Das Fenster ließ sich nicht nach vorn holen")]
