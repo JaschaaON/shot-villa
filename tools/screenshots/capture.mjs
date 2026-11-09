@@ -16,6 +16,8 @@
  *                 (U+2318, U+21E7, U+2325, U+2303), falls dem Rechner solche
  *                 Zeichen fehlen (Linux), z. B. Noto Sans Symbols 2 (⌘ ⇧ ⌥);
  *                 ⌃ fehlt dort und muss aus einer anderen Quelle kommen.
+ *   SAMPLE        anderes Beispielbild (HTML, 1600 × 1068, mit den Kennungen aus
+ *                 sample.html).
  * Ohne Namen entstehen alle Bilder.
  */
 import { spawn } from "node:child_process";
@@ -169,7 +171,7 @@ const serve = (samplePng) =>
         }
         if (url.pathname === "/sample.html") {
           response.writeHead(200, { "content-type": TYPES[".html"] });
-          response.end(await readFile(path.join(here, "sample.html")));
+          response.end(await readFile(process.env.SAMPLE ? path.resolve(process.env.SAMPLE) : path.join(here, "sample.html")));
           return;
         }
         const file = path.join(dist, url.pathname === "/" ? "index.html" : url.pathname);
@@ -330,13 +332,22 @@ const drawEditor = async (cdp, boxes, options = {}) => {
   if (process.env.DEBUG) {
     await cdp.evaluate(`window.__pm = 0; document.querySelector("canvas.canvas").addEventListener("pointermove", () => { window.__pm += 1; });`);
   }
-  await mouse(cdp, "mouseMoved", bx - 3, by);
-  await sleep(120);
-  await mouse(cdp, "mouseMoved", bx, by);
-  await sleep(300);
+  // Die Pipette braucht manchmal mehrere Mausbewegungen; so lange wiederholen, bis eine Farbe steht
+  for (let attempt = 0; attempt < 6; attempt += 1) {
+    await mouse(cdp, "mouseMoved", bx - 3 + attempt, by);
+    await sleep(120);
+    await mouse(cdp, "mouseMoved", bx + attempt, by + 1);
+    await sleep(250);
+    if (await cdp.evaluate(`document.querySelector(".statusbar button")?.innerText.includes("#") ?? false`)) {
+      break;
+    }
+  }
   if (process.env.DEBUG) {
     process.stdout.write(`pm=${await cdp.evaluate("window.__pm")} status=${await cdp.evaluate("document.querySelector('.statusbar').innerText")}\n`);
     process.stdout.write(`${bx},${by} ${await cdp.evaluate(`document.elementFromPoint(${bx}, ${by})?.tagName`)} ${JSON.stringify(bar)}\n`);
+  }
+  if (marks && !(await cdp.evaluate(`document.querySelector(".statusbar button")?.innerText.includes("#") ?? false`))) {
+    process.stderr.write("Warnung: Die Pipette zeigt keine Farbe; Bild neu erzeugen.\n");
   }
   return geometry;
 };

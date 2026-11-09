@@ -1140,22 +1140,22 @@ code {
     animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
   }
   18.75% {
-    transform: translate(1064px, 615px);
+    transform: translate(1065px, 619px);
     opacity: 1;
     animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
   }
   27.5% {
-    transform: translate(1219px, 615px);
+    transform: translate(1231px, 619px);
     opacity: 1;
     animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
   }
   32.5% {
-    transform: translate(1738px, 737px);
+    transform: translate(1739px, 743px);
     opacity: 1;
     animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
   }
   44.167% {
-    transform: translate(2199px, 968px);
+    transform: translate(2198px, 975px);
     opacity: 1;
     animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
   }
@@ -1165,7 +1165,7 @@ code {
     animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
   }
   59.167% {
-    transform: translate(1669px, 615px);
+    transform: translate(1663px, 617px);
     opacity: 1;
     animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
   }
@@ -1362,4 +1362,148 @@ code {
 .ds-legal {
   position: relative;
   z-index: 1;
+}
+
+/* ---------- Bilder vergrößern (lightbox.js) ---------- */
+.is-zoomable {
+  cursor: zoom-in;
+  transition: border-color 0.15s ease;
+}
+
+.is-zoomable:hover {
+  border-color: var(--ferrite);
+}
+
+.is-zoomable:focus-visible {
+  outline: 1px solid var(--snow);
+  outline-offset: 3px;
+}
+
+.ds-figure:not(.ds-hero-shot):has(.is-zoomable) {
+  position: relative;
+}
+
+.ds-figure:not(.ds-hero-shot):has(.is-zoomable)::after {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  padding: 3px 10px;
+  border: 1px solid var(--ash);
+  border-radius: 9999px;
+  background: rgb(8 9 10 / 82%);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  color: var(--mist);
+  content: "Vergrößern";
+  font: 510 11px/1.6 var(--font);
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(-4px);
+  transition:
+    opacity 0.18s ease,
+    transform 0.18s ease;
+}
+
+.ds-figure:not(.ds-hero-shot):has(.is-zoomable):hover::after {
+  opacity: 1;
+  transform: none;
+}
+
+.lb {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+}
+
+.lb-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgb(3 4 4 / 84%);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  opacity: 0;
+  transition: opacity 0.35s ease;
+}
+
+.lb.is-open .lb-backdrop {
+  opacity: 1;
+}
+
+.lb-img {
+  position: fixed;
+  border-radius: 8px;
+  box-shadow: 0 30px 90px rgb(0 0 0 / 60%);
+  cursor: zoom-out;
+  will-change: transform;
+}
+
+.lb-bar {
+  position: fixed;
+  right: 0;
+  bottom: 18px;
+  left: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  color: var(--mist);
+  font-size: 14px;
+  opacity: 0;
+  transition: opacity 0.3s ease 0.15s;
+}
+
+.lb.is-open .lb-bar {
+  opacity: 1;
+}
+
+.lb-count {
+  color: var(--fog);
+  font: 400 12px var(--mono);
+}
+
+.lb-cap {
+  max-width: 50vw;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.lb-nav,
+.lb-close {
+  display: grid;
+  width: 36px;
+  height: 36px;
+  place-items: center;
+  border: 1px solid var(--ash);
+  border-radius: 50%;
+  background: rgb(20 21 22 / 90%);
+  color: var(--snow);
+  cursor: pointer;
+  font: 400 18px/1 var(--font);
+}
+
+.lb-nav:hover,
+.lb-close:hover {
+  border-color: var(--ferrite);
+  background: var(--smoke);
+}
+
+.lb-close {
+  position: fixed;
+  top: 18px;
+  right: 18px;
+  opacity: 0;
+  transition: opacity 0.3s ease 0.15s;
+}
+
+.lb.is-open .lb-close {
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lb-backdrop,
+  .lb-bar,
+  .lb-close {
+    transition: none;
+  }
 }
