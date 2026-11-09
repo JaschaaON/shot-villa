@@ -46,6 +46,7 @@ pub fn show_editor(app: &AppHandle, always_on_top: bool) -> tauri::Result<Webvie
             .title("Pivolo")
             .inner_size(1100.0, 720.0)
             .min_inner_size(560.0, 360.0)
+            .theme(Some(tauri::Theme::Dark))
             .visible(false)
             .center();
         // Werkzeugleiste in der Titelleiste wie bei nativen Mac-Apps.
@@ -74,7 +75,8 @@ pub fn show_settings(app: &AppHandle, tab: Option<&str>) -> tauri::Result<()> {
         });
         WebviewWindowBuilder::new(app, SETTINGS, url)
             .title("Einstellungen")
-            .inner_size(600.0, 560.0)
+            .inner_size(820.0, 580.0)
+            .theme(Some(tauri::Theme::Dark))
             .resizable(false)
             .minimizable(false)
             .visible(false)
@@ -90,6 +92,7 @@ pub fn show_welcome(app: &AppHandle) -> tauri::Result<()> {
         WebviewWindowBuilder::new(app, WELCOME, WebviewUrl::default())
             .title("Willkommen bei Pivolo")
             .inner_size(520.0, 500.0)
+            .theme(Some(tauri::Theme::Dark))
             .resizable(false)
             .minimizable(false)
             .maximizable(false)
@@ -105,6 +108,7 @@ pub fn show_permission(app: &AppHandle) -> tauri::Result<()> {
         WebviewWindowBuilder::new(app, PERMISSION, WebviewUrl::default())
             .title("Bildschirmaufnahme erlauben")
             .inner_size(460.0, 360.0)
+            .theme(Some(tauri::Theme::Dark))
             .resizable(false)
             .minimizable(false)
             .visible(false)

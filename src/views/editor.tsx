@@ -40,7 +40,14 @@ import { fitZoom } from "../editor/zoom";
 import { isMac, keys } from "../platform";
 import { useSettings } from "../settings/use-settings";
 import { fire } from "../ui/fire";
-import { CopyIcon, CropIcon, OcrIcon, PinIcon, SaveIcon } from "../ui/icons";
+import {
+  CropIcon,
+  OcrIcon,
+  PinIcon,
+  RedoIcon,
+  SettingsIcon,
+  UndoIcon,
+} from "../ui/icons";
 
 const STAGE_PADDING = 32;
 const ZOOM_STEP = 1.25;
@@ -405,41 +412,76 @@ const Workspace = ({ shot, settings }: WorkspaceProps) => {
   return (
     <div className="editor">
       <header className="toolbar" data-tauri-drag-region>
-        <div className="group">
-          <button
-            onClick={fire(copyImage)}
-            title={`Kopieren (${keys("⇧⌘C")}, Esc)`}
-            type="button"
-          >
-            <CopyIcon />
-          </button>
-          <button
-            onClick={fire(saveImage)}
-            title={`Sichern (${keys("⌘S")})`}
-            type="button"
-          >
-            <SaveIcon />
-          </button>
-          <button
-            onClick={fire(pin)}
-            title={`Anpinnen (${keys("⌘P")})`}
-            type="button"
-          >
-            <PinIcon />
-          </button>
-          <button
-            onClick={fire(recognize)}
-            title={`Text erkennen (${keys("⇧⌘T")})`}
-            type="button"
-          >
-            <OcrIcon />
-          </button>
+        <div className="crumb">
+          <span>Pivolo</span>
+          <span>/</span>
+          <strong>Aufnahme</strong>
         </div>
-        <div className="group tools">
+        <span className="toolbar-spacer" data-tauri-drag-region />
+        <button
+          className="icon"
+          disabled={state.past.length === 0}
+          onClick={() => {
+            dispatch({ type: "undo" });
+          }}
+          title={`Widerrufen (${keys("⌘Z")})`}
+          type="button"
+        >
+          <UndoIcon />
+        </button>
+        <button
+          className="icon"
+          disabled={state.future.length === 0}
+          onClick={() => {
+            dispatch({ type: "redo" });
+          }}
+          title={`Wiederholen (${keys("⇧⌘Z")})`}
+          type="button"
+        >
+          <RedoIcon />
+        </button>
+        <span className="vsep" />
+        <button
+          className="icon"
+          onClick={fire(pin)}
+          title={`Anpinnen (${keys("⌘P")})`}
+          type="button"
+        >
+          <PinIcon />
+        </button>
+        <button
+          className="icon"
+          onClick={fire(recognize)}
+          title={`Text erkennen (${keys("⇧⌘T")})`}
+          type="button"
+        >
+          <OcrIcon />
+        </button>
+        <span className="vsep" />
+        <button
+          className="ghost"
+          onClick={fire(saveImage)}
+          title={`Sichern (${keys("⌘S")})`}
+          type="button"
+        >
+          Sichern
+        </button>
+        <button
+          className="primary"
+          onClick={fire(copyImage)}
+          title={`Kopieren (${keys("⇧⌘C")}, Esc)`}
+          type="button"
+        >
+          Kopieren
+          <kbd>{keys("⇧⌘C")}</kbd>
+        </button>
+      </header>
+      <div className="workspace">
+        <nav aria-label="Werkzeuge" className="rail">
           {TOOLS.map((info) => (
             <button
               aria-pressed={state.tool === info.tool}
-              className={state.tool === info.tool ? "active" : undefined}
+              className={state.tool === info.tool ? "icon active" : "icon"}
               key={info.tool}
               onClick={() => {
                 dispatch({ tool: info.tool, type: "setTool" });
@@ -448,117 +490,125 @@ const Workspace = ({ shot, settings }: WorkspaceProps) => {
               type="button"
             >
               {info.icon}
+              <span className="key">{info.key.toUpperCase()}</span>
             </button>
           ))}
-          {state.selection ? (
-            <button
-              onClick={() => {
-                dispatch({ type: "crop" });
-              }}
-              title="Zuschneiden (↩)"
-              type="button"
-            >
-              <CropIcon />
-            </button>
-          ) : null}
+          <hr />
+          <button
+            className="icon"
+            disabled={!state.selection}
+            onClick={() => {
+              dispatch({ type: "crop" });
+            }}
+            title="Zuschneiden (↩)"
+            type="button"
+          >
+            <CropIcon />
+          </button>
+          <span className="rail-spacer" />
+          <button
+            className="icon"
+            onClick={fire(async () => {
+              await runAction("settings");
+            })}
+            title={`Einstellungen (${keys("⌘,")})`}
+            type="button"
+          >
+            <SettingsIcon />
+          </button>
+        </nav>
+        <div className="options-col">
+          <Options dispatch={dispatch} state={state} />
         </div>
-        <span className="toolbar-spacer" data-tauri-drag-region />
-        <div className="info">
-          <button
-            aria-label={`Farbe ${colorText}`}
-            className="info-item"
-            onClick={() => {
-              setFormatOverride(nextColorFormat(colorFormat));
-            }}
-            title="Klicken wechselt das Format, Tab kopiert"
-            type="button"
-          >
-            <span
-              className="swatch"
-              style={{
-                background: cursorColor
-                  ? formatColor(cursorColor, "hex")
-                  : "transparent",
-              }}
-            />
-            <span>
-              <strong>{colorText}</strong>
-              <small>Tab kopiert</small>
-            </span>
-          </button>
-          <button
-            aria-label={`${dimension.label} ${dimension.value}`}
-            className="info-item"
-            onClick={() => {
-              setShowPixels(!showPixels);
-            }}
-            title="Klicken wechselt zwischen Punkten und Pixeln"
-            type="button"
-          >
-            <span>
-              <strong>{dimension.value}</strong>
-              <small>{dimension.label}</small>
-            </span>
-          </button>
-          <button
-            aria-label={`Zoom ${Math.round(zoom * 100)} %`}
-            className="info-item"
-            onClick={() => {
-              setZoomMode(zoomMode === "fit" ? 1 : "fit");
-            }}
-            title="Klicken wechselt zwischen 100 % und Einpassen"
-            type="button"
-          >
-            <span>
-              <strong>{Math.round(zoom * 100)} %</strong>
-              <small>Zoom</small>
-            </span>
-          </button>
-        </div>
-      </header>
-      <Options dispatch={dispatch} state={state} />
-      <main
-        className="stage"
-        onWheel={(event) => {
-          if (event.ctrlKey || event.metaKey) {
-            event.preventDefault();
-            changeZoom(Math.exp(-event.deltaY * 0.01));
-          }
-        }}
-        ref={stageRef}
-      >
-        <div className="canvas-wrap">
-          <EditorCanvas
-            dispatch={dispatch}
-            image={shot.image}
-            onCursorColor={setCursorColor}
-            pixels={pixels}
-            state={state}
-            textBounds={textBounds}
-            viewScale={viewScale}
-          />
-          {editing?.kind === "text" ? (
-            <TextEditor
-              crop={doc.crop}
-              key={editing.id}
-              mark={editing}
-              onFinish={(text) => {
-                dispatch({ text, type: "finishEditing" });
-              }}
-              scale={doc.scale}
+        <main
+          className="stage"
+          onWheel={(event) => {
+            if (event.ctrlKey || event.metaKey) {
+              event.preventDefault();
+              changeZoom(Math.exp(-event.deltaY * 0.01));
+            }
+          }}
+          ref={stageRef}
+        >
+          <div className="canvas-wrap">
+            <EditorCanvas
+              dispatch={dispatch}
+              image={shot.image}
+              onCursorColor={setCursorColor}
+              pixels={pixels}
+              state={state}
+              textBounds={textBounds}
               viewScale={viewScale}
             />
-          ) : null}
-        </div>
-        {toast === null ? null : <div className="toast">{toast}</div>}
-      </main>
+            {editing?.kind === "text" ? (
+              <TextEditor
+                crop={doc.crop}
+                key={editing.id}
+                mark={editing}
+                onFinish={(text) => {
+                  dispatch({ text, type: "finishEditing" });
+                }}
+                scale={doc.scale}
+                viewScale={viewScale}
+              />
+            ) : null}
+          </div>
+          {toast === null ? null : <div className="toast">{toast}</div>}
+        </main>
+      </div>
+      <footer className="statusbar">
+        <button
+          aria-label={`Farbe ${colorText}`}
+          onClick={() => {
+            setFormatOverride(nextColorFormat(colorFormat));
+          }}
+          title="Klicken wechselt das Format, Tab kopiert"
+          type="button"
+        >
+          <span
+            className="swatch"
+            style={{
+              background: cursorColor
+                ? formatColor(cursorColor, "hex")
+                : "transparent",
+            }}
+          />
+          {colorText}
+          <span className="hint-tab">Tab kopiert</span>
+        </button>
+        <button
+          aria-label={`${dimension.label} ${dimension.value}`}
+          onClick={() => {
+            setShowPixels(!showPixels);
+          }}
+          title="Klicken wechselt zwischen Punkten und Pixeln"
+          type="button"
+        >
+          {dimension.value}
+        </button>
+        <button
+          aria-label={`Zoom ${Math.round(zoom * 100)} %`}
+          onClick={() => {
+            setZoomMode(zoomMode === "fit" ? 1 : "fit");
+          }}
+          title="Klicken wechselt zwischen 100 % und Einpassen"
+          type="button"
+        >
+          {Math.round(zoom * 100)} %
+        </button>
+        <span className="count">Markierungen {doc.marks.length}</span>
+      </footer>
     </div>
   );
 };
 
 const Empty = () => (
   <div className="editor">
-    <header className="toolbar" data-tauri-drag-region />
+    <header className="toolbar" data-tauri-drag-region>
+      <div className="crumb">
+        <span>Pivolo</span>
+      </div>
+    </header>
     <main className="stage">
       <div className="empty">
         <p>Noch keine Aufnahme.</p>

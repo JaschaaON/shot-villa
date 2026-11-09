@@ -1,0 +1,82 @@
+<!doctype html>
+<!-- Beispiel-Bildschirmfoto „Nordlicht“ (erfundene Daten) für die Produktbilder von Pivolo. -->
+<html lang="de">
+  <head>
+    <meta charset="utf-8" />
+    <style>
+      @font-face { font-family: "Inter Variable"; src: url("/inter.woff2") format("woff2-variations"); font-weight: 100 900; }
+      * { box-sizing: border-box; margin: 0; }
+      body {
+        width: 1600px; height: 1068px; display: flex; overflow: hidden;
+        background: #f2f3f7; color: #15171c;
+        font-family: "Inter Variable", Inter, -apple-system, "Segoe UI", sans-serif;
+      }
+      aside { width: 230px; background: #12141a; color: #aeb4c0; padding: 28px 22px; flex: none; }
+      .logo { display: flex; align-items: center; gap: 14px; color: #fff; font-size: 24px; font-weight: 700; margin-bottom: 44px; }
+      .logo i { width: 38px; height: 38px; border-radius: 11px; background: linear-gradient(135deg, #4f8cff, #6f5cff 55%, #42d6b0); }
+      nav a { display: block; padding: 13px 16px; border-radius: 10px; font-size: 19px; margin-bottom: 8px; }
+      nav a.on { background: #232733; color: #fff; }
+      main { flex: 1; padding: 36px 40px; display: flex; flex-direction: column; gap: 28px; }
+      h1 { font-size: 40px; letter-spacing: -0.02em; }
+      .sub { color: #747a89; font-size: 21px; margin-top: 6px; }
+      .kpis { display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px; }
+      .card { background: #fff; border-radius: 20px; padding: 26px 28px; }
+      .lower .card { display: flex; flex-direction: column; }
+      .kpi .t { color: #5d6370; font-size: 20px; }
+      .kpi .v { font-size: 46px; font-weight: 700; letter-spacing: -0.02em; margin: 6px 0 8px; }
+      .kpi .d { font-size: 20px; font-weight: 600; display: inline-block; padding: 1px 4px; }
+      .up { color: #1a9d57; } .down { color: #d9363e; }
+      .lower { display: grid; grid-template-columns: 1.35fr 1fr; gap: 28px; flex: 1; min-height: 0; }
+      h2 { font-size: 24px; font-weight: 650; margin-bottom: 18px; }
+      .chart { display: flex; align-items: flex-end; gap: 24px; flex: 1; padding-top: 20px; }
+      .chart b { flex: 1; border-radius: 10px 10px 0 0; background: linear-gradient(180deg, #4f8cff, #6f5cff); }
+      .chart b.alt { background: linear-gradient(180deg, #42d6b0, #2f8f86); }
+      ul { list-style: none; padding: 0; }
+      li { display: flex; justify-content: space-between; align-items: center; padding: 16px 0; border-bottom: 1px solid #eceef3; font-size: 21px; }
+      li:last-child { border: none; }
+      .pill { font-size: 16px; font-weight: 600; padding: 4px 12px; border-radius: 999px; }
+      .ok { background: #e1f5ea; color: #1a8a4f; } .run { background: #fdf0d9; color: #b86e00; } .plan { background: #fdf0d9; color: #b86e00; }
+    </style>
+  </head>
+  <body>
+    <aside>
+      <div class="logo"><i></i>Nordlicht</div>
+      <nav>
+        <a class="on">Übersicht</a><a>Projekte</a><a>Aufgaben</a><a>Berichte</a><a>Team</a><a>Einstellungen</a>
+      </nav>
+    </aside>
+    <main>
+      <div>
+        <h1>Projektübersicht</h1>
+        <div class="sub">Oktober 2026 · alle Teams</div>
+      </div>
+      <div class="kpis">
+        <div class="card kpi" id="kpi1"><div class="t">Offene Aufgaben</div><div class="v">128</div><span class="d down" id="delta1">+12 seit Montag</span></div>
+        <div class="card kpi" id="kpi2"><div class="t">Erledigt diese Woche</div><div class="v">342</div><span class="d up" id="delta2">+18 % zur Vorwoche</span></div>
+        <div class="card kpi" id="kpi3"><div class="t">Durchlaufzeit</div><div class="v">2,4 Tage</div><span class="d up">−0,6 Tage</span></div>
+      </div>
+      <div class="lower">
+        <div class="card">
+          <h2>Erledigte Aufgaben je Woche</h2>
+          <div class="chart" id="chart">
+            <b style="height:38%"></b><b class="alt" style="height:52%"></b><b style="height:46%"></b><b class="alt" style="height:68%"></b>
+            <b style="height:62%" id="bar5"></b><b class="alt" style="height:74%"></b><b style="height:70%"></b><b class="alt" style="height:90%"></b><b style="height:82%"></b><b class="alt" style="height:98%"></b>
+          </div>
+        </div>
+        <div class="card">
+          <h2>Meilensteine</h2>
+          <ul id="milestones">
+            <li>Website-Relaunch<span class="pill ok">fertig</span></li>
+            <li>App 2.0 Beta<span class="pill run">läuft</span></li>
+            <li>Kundenumfrage<span class="pill ok">fertig</span></li>
+            <li>Datenmigration<span class="pill run">läuft</span></li>
+            <li>Barrierefreiheit<span class="pill plan">geplant</span></li>
+            <li>Sicherheitsaudit<span class="pill run">läuft</span></li>
+            <li>Schulung Team Nord<span class="pill plan">geplant</span></li>
+            <li>Rechenzentrum Nord<span class="pill ok">fertig</span></li>
+          </ul>
+        </div>
+      </div>
+    </main>
+  </body>
+</html>

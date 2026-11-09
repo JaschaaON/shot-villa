@@ -18,6 +18,7 @@ Legende: ☐ offen · ◐ implementiert, Tests grün, Praxistest offen · ☑ fe
 ## Dokumentation und Website
 
 - ☑ Handbuch mit Screenshots (`docs/README.md`), README, Betriebsanleitung (`docs/deploy.md`)
+- ☑ Redesign 0.4.0 („Schiene“): durchgehend dunkle Oberfläche im Stil einer Konsole hinter Glas (gestapelte Graustufen, Haarlinien, Pillen-Knöpfe, Inter als gebündelte Schrift). Editor mit Werkzeugschiene links, Optionskarte, Statuszeile; Einstellungen mit Seitenleiste. Produktbilder entstehen per `tools/screenshots` (siehe `docs/deploy.md`). Nur im Headless-Browser geprüft, nicht in der echten App auf macOS/Windows.
 - ☑ Produktseite `website/` (statisch, Hell/Dunkel, responsiv), Download der Universal-DMG
 - ☑ Release v0.1.0 mit `Shot-VILLA_0.1.0_universal.dmg`
 - ◐ Image-Build per GitHub Actions nach GHCR, Compose-Stack – Deployment auf dem Server steht aus

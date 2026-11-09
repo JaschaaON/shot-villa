@@ -44,7 +44,13 @@ export const Welcome = () => {
           const shortcut = settings?.hotkeys[key] ?? null;
           return (
             <div key={key}>
-              <dt>{shortcut === null ? "–" : formatShortcut(shortcut)}</dt>
+              <dt>
+                {shortcut === null ? (
+                  "–"
+                ) : (
+                  <kbd>{formatShortcut(shortcut)}</kbd>
+                )}
+              </dt>
               <dd>{label}</dd>
             </div>
           );

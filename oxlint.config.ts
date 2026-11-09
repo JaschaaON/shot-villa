@@ -6,6 +6,6 @@ import vitest from "ultracite/oxlint/vitest";
 
 export default defineConfig({
   extends: [core, react, vitest, antiSlop],
-  ignorePatterns: [...(core.ignorePatterns ?? []), "src-tauri/**"],
+  ignorePatterns: [...(core.ignorePatterns ?? []), "src-tauri/**", "tools/**"],
   options: { typeAware: true },
 });

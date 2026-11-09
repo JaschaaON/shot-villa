@@ -157,3 +157,17 @@ export const EditIcon = () => (
     <path d="M13 3.5l3.5 3.5L7 16.5H3.5V13z" />
   </Icon>
 );
+
+export const SettingsIcon = () => (
+  <Icon>
+    <path d="M3 6.5h8M14.5 6.5H17M3 13.5h2.5M9 13.5h8" />
+    <circle cx="12.5" cy="6.5" r="1.8" />
+    <circle cx="7.5" cy="13.5" r="1.8" />
+  </Icon>
+);
+
+export const EyedropperIcon = () => (
+  <Icon>
+    <path d="M12.5 3.5l4 4-1.6 1.6-4-4zM11 5.5L4 12.5V16h3.5l7-7" />
+  </Icon>
+);

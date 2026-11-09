@@ -79,7 +79,7 @@ Kürzel ohne Vorgabe kannst du in den Einstellungen belegen.
 
 ## Bearbeiten im Editor
 
-Oben links stehen die Ausgabe-Knöpfe, daneben die Werkzeuge, rechts drei Infos: die Farbe unter dem Mauszeiger, die Bildgröße und der Zoom.
+Links in der Schiene stehen die Werkzeuge. Daneben zeigt eine Karte die Optionen des gewählten Werkzeugs. Oben rechts liegen Widerrufen und Wiederholen, Anpinnen, Text erkennen, **Sichern** und die umrandete Hauptaktion **Kopieren**. Die Statuszeile unten zeigt drei Infos: die Farbe unter dem Mauszeiger, die Bildgröße und den Zoom. Die Oberfläche ist durchgehend dunkel.
 
 | Werkzeug | Taste | Hinweis |
 |---|---|---|
@@ -95,7 +95,7 @@ Oben links stehen die Ausgabe-Knöpfe, daneben die Werkzeuge, rechts drei Infos:
 | Spotlight | S | Dunkelt alles außer dem gewählten Bereich ab. |
 | Zähler | C | Nummerierte Punkte 1, 2, 3 … – zählt automatisch weiter. |
 
-Unter der Werkzeugleiste wählst du Farbe (acht Vorgaben plus freie Farbe), Stärke (S/M/L/XL) und den Stil des Werkzeugs. Ist eine Markierung ausgewählt, ändern diese Knöpfe genau diese Markierung.
+In der Optionskarte neben der Schiene wählst du Farbe (acht Vorgaben plus freie Farbe), Stärke (S/M/L/XL) und den Stil des Werkzeugs. Ist eine Markierung ausgewählt, ändern diese Einstellungen genau diese Markierung.
 
 **Weitere Handgriffe**
 
@@ -104,7 +104,7 @@ Unter der Werkzeugleiste wählst du Farbe (acht Vorgaben plus freie Farbe), Stä
 - **Verschieben:** Pfeiltasten (mit ⇧ in großen Schritten), **⌘D** dupliziert, **⌫** löscht.
 - **Zoom:** ⌘+ / ⌘− / ⌘0 (100 %) / ⌘1 (einpassen), Pinch auf dem Trackpad oder ⌘ + Scrollrad. Ein Klick auf die Zoomanzeige wechselt zwischen 100 % und Einpassen.
 - **Pixel oder Punkte:** Ein Klick auf die Größenanzeige wechselt zwischen pt (wie auf dem Bildschirm) und px (echte Bildpunkte auf Retina-Displays).
-- **Farbe aufnehmen:** Die Farbe unter dem Mauszeiger steht oben rechts. **Tab** kopiert sie, ein Klick wechselt das Format (HEX, RGB, CSS `rgba()`, OKLCH).
+- **Farbe aufnehmen:** Die Farbe unter dem Mauszeiger steht unten links in der Statuszeile. **Tab** kopiert sie, ein Klick wechselt das Format (HEX, RGB, CSS `rgba()`, OKLCH).
 
 ## Ausgeben: Kopieren, Sichern, Anpinnen
 

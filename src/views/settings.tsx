@@ -243,6 +243,9 @@ export const Settings = () => {
         ))}
       </nav>
       <section className="panel">
+        <h1 className="panel-title">
+          {TABS.find(({ id }) => id === tab)?.label}
+        </h1>
         {tab === "general" ? (
           <>
             <Row label="Ordner für Bilder">

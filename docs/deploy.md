@@ -59,3 +59,16 @@ python3 -m http.server 4173 --directory website
 ```
 
 Die DMG fürs lokale Ansehen nach `website/downloads/Pivolo.dmg` kopieren (der Ordner ist von Git ausgenommen).
+
+## Produktbilder neu erzeugen
+
+Die Bilder in `docs/images/` und `website/images/` entstehen ohne die App: `tools/screenshots/capture.mjs` lässt die gebaute Oberfläche in einem Headless-Chromium laufen, ersetzt die Tauri-Schnittstelle durch eine Attrappe (`tauri-mock.js`) und zeichnet die Markierungen im Editor per Maus und Tastatur auf ein erfundenes Beispielbild (`sample.html`).
+
+```bash
+pnpm build
+node tools/screenshots/capture.mjs /tmp/bilder            # alle Bilder
+node tools/screenshots/capture.mjs /tmp/bilder editor     # nur eines
+```
+
+Danach `editor`, `settings-general`, `settings-shortcuts` und `settings-advanced` nach `docs/images/` und `website/images/` kopieren; die übrigen Bilder (Begrüßung, Vorschau, Aufnahmeleiste …) dienen der Sichtprüfung. Auf Linux braucht das Skript Schriften für ⌘ ⇧ ⌥ ⌃ (Umgebungsvariable `SYMBOLS_FONT`, Einzelheiten im Kopf der Datei). Chromium wird unter `~/.cache/ms-playwright` gesucht oder über `CHROME` angegeben.
+

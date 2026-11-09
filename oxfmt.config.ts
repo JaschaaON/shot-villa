@@ -6,6 +6,7 @@ export default defineConfig({
   ignorePatterns: [
     ...(ultracite.ignorePatterns ?? []),
     "src-tauri/**",
+    "tools/**",
     "**/*.md",
   ],
 });

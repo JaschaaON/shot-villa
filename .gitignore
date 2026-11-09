@@ -6,3 +6,4 @@ src-tauri/gen/schemas/
 website/downloads/
 CLAUDE.md
 .claude/
+tools/screenshots/out/

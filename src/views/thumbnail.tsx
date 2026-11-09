@@ -33,6 +33,7 @@ const Preview = ({ shot }: { shot: LoadedShot }) => {
       </button>
       <div className="thumbnail-bar" data-tauri-drag-region>
         <button
+          className="icon"
           onClick={fire(async () => {
             await exportShot(shot.info.id, { kind: "copy" });
             await closeWindow();
@@ -43,6 +44,7 @@ const Preview = ({ shot }: { shot: LoadedShot }) => {
           <CopyIcon />
         </button>
         <button
+          className="icon"
           onClick={fire(async () => {
             await output({ kind: "save" }, "Gespeichert");
           })}
@@ -51,13 +53,23 @@ const Preview = ({ shot }: { shot: LoadedShot }) => {
         >
           <SaveIcon />
         </button>
-        <button onClick={fire(editCurrent)} title="Bearbeiten" type="button">
+        <button
+          className="icon"
+          onClick={fire(editCurrent)}
+          title="Bearbeiten"
+          type="button"
+        >
           <EditIcon />
         </button>
         <span className="thumbnail-status" data-tauri-drag-region>
           {status}
         </span>
-        <button onClick={fire(closeWindow)} title="Schließen" type="button">
+        <button
+          className="icon"
+          onClick={fire(closeWindow)}
+          title="Schließen"
+          type="button"
+        >
           <CloseIcon />
         </button>
       </div>
