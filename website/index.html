@@ -59,14 +59,66 @@
         <p class="ds-meta">
           macOS 14 oder neuer (Apple-Chip und Intel) · Windows 10 und 11
         </p>
-        <figure class="ds-figure ds-hero-shot">
-          <img
-            class="ds-shot"
-            src="images/editor.jpg"
-            width="2424"
-            height="1664"
-            alt="Der dunkle Pivolo-Editor mit Werkzeugschiene links, Optionskarte und einer Projektübersicht, die mit Pfeil, rotem Rahmen, nummerierten Markierungen und gelbem Textmarker versehen ist"
-          />
+        <figure class="ds-figure ds-hero-shot ds-demo">
+          <div class="ds-demo-stage">
+            <img
+              class="ds-shot"
+              src="images/editor-clean.jpg"
+              width="2424"
+              height="1664"
+              alt="Der dunkle Pivolo-Editor mit Werkzeugschiene links und Optionskarte. Auf einer Projektübersicht entstehen nacheinander nummerierte Markierungen, ein gelber Textmarker, ein roter Rahmen und ein Pfeil."
+            />
+            <svg
+              class="ds-demo-marks"
+              viewBox="0 0 2424 1664"
+              aria-hidden="true"
+              focusable="false"
+            >
+              <g class="m-all">
+                <rect
+                  class="m-hl"
+                  x="1064"
+                  y="605"
+                  width="155"
+                  height="20"
+                  rx="3"
+                />
+                <rect
+                  class="m-frame"
+                  x="1738"
+                  y="737"
+                  width="461"
+                  height="231"
+                  rx="6"
+                  pathLength="1"
+                />
+                <path
+                  class="m-arrow"
+                  d="M1948 432 L1690.7 600.7"
+                  pathLength="1"
+                />
+                <path
+                  class="m-head"
+                  d="M1669 615 L1687.5 588.5 L1700.7 608.6 Z"
+                />
+                <g class="m-c m-c1">
+                  <circle cx="1068" cy="500" r="15" />
+                  <text x="1068" y="506">1</text>
+                </g>
+                <g class="m-c m-c2">
+                  <circle cx="1465" cy="500" r="15" />
+                  <text x="1465" y="506">2</text>
+                </g>
+                <g class="m-c m-c3">
+                  <circle cx="1863" cy="500" r="15" />
+                  <text x="1863" y="506">3</text>
+                </g>
+                <g class="m-cursor">
+                  <path d="M0 0 L0 26 L7 20 L12 31 L17 29 L12 18 L21 18 Z" />
+                </g>
+              </g>
+            </svg>
+          </div>
         </figure>
       </section>
 
@@ -439,5 +491,6 @@
         Eine App aus der OverlandVibe-Familie</span
       >
     </footer>
+    <script src="fx.js" defer></script>
   </body>
 </html>

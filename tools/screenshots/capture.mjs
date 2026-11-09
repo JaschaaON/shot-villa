@@ -252,7 +252,7 @@ const press = async (cdp, key) => {
   await sleep(60);
 };
 
-const drawEditor = async (cdp, boxes) => {
+const drawEditor = async (cdp, boxes, options = {}) => {
   await cdp.evaluate(`new Promise((resolve) => {
     const check = () => document.querySelector("canvas.canvas") ? resolve(true) : setTimeout(check, 50);
     check();
@@ -280,29 +280,50 @@ const drawEditor = async (cdp, boxes) => {
     await sleep(80);
   };
 
+  const px = ([x, y]) => at(x, y).map((value) => Math.round(value * SCALE));
+  const geometry = { counters: [], arrow: null, highlight: null, frame: null };
+  const marks = options.marks !== false;
+
   // Zähler an den drei Kacheln
-  await press(cdp, "c");
+  if (marks) {
+    await press(cdp, "c");
+  }
   for (const kpi of [boxes.kpi1, boxes.kpi2, boxes.kpi3]) {
-    await click([kpi.x + 26, kpi.y + 6]);
+    geometry.counters.push(px([kpi.x + 26, kpi.y + 6]));
+    if (marks) {
+      await click([kpi.x + 26, kpi.y + 6]);
+    }
   }
   // Textmarker über den ersten Wert
-  await press(cdp, "h");
   const d1 = boxes.delta1;
-  await drag([d1.x - 6, d1.y + 2], [d1.x + d1.width + 6, d1.y + d1.height - 2]);
+  geometry.highlight = [px([d1.x - 6, d1.y + 2]), px([d1.x + d1.width + 6, d1.y + d1.height - 2])];
+  if (marks) {
+    await press(cdp, "h");
+    await drag([d1.x - 6, d1.y + 2], [d1.x + d1.width + 6, d1.y + d1.height - 2]);
+  }
   // Rahmen um die Meilensteine
-  await press(cdp, "r");
-  await drag(
-    [boxes.row1.x - 14, boxes.row1.y - 6],
-    [boxes.row4.x + boxes.row4.width + 14, boxes.row4.y + boxes.row4.height + 6]
-  );
+  const frameFrom = [boxes.row1.x - 14, boxes.row1.y - 6];
+  const frameTo = [boxes.row4.x + boxes.row4.width + 14, boxes.row4.y + boxes.row4.height + 6];
+  geometry.frame = [px(frameFrom), px(frameTo)];
+  if (marks) {
+    await press(cdp, "r");
+    await drag(frameFrom, frameTo);
+  }
   // Pfeil auf die zweite Kachel
-  await press(cdp, "a");
   const d2 = boxes.delta2;
-  await drag([boxes.kpi3.x + 120, boxes.kpi1.y - 70], [d2.x + d2.width + 16, d2.y + d2.height / 2]);
-  // Auswahl aufheben, Pfeilwerkzeug bleibt aktiv
-  await press(cdp, "v");
-  await click([boxes.list.x + 40, boxes.list.y + boxes.list.height - 20]);
+  const arrowFrom = [boxes.kpi3.x + 120, boxes.kpi1.y - 70];
+  const arrowTo = [d2.x + d2.width + 16, d2.y + d2.height / 2];
+  geometry.arrow = [px(arrowFrom), px(arrowTo)];
   await press(cdp, "a");
+  if (marks) {
+    await drag(arrowFrom, arrowTo);
+  }
+  // Auswahl aufheben, Pfeilwerkzeug bleibt aktiv
+  if (marks) {
+    await press(cdp, "v");
+    await click([boxes.list.x + 40, boxes.list.y + boxes.list.height - 20]);
+    await press(cdp, "a");
+  }
   // Mauszeiger über einen Balken: die Pipette zeigt dessen Farbe
   const bar = boxes.bar5;
   const [bx, by] = at(bar.x + bar.width / 2, bar.y + bar.height * 0.5);
@@ -317,6 +338,7 @@ const drawEditor = async (cdp, boxes) => {
     process.stdout.write(`pm=${await cdp.evaluate("window.__pm")} status=${await cdp.evaluate("document.querySelector('.statusbar').innerText")}\n`);
     process.stdout.write(`${bx},${by} ${await cdp.evaluate(`document.elementFromPoint(${bx}, ${by})?.tagName`)} ${JSON.stringify(bar)}\n`);
   }
+  return geometry;
 };
 
 /* ---------- Bilder ---------- */
@@ -325,6 +347,12 @@ const SETTINGS_VIEW = { bar: "native", height: 580, label: "settings", title: "E
 
 const SCENARIOS = {
   "editor": { bar: "overlay", height: 720, label: "main", run: drawEditor, width: 1100 },
+  "editor-clean": { bar: "overlay", height: 720, label: "main", run: async (cdp, boxes) => {
+      const result = await drawEditor(cdp, boxes, { marks: false });
+      // Ohne Markierungen soll „Markierungen 0“ nicht stören; die Website zeichnet sie darüber
+      await cdp.evaluate(`document.querySelector(".statusbar .count").style.visibility = "hidden"`);
+      return result;
+    }, width: 1100 },
   "editor-leer": { bar: "overlay", height: 720, label: "main", query: "&empty=1", width: 1100 },
   "permission": { bar: "native", height: 360, label: "permission", title: "Bildschirmaufnahme erlauben", width: 460 },
   "recording-bereit": { bar: "none", height: 48, label: "recording-bar", width: 230 },
@@ -412,7 +440,11 @@ const main = async () => {
         await cdp.evaluate(frameScript({ height: scenario.height, title: scenario.title ?? "", titlebar, width: scenario.width }));
       }
       if (scenario.run) {
-        await scenario.run(cdp, boxes);
+        const result = await scenario.run(cdp, boxes);
+        if (result && name === "editor") {
+          // Lage der Markierungen in Bildpunkten, für die Bewegtbild-Animation der Website
+          await writeFile(path.join(outDir, "editor-marks.json"), `${JSON.stringify(result, null, 2)}\n`);
+        }
       }
       await sleep(250);
       const image = await cdp.send("Page.captureScreenshot", { format: "jpeg", quality: 92 });
