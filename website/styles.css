@@ -152,8 +152,21 @@ html {
   flex: none;
 }
 
-.ds-mark-mountain {
+.ds-mark-frame {
+  fill: none;
+  stroke: var(--snow);
+  stroke-width: 44;
+  stroke-linecap: round;
+}
+
+.ds-mark-peak {
   fill: var(--snow);
+}
+
+.ds-mark-ring {
+  fill: none;
+  stroke: var(--snow);
+  stroke-width: 18;
 }
 
 .ds-mark-piste {
