@@ -163,12 +163,6 @@ html {
   fill: var(--snow);
 }
 
-.ds-mark-ring {
-  fill: none;
-  stroke: var(--snow);
-  stroke-width: 18;
-}
-
 .ds-mark-piste {
   fill: var(--live);
 }

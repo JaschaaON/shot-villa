@@ -1,5 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
-  <title>Pivolo – Sucher mit Fokus</title>
+  <title>Pivolo – Sucher</title>
   <rect width="512" height="512" rx="96" fill="#141517"/>
-  <g transform="translate(-64 -64) scale(.625)"><g fill="none" stroke="#C4C9CF" stroke-width="44" stroke-linecap="round"><path d="M262 432 V372 Q262 312 322 312 H382"/><path d="M642 312 H702 Q762 312 762 372 V432"/><path d="M762 592 V652 Q762 712 702 712 H642"/><path d="M382 712 H322 Q262 712 262 652 V592"/></g><circle cx="512" cy="512" r="108" fill="none" stroke="#C4C9CF" stroke-width="18"/><circle cx="512" cy="512" r="52" fill="#D7262E"/></g>
+  <g transform="translate(-64 -64) scale(.625)"><g fill="none" stroke="#C4C9CF" stroke-width="44" stroke-linecap="round"><path d="M262 432 V372 Q262 312 322 312 H382"/><path d="M642 312 H702 Q762 312 762 372 V432"/><path d="M762 592 V652 Q762 712 702 712 H642"/><path d="M382 712 H322 Q262 712 262 652 V592"/></g><circle cx="512" cy="512" r="66" fill="#D7262E"/></g>
 </svg>
