@@ -134,6 +134,17 @@ html {
   color: var(--snow);
 }
 
+/* Feste Linie über die ganze Breite der Kopfleiste; die Fortschrittslinie (::after) füllt sie beim Scrollen weiß */
+.ds-top::before {
+  position: absolute;
+  right: 0;
+  bottom: -1px;
+  left: 0;
+  height: 1px;
+  content: "";
+  background: rgb(247 248 248 / 32%);
+}
+
 .ds-brand {
   display: inline-flex;
   align-items: center;
@@ -1513,4 +1524,16 @@ code {
   .lb-close {
     transition: none;
   }
+}
+
+/* ---------- Film ---------- */
+
+.ds-film-video {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 16 / 9;
+  border: 1px solid var(--smoke);
+  border-radius: 12px;
+  background: var(--onyx);
 }
